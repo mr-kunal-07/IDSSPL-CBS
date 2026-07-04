@@ -10,13 +10,26 @@ import {
   ChevronRight,
 } from "lucide-react";
 
+type BreadcrumbItem = {
+  label: string;
+  active?: boolean;
+};
+
+type PageHeaderProps = {
+  title: string;
+  subTitle?: string;
+  breadcrumbs?: BreadcrumbItem[];
+  addHref?: string;
+  onFilter?: () => void;
+};
+
 export default function PageHeader({
   title,
   subTitle,
   breadcrumbs = [],
   addHref = "#",
   onFilter = () => {},
-}) {
+}: PageHeaderProps) {
   const router = useRouter();
 
   return (

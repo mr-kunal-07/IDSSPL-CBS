@@ -1,6 +1,11 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-export default function CollapseButton({ collapsed, onClick }) {
+type CollapseButtonProps = {
+  collapsed: boolean;
+  onClick: () => void;
+};
+
+export default function CollapseButton({ collapsed, onClick }: CollapseButtonProps) {
   return (
     <button
       onClick={onClick}

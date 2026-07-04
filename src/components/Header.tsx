@@ -4,8 +4,12 @@ import { useEffect, useState } from "react";
 import { ChevronDown, Clock3 } from "lucide-react";
 import Image from "next/image";
 
-export default function Header() {
-  const [now, setNow] = useState(null);
+type HeaderProps = {
+  onMenuClick?: () => void;
+};
+
+export default function Header({ onMenuClick }: HeaderProps) {
+  const [now, setNow] = useState<Date | null>(null);
   const [timeLeft, setTimeLeft] = useState(10 * 60);
 
   useEffect(() => {
@@ -67,6 +71,8 @@ export default function Header() {
       {/* Right */}
       <div className="flex items-center gap-4">
         <button
+          type="button"
+          onClick={onMenuClick}
           className="flex h-8 w-32 items-center justify-between rounded-[10px] border border-[#1D73F6] bg-white px-4 text-xs text-[#1D73F6]"
         >
           <span>Language</span>

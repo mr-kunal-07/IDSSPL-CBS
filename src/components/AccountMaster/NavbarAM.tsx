@@ -1,7 +1,28 @@
 import { ArrowLeft, Home, ChevronRight, Filter, Plus } from "lucide-react";
 
-const NavbarAM = ({ titleEn, titleHi, breadcrumbs = [], onBack, onFilter, onAdd }) => {
-    const Breadcrumb = ({ label, isLast, isFirst, href }) => (
+type BreadcrumbItem = {
+  label: string;
+  href?: string;
+};
+
+type NavbarAMProps = {
+  titleEn: string;
+  titleHi: string;
+  breadcrumbs?: BreadcrumbItem[];
+  onBack?: () => void;
+  onFilter?: () => void;
+  onAdd?: () => void;
+};
+
+type BreadcrumbProps = {
+  label: string;
+  isLast: boolean;
+  isFirst: boolean;
+  href?: string;
+};
+
+const NavbarAM = ({ titleEn, titleHi, breadcrumbs = [], onBack, onFilter, onAdd }: NavbarAMProps) => {
+    const Breadcrumb = ({ label, isLast, isFirst, href }: BreadcrumbProps) => (
         <div className="flex items-center gap-1">
             {!isFirst && <ChevronRight size={14} className="text-gray-400" />}
             <a

@@ -1,11 +1,22 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
+import type { MouseEvent as ReactMouseEvent } from "react";
 import { ArrowUpDown, MoreVertical, ExternalLink, Eye, SquarePen, UserRoundCog } from "lucide-react";
 
+type RowData = {
+  srNo: number;
+  accountId: string;
+  status: string;
+  customerId: string;
+  accountName: string;
+  accountType: string;
+  createdBy: string;
+  applicationNo: string;
+  openingDate: string;
+};
 
 const columns = [
   { key: "srNo", label: "Sr No.", sortable: false },
-  { key: "action", label: "Action", sortable: false },
   { key: "applicationNo", label: "Application No.", sortable: false },
   { key: "accountId", label: "Account ID", sortable: true },
   { key: "status", label: "Status", sortable: true },
@@ -14,9 +25,9 @@ const columns = [
   { key: "accountType", label: "Account Type", sortable: true },
   { key: "createdBy", label: "Created By", sortable: true },
   { key: "openingDate", label: "Opening Date", sortable: true },
-];
+] as const;
 
-const rows = [
+const rows: RowData[] = [
   { srNo: 1, accountId: "000320100000001", status: "Live", customerId: "0003000001", accountName: "Akshay Om More", accountType: "Saving Deposit", createdBy: "Admin", applicationNo: "00326270000001", openingDate: "12-Jan-2024" },
   { srNo: 2, accountId: "000320100000002", status: "Live", customerId: "0003000002", accountName: "Nitish Sai Readdy", accountType: "Term Deposit", createdBy: "Admin", applicationNo: "00326270000002", openingDate: "03-Mar-2024" },
   { srNo: 3, accountId: "000320100000003", status: "Live", customerId: "0003000003", accountName: "Karan Patil", accountType: "Term Loan", createdBy: "Admin", applicationNo: "00326270000003", openingDate: "21-Jun-2024" },
@@ -30,14 +41,14 @@ const menuOptions = [
 
 const AccountMasterTable = () => {
   const [activeTab, setActiveTab] = useState("Deposit");
-  const [sortKey, setSortKey] = useState(null);
+  const [sortKey, setSortKey] = useState<keyof RowData | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
-  const [openMenuRow, setOpenMenuRow] = useState(null);
-  const menuRef = useRef(null);
+  const [openMenuRow, setOpenMenuRow] = useState<number | null>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setOpenMenuRow(null);
       }
     };
@@ -45,7 +56,7 @@ const AccountMasterTable = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleSort = (key) => {
+  const handleSort = (key: keyof RowData) => {
     if (sortKey === key) {
       setSortAsc(!sortAsc);
     } else {
@@ -74,7 +85,7 @@ const AccountMasterTable = () => {
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  onClick={() => col.sortable && handleSort(col.key)}
+                  onClick={() => col.sortable && handleSort(col.key as keyof RowData)}
                   className={`text-left text-[16px] font-semibold text-white px-6 py-3 whitespace-nowrap ${
                     col.sortable ? "cursor-pointer select-none" : ""
                   }`}

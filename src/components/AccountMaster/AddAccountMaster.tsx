@@ -1,5 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
+import type { ChangeEvent } from "react";
 import {
   X,
   MapPin,
@@ -15,6 +16,33 @@ import SuccessModal from "./SuccessModal";
 /* ------------------------------------------------------------------ */
 /* Static data                                                         */
 /* ------------------------------------------------------------------ */
+
+type ListRow = {
+  code: string;
+  name?: string;
+  description?: string;
+};
+
+type ListColumn = {
+  key: keyof ListRow;
+  label: string;
+};
+
+type ListModalProps = {
+  title: string;
+  columns: ListColumn[];
+  rows: ListRow[];
+  onSelect: (row: ListRow) => void;
+  onClose: () => void;
+};
+
+type FormData = {
+  accountType: string;
+  accountCode: string;
+  accountDescription: string;
+  productType: string;
+  productDescription: string;
+};
 
 const ACCOUNT_TYPES = [
   { code: "AL", name: "All" },
@@ -49,7 +77,7 @@ const DEFAULT_SUB_PRODUCTS = [
 /* Shared list-modal shell (Account Type List / Sub Product List)      */
 /* ------------------------------------------------------------------ */
 
-function ListModal({ title, columns, rows, onSelect, onClose }) {
+function ListModal({ title, columns, rows, onSelect, onClose }: ListModalProps) {
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
@@ -151,7 +179,7 @@ function ListModal({ title, columns, rows, onSelect, onClose }) {
 }
 
 
-function Row({ label, value }) {
+function Row({ label, value }: { label: string; value?: string }) {
   return (
     <div className="flex items-center justify-between text-sm">
       <span className="text-gray-500">{label}</span>
@@ -164,9 +192,13 @@ function Row({ label, value }) {
 /* Main Add Account form                                               */
 /* ------------------------------------------------------------------ */
 
-export default function AddAccountFlow({ onClose = () => { } }) {
-  const [step, setStep] = useState("form"); // form | accountTypeList | subProductList | success
-  const [formData, setFormData] = useState({
+type AddAccountFlowProps = {
+  onClose?: () => void;
+};
+
+export default function AddAccountFlow({ onClose = () => { } }: AddAccountFlowProps) {
+  const [step, setStep] = useState<"form" | "accountTypeList" | "subProductList" | "success">("form");
+  const [formData, setFormData] = useState<FormData>({
     accountType: "",
     accountCode: "",
     accountDescription: "",
@@ -174,30 +206,30 @@ export default function AddAccountFlow({ onClose = () => { } }) {
     productDescription: "",
   });
 
-  const handleChange = (field) => (e) =>
+  const handleChange = (field: keyof FormData) => (e: ChangeEvent<HTMLInputElement>) =>
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
 
-  const handleSelectAccountType = (row) => {
+  const handleSelectAccountType = (row: ListRow) => {
     setFormData((prev) => ({
       ...prev,
       accountCode: row.code,
-      accountType: row.name,
-      accountDescription: row.name,
+      accountType: row.name ?? "",
+      accountDescription: row.name ?? "",
     }));
     setStep("form");
   };
 
-  const handleSelectSubProduct = (row) => {
+  const handleSelectSubProduct = (row: ListRow) => {
     setFormData((prev) => ({
       ...prev,
-      productType: `${row.code} - ${row.description}`,
-      productDescription: row.description,
+      productType: `${row.code} - ${row.description ?? ""}`,
+      productDescription: row.description ?? "",
     }));
     setStep("form");
   };
 
-  const subProductRows =
-    SUB_PRODUCTS[formData.accountCode] || DEFAULT_SUB_PRODUCTS;
+  const subProductRows: ListRow[] =
+    (SUB_PRODUCTS[formData.accountCode as keyof typeof SUB_PRODUCTS] as ListRow[] | undefined) || DEFAULT_SUB_PRODUCTS;
 
   const fields = [
     {
@@ -299,8 +331,8 @@ export default function AddAccountFlow({ onClose = () => { } }) {
                         type="text"
                         readOnly={field.readOnly}
                         placeholder={field.placeholder}
-                        value={formData[field.key]}
-                        onChange={field.readOnly ? undefined : handleChange(field.key)}
+                        value={formData[field.key as keyof FormData]}
+                        onChange={field.readOnly ? undefined : handleChange(field.key as keyof FormData)}
                         className="w-full outline-none text-sm placeholder-gray-400 text-gray-900 font-medium bg-transparent cursor-pointer"
                       />
                     </div>

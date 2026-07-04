@@ -1,6 +1,16 @@
 import { Clock3, ShieldCheck } from "lucide-react";
 
-export default function UserFooter({ user }) {
+type UserFooterProps = {
+  user: {
+    avatar: string;
+    name: string;
+    email: string;
+    lastLogin: string;
+    role: string;
+  };
+};
+
+export default function UserFooter({ user }: UserFooterProps) {
   return (
     <div className="mt-auto p-2">
       <div className="rounded-lg border border-white/10 bg-[#1A0838] p-2.5">

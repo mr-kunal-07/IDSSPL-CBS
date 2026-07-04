@@ -1,14 +1,35 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { ComponentType } from "react";
 import { ChevronDown } from "lucide-react";
 import NavItem from "./NavItem";
+
+type NavChild = {
+  id: string;
+  title: string;
+  href: string;
+};
+
+type NavItemData = {
+  id: string;
+  title: string;
+  icon: ComponentType<{ size?: number; className?: string }>;
+  href?: string;
+  children?: NavChild[];
+};
+
+type NavGroupProps = {
+  item: NavItemData;
+  pathname: string;
+  defaultOpen?: boolean;
+};
 
 export default function NavGroup({
   item,
   pathname,
   defaultOpen = false,
-}) {
+}: NavGroupProps) {
   const children = item.children ?? [];
 
   const hasActiveChild = children.some(

@@ -1,6 +1,17 @@
 import { LogOut } from "lucide-react";
 
-export default function IconRail({ items, active, onSelect }) {
+type RailItem = {
+  id: string;
+  icon: string;
+};
+
+type IconRailProps = {
+  items: RailItem[];
+  active: string;
+  onSelect: (id: string) => void;
+};
+
+export default function IconRail({ items, active, onSelect }: IconRailProps) {
   return (
     <div className="relative flex h-full w-[42px] flex-col items-center bg-[#0C0B1E]">
       <div className="absolute right-0 top-0 h-full w-px bg-[#1877F2]" />

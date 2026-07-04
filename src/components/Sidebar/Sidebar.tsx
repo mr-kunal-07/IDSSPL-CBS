@@ -10,13 +10,14 @@ import NavItem from "./NavItem";
 import UserFooter from "./UserFooter";
 import CollapseButton from "./CollapseButton";
 
-import {
-  menuItems,
-  railIcons,
-  user,
-} from "./sidebarData";
+import { menuItems, railIcons, user } from "./sidebarData";
 
-export default function Sidebar() {
+type SidebarProps = {
+  isOpen?: boolean;
+  onClose?: () => void;
+};
+
+export default function Sidebar({ isOpen: _isOpen, onClose: _onClose }: SidebarProps) {
   const pathname = usePathname();
 
   const [collapsed, setCollapsed] = useState(false);

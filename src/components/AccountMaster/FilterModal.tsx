@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { ChangeEvent } from "react";
 import { X, Filter as FilterIcon, Users, Hash, ChevronRight } from "lucide-react";
 
 const filterOptions = [
@@ -43,9 +44,15 @@ const filterOptions = [
   },
 ];
 
-export default function FilterModal({ onClose }) {
-  const [activeFilter, setActiveFilter] = useState("accountName");
-  const [values, setValues] = useState({
+type FilterKey = "accountName" | "accountType" | "accountNumber";
+
+type FilterModalProps = {
+  onClose: () => void;
+};
+
+export default function FilterModal({ onClose }: FilterModalProps) {
+  const [activeFilter, setActiveFilter] = useState<FilterKey>("accountName");
+  const [values, setValues] = useState<Record<FilterKey, string>>({
     accountName: "",
     accountType: "",
     accountNumber: "",
@@ -53,7 +60,7 @@ export default function FilterModal({ onClose }) {
 
   const active = filterOptions.find((f) => f.id === activeFilter);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValues((prev) => ({ ...prev, [activeFilter]: e.target.value }));
   };
 
@@ -106,7 +113,7 @@ export default function FilterModal({ onClose }) {
             return (
               <div key={option.id} className="relative flex items-center">
                 <button
-                  onClick={() => setActiveFilter(option.id)}
+                  onClick={() => setActiveFilter(option.id as FilterKey)}
                   className={`flex w-full items-center gap-3 rounded-2xl border px-5 py-4 text-left transition-colors ${
                     isActive
                       ? "border-[#0B63C1] bg-[#E8F1FD]"

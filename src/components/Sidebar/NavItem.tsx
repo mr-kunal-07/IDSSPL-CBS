@@ -1,13 +1,28 @@
 "use client";
 
+import type { ComponentType } from "react";
 import { useRouter } from "next/navigation";
+
+type NavItemData = {
+  id: string;
+  title: string;
+  href?: string;
+  icon?: ComponentType<{ size?: number; className?: string }>;
+};
+
+type NavItemProps = {
+  item: NavItemData;
+  active: boolean;
+  level?: number;
+  isLast?: boolean;
+};
 
 export default function NavItem({
   item,
   active,
   level = 0,
   isLast = false,
-}) {
+}: NavItemProps) {
   const router = useRouter();
   const Icon = item.icon;
 
