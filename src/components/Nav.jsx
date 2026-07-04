@@ -1,0 +1,110 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import {
+  ArrowLeft,
+  Filter,
+  Plus,
+  Home,
+  ChevronRight,
+} from "lucide-react";
+
+export default function PageHeader({
+  title,
+  subTitle,
+  breadcrumbs = [],
+  addHref = "#",
+  onFilter = () => {},
+}) {
+  const router = useRouter();
+
+  return (
+    <div className="w-full border-b border-[#ECECEC] bg-white px-3 py-2">
+      <div className="flex items-start justify-between">
+
+        {/* Left */}
+        <div className="flex gap-3">
+
+          <button
+            onClick={() => router.back()}
+            className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-[#1565D8] text-white hover:bg-[#135dc9]"
+          >
+            <ArrowLeft size={15} strokeWidth={2.5} />
+          </button>
+
+          <div>
+
+            <div className="flex items-center gap-2">
+              <h1 className="text-[15px] font-semibold text-[#1B4FA8]">
+                {title}
+              </h1>
+
+              <span className="text-[15px] font-semibold text-[#333]">
+                {subTitle}
+              </span>
+            </div>
+
+            <div className="mt-[2px] flex items-center text-[12px]">
+              {breadcrumbs.map((item, index) => (
+                <div key={index} className="flex items-center">
+
+                  {index === 0 && (
+                    <Home
+                      size={12}
+                      className="mr-1 text-[#A3A3A3]"
+                    />
+                  )}
+
+                  <span
+                    className={
+                      item.active
+                        ? "text-[#1565D8]"
+                        : "text-[#9C9C9C]"
+                    }
+                  >
+                    {item.label}
+                  </span>
+
+                  {index !== breadcrumbs.length - 1 && (
+                    <ChevronRight
+                      size={13}
+                      className="mx-1 text-[#B7B7B7]"
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+
+          </div>
+        </div>
+
+        {/* Right */}
+        <div className="flex items-center gap-2">
+
+          <button
+            onClick={onFilter}
+            className="flex h-8 w-8 items-center justify-center rounded-md border border-[#1565D8] text-[#1565D8]"
+          >
+            <Filter size={15} />
+          </button>
+
+          <Link
+            href={addHref}
+            className="flex h-8 overflow-hidden rounded-md border border-[#1565D8]"
+          >
+            <div className="flex w-9 items-center justify-center bg-white text-[#1565D8]">
+              <Plus size={15} strokeWidth={2.8} />
+            </div>
+
+            <div className="flex items-center bg-[#1565D8] px-3 text-[13px] font-medium text-white">
+              Add
+            </div>
+          </Link>
+
+        </div>
+
+      </div>
+    </div>
+  );
+}
