@@ -68,6 +68,7 @@ export default function FilterModal({
 
   const handleClearAll = () => {
     setValues(defaultValues);
+    onClose();
   };
 
   const handleApply = () => {
@@ -123,8 +124,8 @@ export default function FilterModal({
                 </button>
 
                 {isActive && (
-                  <div className="absolute -right-6 flex h-10 w-10 items-center justify-center">
-                    <div className="h-0 w-0 border-y-[16px] border-l-[22px] border-y-transparent border-l-[#B9D8F8]" />
+                  <div className="absolute -right-4 flex h-10 w-10 items-center justify-center">
+                    <div className="h-0 w-0 border-y-[18px] border-l-[24px] border-y-transparent border-l-[#0B63C1]" />
                   </div>
                 )}
               </div>
@@ -132,20 +133,43 @@ export default function FilterModal({
           })}
         </div>
 
-        <div className="ml-10 w-[600px] rounded-2xl bg-[#DCEBFC] p-6">
+        <div className="ml-10 w-[800px] rounded-2xl bg-[#DCEBFC] p-6 h-[220px]">
           <h3 className="mb-3 text-lg font-semibold text-gray-900">
             {active?.label}
           </h3>
-          <div className="flex items-center gap-3 rounded-xl border border-[#0B63C1] bg-white px-4 py-3">
-            {active?.inputIcon}
-            <input
-              type="text"
-              value={values[activeFilter]}
-              onChange={handleChange}
-              placeholder={active?.placeholder}
-              className="w-full bg-transparent text-gray-700 placeholder-gray-400 outline-none"
-            />
-          </div>
+          {activeFilter === "status" ? (
+            <div className="flex items-center gap-6">
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="h-5 w-5 rounded border-gray-300 text-[#0B63C1] focus:ring-[#0B63C1]"
+                  checked={values.status === "active"}
+                  onChange={() => setValues({ ...values, status: "active" })}
+                />
+                <span className="ml-2 text-gray-900">Active</span>
+              </label>
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="h-5 w-5 rounded border-gray-300 text-[#0B63C1] focus:ring-[#0B63C1]"
+                  checked={values.status === "inactive"}
+                  onChange={() => setValues({ ...values, status: "inactive" })}
+                />
+                <span className="ml-2 text-gray-900">Inactive</span>
+              </label>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3 rounded-xl border border-[#0B63C1] bg-white px-4 py-3">
+              {active?.inputIcon}
+              <input
+                type="text"
+                value={values[activeFilter]}
+                onChange={handleChange}
+                placeholder={active?.placeholder}
+                className="w-full bg-transparent text-gray-700 placeholder-gray-400 outline-none"
+              />
+            </div>
+          )}
         </div>
       </div>
 
