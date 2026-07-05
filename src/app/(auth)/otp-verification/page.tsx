@@ -1,35 +1,29 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { ArrowRight, Lock } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 const OTP_LENGTH = 6;
-const TIMER_SECONDS = 15;
 
 const OtpVerificationPage = () => {
   const router = useRouter();
 
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
-  const [timeLeft, setTimeLeft] = useState(TIMER_SECONDS);
+  const [timer, setTimer] = useState(30);
+  const [canResend, setCanResend] = useState(false);
   const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
-    if (timeLeft <= 0) return;
-    const interval = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [timeLeft]);
-
-  const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60)
-      .toString()
-      .padStart(2, "0");
-    const s = (seconds % 60).toString().padStart(2, "0");
-    return `${m}:${s}`;
-  };
+    if (timer > 0) {
+      const interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    } else {
+      setCanResend(true);
+    }
+  }, [timer]);
 
   const handleChange = (value: string, index: number) => {
     if (!/^[0-9]?$/.test(value)) return;
@@ -52,111 +46,138 @@ const OtpVerificationPage = () => {
     }
   };
 
-  const handleResend = () => {
+  const handleResendOTP = () => {
     setOtp(Array(OTP_LENGTH).fill(""));
-    setTimeLeft(TIMER_SECONDS);
+    setTimer(30);
+    setCanResend(false);
     inputsRef.current[0]?.focus();
   };
 
-  const handleVerify = () => {
+  const CheckOTPverify = () => {
     const code = otp.join("");
-    console.log(code);
-    router.push("/dashboard");
+    if (code.length === OTP_LENGTH) {
+      router.push("/dashboard");
+    }
   };
 
+  const isOtpFilled = otp.join("").length === OTP_LENGTH;
+
   return (
-   <div className="min-h-screen bg-linear-to-br from-white to-[#D0E7F6] flex ">
-      {/* Left */}
-      <div>
-        <Image
+    <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-br from-white via-[#EEF8FF] to-[#D0E7F6]">
+      <div className="flex w-full h-screen">
+        {/* Left Image */}
+        <img
           src="/login.png"
-          alt="Login"
-          width={1000}
-          height={1000}
-          className="h-screen w-auto"
-        />      </div>
-      {/* Right */}
-       <div className="flex items-center justify-center px-4 py-20">
-      <div className="w-full max-w-sm">
-        {/* Logo */}
-        <div className="flex justify-center">
-          <Image src="/logo.png" alt="logo" width={250} height={250} priority />
-        </div>
+          alt="bank"
+          className="h-screen w-auto object-cover flex-shrink-0"
+        />
 
-        {/* Heading */}
-        <h1 className="mt-3 text-center text-[30px] font-serif text-[#2C3193] leading-none">
-          CBS Software Bank
-        </h1>
+        {/* Right */}
+       <div className="relative flex-1 pt-[10px] flex flex-col items-center">
+          {/* Logo */}
+          <div className="w-full flex justify-center items-center mb-5">
+            <Image
+              src="/logo.png"
+              alt="IDSSPL Logo"
+              width={353}
+    height={118}
+    className="w-[353px] h-[118px]"
+            />
+          </div>
 
-        <h2 className="text-center text-[25px] font-medium text-[#222]">
-          Welcome Back
-        </h2>
+          {/* Login content */}
+         <div className="absolute top-[121px] w-full max-w-[557px] flex flex-col items-center">
+            <div className="flex flex-col items-start gap-4 h-[134px]">
+              <h2
+                className="font-medium text-[32px] leading-[110%] text-center w-[557px] h-[35px]"
+                style={{ color: "#3730A3", fontFamily: "Literata" }}
+              >
+                CBS Software Bank
+              </h2>
+               <h3 className="font-normal text-[28px] leading-[110%] text-center text-[#1A1A1A] w-full">
+                Welcome Back
+              </h3>
+               <p className="font-normal text-[16px] text-center text-[#393939] w-full">
+                Empowering banks with a secure, future-ready platform that
+                keeps your customers' trust at the heart of every
+                transaction.
+              </p>
+            </div>
 
-        <p className="mt-1 text-center text-sm text-gray-600 leading-5">
-          Empowering banks with a secure, future-ready platform that keeps your
-          customers' trust at the heart of every transaction."
-        </p>
+            {/* OTP Card */}
+            <div className="flex flex-col justify-center items-center px-[54px] py-10 gap-2.5 w-[557px] h-[433px] bg-gradient-to-br from-white to-[#EAF8FB] shadow-[0px_10px_32px_rgba(0,0,0,0.15)] rounded-[22px] mt-8">
+              <div className="flex flex-col items-center gap-2.5 w-[412px] h-[369px]">
+                <Image
+                  src="/Sidebar/Icon.png"
+                  alt="otp-icon"
+                  width={82}
+                  height={82}
+                  className="w-[82px] h-[82px]"
+                />
+              <p
+  className="font-medium text-[24px] leading-[24px] text-center w-[332px] h-[24px]"
+  style={{ fontFamily: "'Instrument Sans'", color: "#000000" }}
+>
+  OTP Verification
+</p>
+                <p
+                  className="font-normal text-[16px] leading-[24px] text-center flex justify-center items-center text-[#626262] w-[332px] h-[24px]"
+                  style={{ fontFamily: "'Instrument Sans'" }}
+                >
+                  Enter the OTP Sent to your registered mobile
+                </p>
 
-        {/* OTP Card */}
-        <div className="mt-3 rounded-2xl border border-[#D8E3F0] bg-white shadow-sm px-8 py-8">
-          <div className="flex justify-center">
-            <div className="h-14 w-14 rounded-full bg-[#EAF1FB] flex items-center justify-center">
-              <Lock size={22} className="text-[#1668C8]" />
+                {/* OTP inputs */}
+               <div className="flex flex-row items-center justify-center gap-3.5 h-[61px]">
+  {otp.map((digit, index) => (
+    <input
+      key={index}
+      ref={(el) => {
+        inputsRef.current[index] = el;
+      }}
+      type="text"
+      inputMode="numeric"
+      maxLength={1}
+      value={digit}
+      onChange={(e) => handleChange(e.target.value, index)}
+      onKeyDown={(e) => handleKeyDown(e, index)}
+      className="w-12 h-14 text-center rounded-xl border border-[#D8E3F0] bg-white text-lg font-medium text-[#000000] outline-none shadow-sm focus:border-[#1668C8] focus:ring-2 focus:ring-[#1668C8]/20"
+    />
+  ))}
+</div>
+
+                <p
+                  className="font-medium text-[16px] leading-[24px] text-center text-[#0B63C1]"
+                  style={{ fontFamily: "Instrument Sans" }}
+                >
+                  00:{timer.toString().padStart(2, "0")}
+                </p>
+
+                <p
+                  className="font-normal text-[16px] leading-[24px] text-center text-[#626262]"
+                  style={{ fontFamily: "Instrument Sans" }}
+                >
+                  Didn't receive the OTP?{" "}
+                  <span
+                    className="font-medium text-[#0B63C1] cursor-pointer"
+                    onClick={handleResendOTP}
+                  >
+                    Resend
+                  </span>
+                </p>
+              </div>
+
+              <button
+                disabled={!isOtpFilled}
+                onClick={CheckOTPverify}
+                className="flex flex-row justify-center items-center px-6 py-4 gap-1.5 w-[356px] h-14 bg-[#0B63C1] shadow-[0px_1px_0.5px_0.05px_rgba(29,41,61,0.02)] rounded-[18px] text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Verify →
+              </button>
             </div>
           </div>
-
-          <h3 className="mt-4 text-center text-lg font-semibold text-[#222]">
-            OTP Verification
-          </h3>
-
-          <p className="mt-1 text-center text-sm text-gray-500">
-            Enter The OTP Sent To Your Registered Mobile
-          </p>
-
-          <div className="mt-5 flex justify-center gap-2">
-            {otp.map((digit, index) => (
-              <input
-                key={index}
-                ref={(el) => {
-                  inputsRef.current[index] = el;
-                }}
-                type="text"
-                inputMode="numeric"
-                maxLength={1}
-                value={digit}
-                onChange={(e) => handleChange(e.target.value, index)}
-                onKeyDown={(e) => handleKeyDown(e, index)}
-                className="h-12 w-11 rounded-lg border border-[#D8E3F0] text-center text-lg font-medium text-[#222] outline-none focus:border-[#5B63C6]"
-              />
-            ))}
-          </div>
-
-          <p className="mt-4 text-center text-sm font-medium text-[#1668C8]">
-            {formatTime(timeLeft)}
-          </p>
-
-          <p className="mt-1 text-center text-sm text-gray-500">
-            Didn't receive the OTP?{" "}
-            <button
-              type="button"
-              onClick={handleResend}
-              className="text-[#1668C8] font-medium hover:underline"
-            >
-              Resend
-            </button>
-          </p>
-
-          <button
-            type="button"
-            onClick={handleVerify}
-            className="mt-2 h-12 w-full rounded-xl bg-[#1668C8] text-white font-medium hover:bg-[#0F5AB3] transition flex items-center justify-center gap-2"
-          >
-            Verify
-            <ArrowRight size={18} />
-          </button>
         </div>
       </div>
-    </div>
     </div>
   );
 };
