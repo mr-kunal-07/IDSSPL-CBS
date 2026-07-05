@@ -179,7 +179,7 @@ export default function FilterModal({
           onClick={handleClearAll}
           className="rounded-full border border-[#0B63C1] px-8 py-3 font-semibold text-[#0B63C1] hover:bg-[#F2F8FE]"
         >
-          Clear All
+          Clear Alls
         </button>
         <button
           type="button"
