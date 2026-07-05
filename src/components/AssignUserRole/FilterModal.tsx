@@ -85,7 +85,7 @@ export default function FilterModal({
       <button
         type="button"
         onClick={onClose}
-        className="absolute right-8 top-8 flex h-9 w-9 items-center justify-center rounded-full border border-black text-black hover:bg-gray-100"
+        className="absolute right-8 top-8 z-50 flex h-9 w-9 items-center justify-center rounded-full border border-black text-black hover:bg-gray-100"
       >
         <X size={18} />
       </button>
@@ -124,8 +124,8 @@ export default function FilterModal({
                 </button>
 
                 {isActive && (
-                  <div className="absolute -right-4 flex h-10 w-10 items-center justify-center">
-                    <div className="h-0 w-0 border-y-[18px] border-l-[24px] border-y-transparent border-l-[#0B63C1]" />
+                  <div className="absolute -right-9 flex h-10 w-10 items-center justify-center">
+                    <div className="h-0 w-0 border-y-[18px] border-l-[24px] border-y-transparent border-l-[#DCEBFC]" />
                   </div>
                 )}
               </div>
