@@ -2,12 +2,16 @@
 
 import { useState } from "react";
 import NavbarAM from "./NavbarAM";
-import FilterModal from "./FilterModal";
+import FilterModal, { type AccountFilters } from "./FilterModal";
 import AccountMasterTable from "./AccountMasterTable";
 
 export default function AccountMasterPage() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filters, setFilters] = useState<Record<string, string>>({});
+  const [filters, setFilters] = useState<AccountFilters>({
+    accountName: "",
+    accountNumber: "",
+    accountType: "",
+  });
 
   return (
     <div>

@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import type { MouseEvent as ReactMouseEvent } from "react";
 import { ArrowUpDown, MoreVertical, ExternalLink, Eye, SquarePen, UserRoundCog } from "lucide-react";
+import type { AccountFilters } from "./FilterModal";
 
 type RowData = {
   srNo: number;
@@ -40,7 +41,7 @@ const menuOptions = [
   { key: "freeze", label: "Account Freeze / Unfreeze", icon: UserRoundCog },
 ];
 
-const AccountMasterTable = () => {
+const AccountMasterTable = ({ filters }: { filters?: AccountFilters }) => {
   const [activeTab, setActiveTab] = useState("Deposit");
   const [sortKey, setSortKey] = useState<keyof RowData | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
@@ -160,14 +161,27 @@ const AccountMasterTable = () => {
     }
   };
 
-  const sortedRows = [...rows].sort((a, b) => {
-    if (!sortKey) return 0;
-    const valA = a[sortKey];
-    const valB = b[sortKey];
-    if (valA < valB) return sortAsc ? -1 : 1;
-    if (valA > valB) return sortAsc ? 1 : -1;
-    return 0;
-  });
+  const filteredRows = rows.filter((row) => {
+  let match = true;
+  if (filters?.accountName) {
+    match &&= row.accountName.toLowerCase().includes(filters.accountName.toLowerCase());
+  }
+  if (filters?.accountNumber) {
+    match &&= row.accountId.toLowerCase().includes(filters.accountNumber.toLowerCase());
+  }
+  if (filters?.accountType) {
+    match &&= row.accountType.toLowerCase().includes(filters.accountType.toLowerCase());
+  }
+  return match;
+});
+const sortedRows = [...filteredRows].sort((a, b) => {
+  if (!sortKey) return 0;
+  const valA = a[sortKey];
+  const valB = b[sortKey];
+  if (valA < valB) return sortAsc ? -1 : 1;
+  if (valA > valB) return sortAsc ? 1 : -1;
+  return 0;
+});
 
   return (
     <div className="w-full bg-white rounded-xl overflow-hidden shadow-sm">
