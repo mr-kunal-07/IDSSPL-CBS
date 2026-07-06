@@ -45,7 +45,7 @@ export default function MainRoleListModal({
   }, [roles, search]);
 
   return (
-    <div className="relative w-full max-w-[720px] overflow-hidden rounded-3xl border-2 border-[#0B63C1] bg-white p-6 shadow-xl">
+    <div className="relative w-full min-w-[600px] overflow-hidden rounded-2xl border-2 border-[#0B63C1] bg-white p-6 shadow-xl">
       <div className="pointer-events-none absolute -top-8 right-8 h-32 w-32 rounded-full bg-[#DCEBFC]" />
       <div className="pointer-events-none absolute -bottom-12 -left-8 h-40 w-40 rounded-full bg-[#DCEBFC]" />
 

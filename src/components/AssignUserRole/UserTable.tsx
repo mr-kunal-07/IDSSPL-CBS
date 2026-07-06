@@ -21,22 +21,39 @@ export type UserRow = {
   userName: string;
   userId: string;
   assigned: boolean;
+  role?: string;
 };
 
-const defaultUsers: UserRow[] = Array.from({ length: 10 }, (_, i) => ({
+const newUsers: UserRow[] = Array.from({ length: 5 }, (_, i) => ({
   srNo: i + 1,
   shortName: "AMT",
   phone: "9876543210",
   email: "amt@example.com",
   userName: "Appana M Telgi",
-  userId: "001",
+  userId: `00${i + 1}`,
+  assigned: false,
+}));
+
+const modifiedUsers: UserRow[] = Array.from({ length: 10 }, (_, i) => ({
+  srNo: i + 1,
+  shortName: "AMT",
+  phone: "9876543210",
+  email: "amt@example.com",
+  userName: "Appana M Telgi",
+  userId: `00${i + 1}`,
   assigned: true,
+  role: "Officer",
 }));
 
 type TabType = "new" | "modify";
 
 type UserTableProps = {
   onUserSelect: (user: SelectedUser) => void;
+  onRoleAssigned?: (userId: string, role: string) => void;
+  currentNewUsers?: UserRow[];
+  currentModifiedUsers?: UserRow[];
+  setCurrentNewUsers?: React.Dispatch<React.SetStateAction<UserRow[]>>;
+  setCurrentModifiedUsers?: React.Dispatch<React.SetStateAction<UserRow[]>>;
 };
 
 const PAGINATION_ITEMS: (number | "ellipsis")[] = [
@@ -52,7 +69,14 @@ const PAGINATION_ITEMS: (number | "ellipsis")[] = [
   125,
 ];
 
-export default function UserTable({ onUserSelect }: UserTableProps) {
+export default function UserTable({ 
+  onUserSelect, 
+  onRoleAssigned,
+  currentNewUsers,
+  currentModifiedUsers,
+  setCurrentNewUsers,
+  setCurrentModifiedUsers 
+}: UserTableProps) {
   const [activeTab, setActiveTab] = useState<TabType>("modify");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState<UserRoleFilters>({
@@ -63,9 +87,14 @@ export default function UserTable({ onUserSelect }: UserTableProps) {
   const [selectedRow, setSelectedRow] = useState<number | null>(1);
   const [currentPage, setCurrentPage] = useState(101);
   const [sortAsc, setSortAsc] = useState(true);
+  
+  const usersNew = currentNewUsers ?? newUsers;
+  const usersModified = currentModifiedUsers ?? modifiedUsers;
+  const setUsersNew = setCurrentNewUsers ?? (() => {});
+  const setUsersModified = setCurrentModifiedUsers ?? (() => {});
 
   const filteredUsers = useMemo(() => {
-    let result = [...defaultUsers];
+    let result = activeTab === "new" ? [...usersNew] : [...usersModified];
 
     if (filters.userName.trim()) {
       const q = filters.userName.toLowerCase();
@@ -83,15 +112,25 @@ export default function UserTable({ onUserSelect }: UserTableProps) {
     );
 
     return result;
-  }, [filters, sortAsc]);
+  }, [filters, sortAsc, activeTab, usersNew, usersModified]);
 
   const handleRowClick = (user: UserRow) => {
     setSelectedRow(user.srNo);
     onUserSelect({
       userId: user.userId,
       userName: user.userName,
-      userRole: "Officer",
+      userRole: user.role || "Officer",
     });
+  };
+
+  const moveUserToModified = (userId: string, role: string) => {
+    const userIndex = usersNew.findIndex((u) => u.userId === userId);
+    if (userIndex !== -1) {
+      const user = usersNew[userIndex];
+      const updatedUser = { ...user, assigned: true, role };
+      setUsersNew((prev) => prev.filter((u) => u.userId !== userId));
+      setUsersModified((prev) => [...prev, updatedUser]);
+    }
   };
 
   const handleFilterApply = (newFilters: UserRoleFilters) => {
@@ -151,6 +190,11 @@ export default function UserTable({ onUserSelect }: UserTableProps) {
                   <ArrowUpDown size={13} className="opacity-80" />
                 </span>
               </th>
+              {activeTab === "modify" && (
+                <th className="px-4 py-3 text-left text-sm font-semibold text-white">
+                  Role
+                </th>
+              )}
               <th className="px-4 py-3 text-left text-sm font-semibold text-white">
                 Assigned
               </th>
@@ -172,25 +216,47 @@ export default function UserTable({ onUserSelect }: UserTableProps) {
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex flex-col gap-0.5">
-                    <span className="text-sm font-semibold text-[#0B63C1]">
+                    <span className="text-sm font-semibold text-[#black]">
                       {user.shortName}
                     </span>
-                    <span className="inline-flex items-center gap-1 text-xs text-gray-500">
-                      <Phone size={11} className="text-[#0B63C1]" />
-                      {user.phone}
+                    <span className="inline-flex items-center gap-1 text-xs text-[#black]">
+                      <Phone size={11} className="text-[#black]" />
+                      <span className="text-[#0b63c1]">{user.phone}</span>
                     </span>
-                    <span className="inline-flex items-center gap-1 text-xs text-gray-500">
-                      <Mail size={11} className="text-[#0B63C1]" />
-                      {user.email}
+                    <span className="inline-flex items-center gap-1 text-xs text-[#black]">
+                      <Mail size={11} className="text-[#black]" />
+                      <span className="text-[#0b63c1]">{user.email}</span>
                     </span>
                   </div>
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700">{user.userName}</td>
+                {activeTab === "modify" && (
+                  <td className="px-4 py-3 text-sm text-gray-700">{user.role}</td>
+                )}
                 <td className="px-4 py-3">
-                  {user.assigned && (
+                  {activeTab === "new" ? (
                     <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-red-50">
                       <AlertTriangle size={16} className="text-red-500" />
                     </span>
+                  ) : (
+                    user.assigned && (
+                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-green-50">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="3"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="text-green-500"
+                        >
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                      </span>
+                    )
                   )}
                 </td>
               </tr>
