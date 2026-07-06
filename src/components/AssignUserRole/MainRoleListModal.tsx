@@ -1,0 +1,124 @@
+"use client";
+
+import { useState, useMemo } from "react";
+import { X, Search } from "lucide-react";
+
+export type MainRole = {
+  id: string;
+  name: string;
+};
+
+const defaultRoles: MainRole[] = [
+  { id: "01", name: "Officer" },
+  { id: "02", name: "Manager" },
+  { id: "03", name: "MIS Activity" },
+  { id: "04", name: "Clerk" },
+  { id: "05", name: "HO Clerk" },
+  { id: "06", name: "Cashier" },
+  { id: "07", name: "Stationary" },
+  { id: "08", name: "Shares" },
+  { id: "09", name: "Reports" },
+  { id: "10", name: "Daily Reports" },
+];
+
+type MainRoleListModalProps = {
+  onClose: () => void;
+  onSelect: (role: MainRole) => void;
+  roles?: MainRole[];
+};
+
+export default function MainRoleListModal({
+  onClose,
+  onSelect,
+  roles = defaultRoles,
+}: MainRoleListModalProps) {
+  const [search, setSearch] = useState("");
+
+  const filteredRoles = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    if (!query) return roles;
+    return roles.filter(
+      (role) =>
+        role.id.toLowerCase().includes(query) ||
+        role.name.toLowerCase().includes(query)
+    );
+  }, [roles, search]);
+
+  return (
+    <div className="relative w-full max-w-[720px] overflow-hidden rounded-3xl border-2 border-[#0B63C1] bg-white p-6 shadow-xl">
+      <div className="pointer-events-none absolute -top-8 right-8 h-32 w-32 rounded-full bg-[#DCEBFC]" />
+      <div className="pointer-events-none absolute -bottom-12 -left-8 h-40 w-40 rounded-full bg-[#DCEBFC]" />
+
+      <div className="relative z-10 flex items-center justify-between">
+        <h2 className="text-xl font-semibold text-gray-900">Main Role List</h2>
+
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 rounded-full bg-gray-100 px-4 py-2">
+            <Search size={15} className="text-gray-400" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search"
+              className="w-32 bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none sm:w-40"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 text-gray-600 hover:bg-gray-50"
+          >
+            <X size={16} />
+          </button>
+        </div>
+      </div>
+
+      <div className="relative z-10 mt-5 overflow-hidden rounded-2xl border border-[#DCEBFC]">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="bg-[#DCEBFC]">
+              <th className="px-5 py-3 text-left text-sm font-semibold text-gray-800">
+                Main Role ID
+              </th>
+              <th className="px-5 py-3 text-left text-sm font-semibold text-gray-800">
+                Role
+              </th>
+              <th className="px-5 py-3 text-right text-sm font-semibold text-gray-800">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredRoles.map((role, idx) => (
+              <tr
+                key={role.id}
+                className={
+                  idx !== filteredRoles.length - 1 ? "border-b border-gray-100" : ""
+                }
+              >
+                <td className="px-5 py-3">
+                  <span className="inline-flex min-w-[36px] items-center justify-center rounded-lg bg-[#E8F1FD] px-3 py-1 text-sm font-semibold text-[#0B63C1]">
+                    {role.id}
+                  </span>
+                </td>
+                <td className="px-5 py-3 text-sm text-gray-700">{role.name}</td>
+                <td className="px-5 py-3 text-right">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onSelect(role);
+                      onClose();
+                    }}
+                    className="rounded-lg bg-[#E8F1FD] px-5 py-1.5 text-sm font-medium text-[#0B63C1] transition hover:bg-[#DCEBFC]"
+                  >
+                    Select
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
