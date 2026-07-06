@@ -2,10 +2,11 @@
 import { useState } from "react";
 import AddCM from "@/components/CustomerMaster/AddCM";
 import NavbarCM from "@/components/CustomerMaster/NavbarCM";
-import TableCM from "@/components/CustomerMaster/TableCM";
+import TableCM, { type RowData } from "@/components/CustomerMaster/TableCM";
 import EditMobileModal from "@/components/CustomerMaster/EditMobile";
 import EditEmailModal from "@/components/CustomerMaster/EditEmail";
 import BankingServices from "@/components/CustomerMaster/BankingServices";
+import ViewEditCM from "@/components/CustomerMaster/ViewEditCM";
 import FilterModal, {
   type CustomerFilters,
   defaultValues,
@@ -21,6 +22,8 @@ interface CustomerRow {
 const CustomerMasterPage = () => {
   const [openAddModal, setOpenAddModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState<CustomerRow | null>(null);
+  const [viewMode, setViewMode] = useState<"view" | "edit" | null>(null);
+  const [selectedCustomerRow, setSelectedCustomerRow] = useState<RowData | null>(null);
 
   const [openEditMobile, setOpenEditMobile] = useState(false);
   const [openEditEmail, setOpenEditEmail] = useState(false);
@@ -34,13 +37,14 @@ const CustomerMasterPage = () => {
     setFilters(defaultValues);
   };
 
-  const handleView = (row: CustomerRow) => {
-    setSelectedRow(row);
+  const handleView = (row: RowData) => {
+    setSelectedCustomerRow(row);
+    setViewMode("view");
   };
 
-  const handleEdit = (row: CustomerRow) => {
-    setSelectedRow(row);
-    setOpenEditMobile(true);
+  const handleEdit = (row: RowData) => {
+    setSelectedCustomerRow(row);
+    setViewMode("edit");
   };
 
   const handleEditPhone = (row: CustomerRow) => {
@@ -139,6 +143,14 @@ const CustomerMasterPage = () => {
           onClose={() => setOpenBankingServices(false)}
           customerId={selectedRow.customerId}
           customerName={selectedRow.name}
+        />
+      )}
+
+      {viewMode && selectedCustomerRow && (
+        <ViewEditCM
+          mode={viewMode}
+          customerData={selectedCustomerRow}
+          onClose={() => setViewMode(null)}
         />
       )}
     </div>

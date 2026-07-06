@@ -14,7 +14,7 @@ import {
   SquarePenIcon,
 } from "lucide-react";
 
-type RowData = {
+export type RowData = {
   srNo: number;
   customerId: string;
   phone: string;
