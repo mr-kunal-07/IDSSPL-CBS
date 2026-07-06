@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { type CustomerFilters } from "./FilterModal";
 import {
   ArrowUpDown,
   MoreVertical,
@@ -12,6 +13,7 @@ import {
   Mail,
   Copy,
 } from "lucide-react";
+
 
 type RowData = {
   srNo: number;
@@ -59,7 +61,7 @@ const menuOptions = [
 
 type SortKey = keyof Omit<RowData, "phone" | "email">;
 
-const TableCM = () => {
+const TableCM = ({ filters }: { filters?: CustomerFilters }) => {
   const [sortKey, setSortKey] = useState<SortKey | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
   const [openMenuRow, setOpenMenuRow] = useState<number | null>(null);
@@ -84,7 +86,15 @@ const TableCM = () => {
     }
   };
 
-  const sortedRows = [...rows].sort((a, b) => {
+  const filteredRows = rows.filter((r) => {
+    if (!filters) return true;
+    if (filters.customerName && !r.name.toLowerCase().includes(filters.customerName.toLowerCase())) return false;
+    if (filters.customerId && !r.customerId.toLowerCase().includes(filters.customerId.toLowerCase())) return false;
+    if (filters.status && r.status.toLowerCase() !== filters.status.toLowerCase()) return false;
+    return true;
+  });
+
+  const sortedRows = [...filteredRows].sort((a, b) => {
     if (!sortKey) return 0;
     const valA = a[sortKey];
     const valB = b[sortKey];

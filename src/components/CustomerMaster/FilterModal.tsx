@@ -2,18 +2,18 @@
 
 import { useState } from "react";
 import type { ChangeEvent } from "react";
-import { X, Filter as FilterIcon, User, ShieldCheck } from "lucide-react";
+import { X, Filter as FilterIcon, User, ShieldCheck, Hash } from "lucide-react";
 
 const filterOptions = [
   {
-    id: "userName",
-    label: "User Name",
+    id: "customerName",
+    label: "Customer Name",
     icon: (
       <span className="flex h-5 w-5 items-center justify-center rounded border border-[#0B63C1] text-[10px] font-bold text-[#0B63C1]">
         A
       </span>
     ),
-    placeholder: "User Name",
+    placeholder: "Customer Name",
     inputIcon: (
       <span className="flex h-5 w-5 items-center justify-center rounded border border-[#0B63C1] text-[10px] font-bold text-[#0B63C1]">
         A
@@ -21,11 +21,11 @@ const filterOptions = [
     ),
   },
   {
-    id: "userId",
-    label: "User ID",
-    icon: <User size={18} className="text-[#0B63C1]" />,
-    placeholder: "User ID",
-    inputIcon: <User size={18} className="text-[#0B63C1]" />,
+    id: "customerId",
+    label: "Customer ID",
+    icon: <Hash size={18} className="text-[#0B63C1]" />,
+    placeholder: "Customer ID",
+    inputIcon: <Hash size={18} className="text-[#0B63C1]" />,
   },
   {
     id: "status",
@@ -38,17 +38,17 @@ const filterOptions = [
 
 type FilterKey = (typeof filterOptions)[number]["id"];
 
-export type UserRoleFilters = Record<FilterKey, string>;
+export type CustomerFilters = Record<FilterKey, string>;
 
 type FilterModalProps = {
   onClose: () => void;
-  onApply: (filters: UserRoleFilters) => void;
-  initialValues?: UserRoleFilters;
+  onApply: (filters: CustomerFilters) => void;
+  initialValues?: CustomerFilters;
 };
 
-const defaultValues: UserRoleFilters = {
-  userName: "",
-  userId: "",
+const defaultValues: CustomerFilters = {
+  customerName: "",
+  customerId: "",
   status: "",
 };
 
@@ -57,8 +57,8 @@ export default function FilterModal({
   onApply,
   initialValues = defaultValues,
 }: FilterModalProps) {
-  const [activeFilter, setActiveFilter] = useState<FilterKey>("userName");
-  const [values, setValues] = useState<UserRoleFilters>(initialValues);
+  const [activeFilter, setActiveFilter] = useState<FilterKey>("customerName");
+  const [values, setValues] = useState<CustomerFilters>(initialValues);
 
   const active = filterOptions.find((f) => f.id === activeFilter);
 
@@ -68,6 +68,7 @@ export default function FilterModal({
 
   const handleClearAll = () => {
     setValues(defaultValues);
+    onApply(defaultValues);
     onClose();
   };
 
@@ -79,7 +80,7 @@ export default function FilterModal({
   return (
     <div className="relative w-full max-w-4xl overflow-hidden rounded-3xl border-2 border-[#0B63C1] bg-white p-8">
       <div className="pointer-events-none absolute -top-10 right-10 h-40 w-40 rounded-full bg-[#DCEBFC]" />
-      <div className="pointer-events-none absolute -bottom-16 -left-10 h-48 w-48 rounded-full bg-[#DCEBFC]" /> 
+      <div className="pointer-events-none absolute -bottom-16 -left-10 h-48 w-48 rounded-full bg-[#DCEBFC]" />
 
       <button
         type="button"
@@ -132,7 +133,7 @@ export default function FilterModal({
           })}
         </div>
 
-        <div className="ml-10 w-[800px] rounded-2xl bg-[#DCEBFC] p-6 h-[220px]">
+        <div className="ml-10 w-[800px] rounded-2xl bg-[#DCEBFC] p-6 h-[220px] flex flex-col justify-center">
           <h3 className="mb-3 text-lg font-semibold text-gray-900">
             {active?.label}
           </h3>
@@ -142,8 +143,13 @@ export default function FilterModal({
                 <input
                   type="checkbox"
                   className="h-5 w-5 rounded border-gray-300 text-[#0B63C1] focus:ring-[#0B63C1]"
-                  checked={values.status === "active"}
-                  onChange={() => setValues({ ...values, status: "active" })}
+                  checked={values.status === "Active"}
+                  onChange={() =>
+                    setValues({
+                      ...values,
+                      status: values.status === "Active" ? "" : "Active",
+                    })
+                  }
                 />
                 <span className="ml-2 text-gray-900">Active</span>
               </label>
@@ -151,8 +157,13 @@ export default function FilterModal({
                 <input
                   type="checkbox"
                   className="h-5 w-5 rounded border-gray-300 text-[#0B63C1] focus:ring-[#0B63C1]"
-                  checked={values.status === "inactive"}
-                  onChange={() => setValues({ ...values, status: "inactive" })}
+                  checked={values.status === "Inactive"}
+                  onChange={() =>
+                    setValues({
+                      ...values,
+                      status: values.status === "Inactive" ? "" : "Inactive",
+                    })
+                  }
                 />
                 <span className="ml-2 text-gray-900">Inactive</span>
               </label>

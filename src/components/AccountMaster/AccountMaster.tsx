@@ -3,9 +3,11 @@
 import { useState } from "react";
 import NavbarAM from "./NavbarAM";
 import FilterModal from "./FilterModal";
+import AccountMasterTable from "./AccountMasterTable";
 
 export default function AccountMasterPage() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [filters, setFilters] = useState<Record<string, string>>({});
 
   return (
     <div>
@@ -17,7 +19,7 @@ export default function AccountMasterPage() {
           { label: "Account Master", href: "/account-master" },
         ]}
         onBack={() => console.log("back")}
-        onFilter={() => setIsFilterOpen(true)}
+        onOpenFilter={() => setIsFilterOpen(true)}
         onAdd={() => console.log("add")}
       />
 
@@ -29,10 +31,17 @@ export default function AccountMasterPage() {
           onClick={() => setIsFilterOpen(false)}
         >
           <div onClick={(e) => e.stopPropagation()}>
-            <FilterModal onClose={() => setIsFilterOpen(false)} />
+            <FilterModal
+              onClose={() => setIsFilterOpen(false)}
+              onApply={(vals) => setFilters(vals)}
+            />
           </div>
         </div>
       )}
+
+      <div className="mt-6">
+        <AccountMasterTable filters={filters} />
+      </div>
     </div>
   );
 }
