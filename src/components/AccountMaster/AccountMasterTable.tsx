@@ -17,6 +17,7 @@ type RowData = {
 
 const columns = [
   { key: "srNo", label: "Sr No.", sortable: false },
+  { key: "action", label: "Action", sortable: false },
   { key: "applicationNo", label: "Application No.", sortable: false },
   { key: "accountId", label: "Account ID", sortable: true },
   { key: "status", label: "Status", sortable: true },
@@ -78,7 +79,7 @@ const AccountMasterTable = () => {
     <div className="w-full bg-white rounded-xl overflow-hidden shadow-sm">
 
       {/* Table */}
-      <div className="overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="overflow-x-auto [-ms-overflow-style:none] scrollbar-none [&::-webkit-scrollbar]:hidden">
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-[#0B63C1] rounded-t-xl">

@@ -11,7 +11,11 @@ import {
   User,
   Search,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import SuccessModal from "./SuccessModal";
+import Image from "next/image";
+import ListModal from "./ListModal";
+import AddSavingAccountModal from "./AddSavingAccountModal";
 
 /* ------------------------------------------------------------------ */
 /* Static data                                                         */
@@ -44,7 +48,17 @@ type FormData = {
   productDescription: string;
 };
 
-const ACCOUNT_TYPES = [
+type FieldConfig = {
+  key: keyof FormData;
+  label: string;
+  labelHi: string;
+  placeholder: string;
+  icon: LucideIcon;
+  readOnly?: boolean;
+  onMenuClick?: () => void;
+};
+
+const ACCOUNT_TYPES: ListRow[] = [
   { code: "AL", name: "All" },
   { code: "BL", name: "Bill Discounting" },
   { code: "BG", name: "Bill Guarantee" },
@@ -58,132 +72,133 @@ const ACCOUNT_TYPES = [
   { code: "PG", name: "Pigmy Deposit" },
 ];
 
-const SUB_PRODUCTS = {
-  AL: [{ code: "201", description: "Saving Depsoit" }],
+const SUB_PRODUCTS: Record<string, ListRow[]> = {
+  AL: [{ code: "201", description: "Saving Deposit" }],
   BR: [{ code: "BR", description: "Branch" }],
-  CA: [{ code: "CA", description: "Current Account" }],
+  CA: [{ code: "CA", description: "Saving Deposit" }],
   CC: [{ code: "CC", description: "Cash Credit" }],
   FA: [{ code: "FA", description: "Fixed Asset" }],
 };
-const DEFAULT_SUB_PRODUCTS = [
-  { code: "201", description: "Saving Depsoit" },
+const DEFAULT_SUB_PRODUCTS: ListRow[] = [
+  { code: "201", description: "Saving Deposit" },
   { code: "BR", description: "Branch" },
   { code: "CA", description: "Current Account" },
   { code: "CC", description: "Cash Credit" },
   { code: "FA", description: "Fixed Asset" },
 ];
 
+
 /* ------------------------------------------------------------------ */
-/* Shared list-modal shell (Account Type List / Sub Product List)      */
+/* Reusable form field (icon + input + optional menu trigger)          */
 /* ------------------------------------------------------------------ */
 
-function ListModal({ title, columns, rows, onSelect, onClose }: ListModalProps) {
-  const [query, setQuery] = useState("");
+function FormField({
+  field,
+  value,
+  onChange,
+}: {
+  field: FieldConfig;
+  value: string;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+}) {
+  const Icon = field.icon;
+  const isMenuField = Boolean(field.onMenuClick);
 
-  const filtered = useMemo(() => {
-    if (!query.trim()) return rows;
-    const q = query.toLowerCase();
-    return rows.filter((r) =>
-      Object.values(r).some((v) => String(v).toLowerCase().includes(q))
-    );
-  }, [rows, query]);
+  const Wrapper = isMenuField ? "button" : "div";
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-[60]">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[85vh] flex flex-col p-8">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-5 flex-shrink-0">
-          <h2 className="text-lg font-medium text-slate-900 whitespace-nowrap">
-            {title}
-          </h2>
-          <div className="flex-1 relative">
-            <Search
-              size={16}
-              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
-            />
-            <input
-              autoFocus
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search"
-              className="w-full bg-gray-100 rounded-lg pl-10 pr-4 py-1 text-sm outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
+    <div className="mb-3 last:mb-0">
+      {/* Label */}
+      <label className="block text-[16px] font-semibold text-[#1F2858]">
+        {field.label}
+        <span className="text-gray-500 font-medium">
+          {" "}
+          / {field.labelHi}
+        </span>
+        <span className="text-red-500">*</span>
+      </label>
+
+      <div className="flex items-center gap-3">
+        {/* Input */}
+        <Wrapper
+          type={isMenuField ? "button" : undefined}
+          onClick={field.onMenuClick}
+          className={`
+            group
+            flex
+            items-center
+            w-full
+            h-10
+            rounded-md
+            border
+            border-[#B8C2D6]
+            bg-white
+            px-4
+            transition-all
+            duration-200
+            hover:border-[#0A66D8]
+            focus-within:border-[#0A66D8]
+            focus-within:ring-2
+            focus-within:ring-[#0A66D8]/10
+            ${
+              isMenuField
+                ? "cursor-pointer"
+                : ""
+            }
+          `}
+        >
+          <Icon
+            size={18}
+            className="text-[#6B7280] shrink-0"
+          />
+
+          <input
+            type="text"
+            readOnly={field.readOnly}
+            placeholder={field.placeholder}
+            value={value}
+            onChange={field.readOnly ? undefined : onChange}
+            className={`
+              ml-3
+              w-full
+              bg-transparent
+              text-[16px]
+              text-[#4B5563]
+              placeholder:text-[#7C879B]
+              outline-none
+              ${
+                isMenuField
+                  ? "pointer-events-none cursor-pointer"
+                  : ""
+              }
+            `}
+          />
+        </Wrapper>
+
+        {/* Right Button */}
+        {isMenuField && (
           <button
-            onClick={onClose}
-            className="w-9 h-9 rounded-full border-2 border-gray-500 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition flex-shrink-0"
+            type="button"
+            onClick={field.onMenuClick}
+            className="
+              flex
+              h-12
+              w-12
+              items-center
+              justify-center
+              rounded-xl
+              bg-[#EEF4FF]
+              text-[#0A66D8]
+              transition-all
+              duration-200
+              hover:bg-[#DDEAFF]
+              active:scale-95
+            "
           >
-            <X size={18} strokeWidth={2.5} />
+            <MoreVertical size={18} strokeWidth={2.5} />
           </button>
-        </div>
-
-        {/* Table */}
-        <div className="overflow-y-auto rounded-lg border border-gray-100 ">
-          <table className="w-full text-sm">
-            <thead className="sticky top-0">
-              <tr className="bg-blue-100 text-slate-800">
-                {columns.map((c) => (
-                  <th
-                    key={c.key}
-                    className="text-left font-semibold px-5 py-3 first:rounded-tl-lg last:rounded-tr-lg"
-                  >
-                    {c.label}
-                  </th>
-                ))}
-                <th className="text-left font-semibold px-5 py-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((row, i) => (
-                <tr
-                  key={i}
-                  className="border-b border-gray-100 last:border-0 hover:bg-blue-50/50 transition"
-                >
-                  {columns.map((c) => (
-                    <td key={c.key} className="px-5 py-3.5">
-                      {c.key === columns[0].key ? (
-                        <span className="inline-block bg-indigo-50 font-medium text-md px-2.5 py-1 rounded-md">
-                          {row[c.key]}
-                        </span>
-                      ) : (
-                        <span className="text-slate-800">{row[c.key]}</span>
-                      )}
-                    </td>
-                  ))}
-                  <td className="px-5 py-3.5">
-                    <button
-                      onClick={() => onSelect(row)}
-                      className="bg-indigo-50 text-blue-600 font-semibold text-sm px-4 py-1.5 rounded-md hover:bg-indigo-100 transition"
-                    >
-                      Select
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {filtered.length === 0 && (
-                <tr>
-                  <td
-                    colSpan={columns.length + 1}
-                    className="text-center text-gray-400 py-8"
-                  >
-                    No results found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+        )}
       </div>
-    </div>
-  );
-}
-
-
-function Row({ label, value }: { label: string; value?: string }) {
-  return (
-    <div className="flex items-center justify-between text-sm">
-      <span className="text-gray-500">{label}</span>
-      <span className="font-medium text-slate-800">{value || "—"}</span>
     </div>
   );
 }
@@ -196,8 +211,15 @@ type AddAccountFlowProps = {
   onClose?: () => void;
 };
 
+type Step =
+  | "form"
+  | "accountTypeList"
+  | "subProductList"
+  | "savingAccount"
+  | "success";
+
 export default function AddAccountFlow({ onClose = () => { } }: AddAccountFlowProps) {
-  const [step, setStep] = useState<"form" | "accountTypeList" | "subProductList" | "success">("form");
+  const [step, setStep] = useState<Step>("form");
   const [formData, setFormData] = useState<FormData>({
     accountType: "",
     accountCode: "",
@@ -228,17 +250,15 @@ export default function AddAccountFlow({ onClose = () => { } }: AddAccountFlowPr
     setStep("form");
   };
 
-  const subProductRows: ListRow[] =
-    (SUB_PRODUCTS[formData.accountCode as keyof typeof SUB_PRODUCTS] as ListRow[] | undefined) || DEFAULT_SUB_PRODUCTS;
+  const subProductRows: ListRow[] = SUB_PRODUCTS[formData.accountCode] || DEFAULT_SUB_PRODUCTS;
 
-  const fields = [
+  const fields: FieldConfig[] = [
     {
       key: "accountType",
       label: "Account Type",
       labelHi: "खाते प्रकार",
       placeholder: "Select Account Type",
       icon: MapPin,
-      hasMenu: true,
       readOnly: true,
       onMenuClick: () => setStep("accountTypeList"),
     },
@@ -248,7 +268,6 @@ export default function AddAccountFlow({ onClose = () => { } }: AddAccountFlowPr
       labelHi: "वर्णन",
       placeholder: "Description",
       icon: AlignLeft,
-      hasMenu: false,
     },
     {
       key: "productType",
@@ -256,7 +275,6 @@ export default function AddAccountFlow({ onClose = () => { } }: AddAccountFlowPr
       labelHi: "उत्पादनाचा प्रकार",
       placeholder: "Select Product Type",
       icon: MapPin,
-      hasMenu: true,
       readOnly: true,
       onMenuClick: () => setStep("subProductList"),
     },
@@ -266,7 +284,6 @@ export default function AddAccountFlow({ onClose = () => { } }: AddAccountFlowPr
       labelHi: "वर्णन",
       placeholder: "Description",
       icon: AlignLeft,
-      hasMenu: false,
     },
   ];
 
@@ -278,10 +295,11 @@ export default function AddAccountFlow({ onClose = () => { } }: AddAccountFlowPr
 
   return (
     <>
-      {/* Base form modal — stays mounted underneath the list/success modals */}
+      {/* Base form modal — stays mounted underneath the list/saving-account/success modals */}
       <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
         <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl p-8 relative">
           <button
+            type="button"
             onClick={onClose}
             className="absolute top-6 right-6 w-9 h-9 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition"
           >
@@ -289,78 +307,41 @@ export default function AddAccountFlow({ onClose = () => { } }: AddAccountFlowPr
           </button>
 
           <div className="flex items-start gap-3 mb-6">
-            <div className="relative w-11 h-11 flex-shrink-0">
-              <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center absolute top-0 left-0">
-                <User size={16} className="text-white" fill="white" />
-              </div>
-              <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center absolute bottom-0 right-0 border-2 border-white">
-                <Plus size={12} className="text-white" strokeWidth={3} />
-              </div>
-            </div>
+            <Image src="/add-icn.png" alt="Account Icon" width={50} height={50} />
+
             <div>
               <h2 className="text-2xl font-bold text-slate-900">
-                Add Account <span className="font-bold text-indigo-600">/ खाते जोडा</span>
+                Add Account <span className="font-bold text-[#64748B]">/ खाते जोडा</span>
               </h2>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-gray-700">
                 Add some basic information related to the Employee /{" "}
                 <span>कर्मचाऱ्याशी संबंधित काही मूलभूत माहिती</span>
               </p>
             </div>
           </div>
-
-          <div className="border-2 border-blue-500 rounded-xl p-6 space-y-5">
-            {fields.map((field) => {
-              const Icon = field.icon;
-              return (
-                <div key={field.key}>
-                  <label className="block text-sm font-semibold text-slate-900 mb-1.5">
-                    {field.label}{" "}
-                    <span className="font-normal text-gray-500">
-                      / {field.labelHi}
-                    </span>
-                    <span className="text-red-500 ml-0.5">*</span>
-                  </label>
-                  <div className="flex gap-2">
-                    <div
-                      onClick={field.onMenuClick}
-                      className={`flex items-center gap-2 flex-1 border border-gray-300 rounded-lg px-3.5 py-3 focus-within:border-blue-500 ${field.readOnly ? "cursor-pointer" : ""
-                        }`}
-                    >
-                      <Icon size={18} className="text-gray-400 flex-shrink-0" />
-                      <input
-                        type="text"
-                        readOnly={field.readOnly}
-                        placeholder={field.placeholder}
-                        value={formData[field.key as keyof FormData]}
-                        onChange={field.readOnly ? undefined : handleChange(field.key as keyof FormData)}
-                        className="w-full outline-none text-sm placeholder-gray-400 text-gray-900 font-medium bg-transparent cursor-pointer"
-                      />
-                    </div>
-                    {field.hasMenu && (
-                      <button
-                        type="button"
-                        onClick={field.onMenuClick}
-                        className="w-11 h-11 flex-shrink-0 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 hover:bg-indigo-100 transition"
-                      >
-                        <MoreVertical size={18} />
-                      </button>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+          <div className="bg-white rounded-[20px] border-x border-b border-t-4 border-[#0A66D8] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+            {fields.map((field) => (
+              <FormField
+                key={field.key}
+                field={field}
+                value={formData[field.key]}
+                onChange={handleChange(field.key)}
+              />
+            ))}
           </div>
 
           <div className="flex justify-end gap-3 mt-6">
             <button
+              type="button"
               onClick={onClose}
               className="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-blue-500 text-blue-600 font-medium text-sm hover:bg-blue-50 transition"
             >
               Cancel <X size={16} />
             </button>
             <button
+              type="button"
               disabled={!isFormValid}
-              onClick={() => setStep("success")}
+              onClick={() => setStep("savingAccount")}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm transition ${isFormValid
                   ? "bg-blue-600 text-white hover:bg-blue-700"
                   : "bg-gray-200 text-gray-400 cursor-not-allowed"
@@ -400,13 +381,17 @@ export default function AddAccountFlow({ onClose = () => { } }: AddAccountFlowPr
         />
       )}
 
-      {/* Success overlay after submit */}
-      {step === "success" && (
-        <SuccessModal
-          data={formData}
+      {/* Add Saving Account overlay — shown after Submit, before the success screen */}
+      {step === "savingAccount" && (
+        <AddSavingAccountModal
           onClose={() => setStep("form")}
-          onDone={onClose}
+          onSave={() => setStep("success")}
         />
+      )}
+
+      {/* Success overlay after the saving account details are saved */}
+      {step === "success" && (
+        <SuccessModal data={formData} onClose={() => setStep("form")} onDone={onClose} />
       )}
     </>
   );
