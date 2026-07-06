@@ -7,23 +7,23 @@ import {
 export const railIcons = [
   {
     id: "home",
-    icon: "/sidebar/home.png",
+    icon: "/home.png",
   },
   {
     id: "briefcase",
-    icon: "/sidebar/desk.png",
+    icon: "/desk.png",
   },
   {
     id: "clipboard",
-    icon: "/sidebar/note.png",
+    icon: "/note.png",
   },
   {
     id: "calculator",
-    icon: "/sidebar/calender.png",
+    icon: "/calender.png",
   },
   {
     id: "settings",
-    icon: "/sidebar/setting.png",
+    icon: "/setting.png",
   },
 ];
 
