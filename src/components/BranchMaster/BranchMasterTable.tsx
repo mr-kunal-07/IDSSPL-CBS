@@ -280,13 +280,13 @@ export default function BranchMasterTable({
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-[#0B63C1]">
-              <th className="text-left text-[15px] font-semibold text-white px-4 py-3 whitespace-nowrap">Sr No.</th>
-              <th className="text-left text-[15px] font-semibold text-white px-4 py-3 whitespace-nowrap">Actions</th>
+              <th className="text-left text-[15px] font-medium text-white px-4 py-3 whitespace-nowrap">Sr No.</th>
+              <th className="text-left text-[15px] font-medium text-white px-4 py-3 whitespace-nowrap">Actions</th>
               {columns.map((col) => (
                 <th
                   key={col.key}
                   onClick={() => handleSort(col)}
-                  className="text-left text-[15px] font-semibold text-white px-4 py-3 whitespace-nowrap cursor-pointer select-none"
+                  className="text-left text-[15px] font-medium text-white px-4 py-3 whitespace-nowrap cursor-pointer select-none"
                 >
                   <SortableHeader
                     label={col.label}
@@ -308,7 +308,7 @@ export default function BranchMasterTable({
               sortedRows.map((r) => (
                 <tr key={r.sr} className="bg-white hover:bg-slate-50 transition-colors">
                   <td className="px-4 py-3 align-middle">
-                    <span className="inline-flex items-center justify-center px-3 py-1.5 bg-indigo-50 rounded-md text-blue-700 text-sm font-semibold">
+                    <span className="inline-flex items-center justify-center px-3 py-1.5 bg-indigo-50 rounded-md text-blue-700 text-sm font-medium">
                       {r.sr}
                     </span>
                   </td>
