@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "react-toastify";
 import {
   User,
   CreditCard,
@@ -66,32 +67,38 @@ const AddSI = ({ onClose, onSave, debitAccountCode = "022010014255", debitName =
   });
 
   const [isValidated, setIsValidated] = useState(false);
+  const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [showSuccess, setShowSuccess] = useState(false);
 
 const grid4 =
   "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-x-4 gap-y-5";
-  const isFormComplete = () =>
-    account.creditAccountCode.trim() !== "" &&
-    account.creditName.trim() !== "" &&
-    si.startDate.trim() !== "" &&
-    si.endDate.trim() !== "" &&
-    si.nextDueDate.trim() !== "" &&
-    si.maturityDate.trim() !== "" &&
-    si.debitParticular.trim() !== "" &&
-    si.creditParticular.trim() !== "" &&
-    si.amount.trim() !== "" &&
-    si.frequency.trim() !== "";
 
-  const markDirty = () => {
-    if (isValidated) setIsValidated(false);
+  const markDirty = (field: string) => {
+    setIsValidated(false);
+    setErrors((e) => (e[field] ? { ...e, [field]: false } : e));
   };
 
   const handleValidate = () => {
-    if (!isFormComplete()) {
-      window.alert("Please fill all required fields before validating.");
-      return;
+    const newErrors: Record<string, boolean> = {
+      creditAccountCode: account.creditAccountCode.trim() === "",
+      creditName: account.creditName.trim() === "",
+      startDate: si.startDate.trim() === "",
+      endDate: si.endDate.trim() === "",
+      nextDueDate: si.nextDueDate.trim() === "",
+      maturityDate: si.maturityDate.trim() === "",
+      debitParticular: si.debitParticular.trim() === "",
+      creditParticular: si.creditParticular.trim() === "",
+      amount: si.amount.trim() === "",
+      frequency: si.frequency.trim() === "",
+    };
+    setErrors(newErrors);
+    const hasErrors = Object.values(newErrors).some(Boolean);
+    setIsValidated(!hasErrors);
+    if (hasErrors) {
+      toast.error("Please fill all required fields before validating.");
+    } else {
+      toast.success("All fields validated successfully.");
     }
-    setIsValidated(true);
   };
 
   const handleSave = () => {
@@ -132,31 +139,32 @@ const grid4 =
       hideFooter
     >
       <SectionCard titleEn="Account Details" titleHi="खात्याचा तपशील" icon={<User size={16} />}>
-        <div className={`${grid4} mt-2`}>
+        <div className={`${grid4} mt-0`}>
           <FieldShell label="Debit Account Code" labelHi="नावे खाते संकेत" required>
             <TextInput icon={<CreditCard size={16} />} value={account.debitAccountCode} onChange={() => {}} readOnly />
           </FieldShell>
           <FieldShell label="Name" labelHi="नाव" required>
             <TextInput icon={<User size={16} />} value={account.debitName} onChange={() => {}} readOnly />
           </FieldShell>
-          <FieldShell label="Credit Account Code" labelHi="जमा खात्याचा कोड" required>
+          <FieldShell label="Credit Account Code" labelHi="जमा खात्याचा कोड" required noWrap error={errors.creditAccountCode}>
             <div className="flex items-center gap-2 w-full">
               <div className="flex-1">
                 <TextInput
                   icon={<CreditCard size={16} />}
                   value={account.creditAccountCode}
                   onChange={(v) => {
-                    markDirty();
+                    markDirty("creditAccountCode");
                     setAccount((a) => ({ ...a, creditAccountCode: v }));
                   }}
                   placeholder="Enter Credit Account Code"
+                  error={errors.creditAccountCode}
                 />
               </div>
 
               <LookupButton
                 items={CREDIT_ACCOUNT_CODES}
                 onPick={(code) => {
-                  markDirty();
+                  markDirty("creditAccountCode");
                   setAccount((a) => ({
                     ...a,
                     creditAccountCode: code,
@@ -165,65 +173,70 @@ const grid4 =
               />
             </div>
           </FieldShell>
-          <FieldShell label="Name" labelHi="नाव" required>
+          <FieldShell label="Name" labelHi="नाव" required error={errors.creditName}>
             <TextInput
               icon={<User size={16} />}
               value={account.creditName}
               onChange={(v) => {
-                markDirty();
+                markDirty("creditName");
                 setAccount((a) => ({ ...a, creditName: v }));
               }}
               placeholder="Enter Name"
+              error={errors.creditName}
             />
           </FieldShell>
         </div>
       </SectionCard>
 
       <SectionCard titleEn="SI Details" titleHi="SI तपशील" icon={<Repeat size={16} />}>
-        <div className={`${grid4} mt-2`}>
-          <FieldShell label="Start Date" labelHi="सुरुवात तारीख" required>
-            <DateInput value={si.startDate} onChange={(v) => { markDirty(); setSi((s) => ({ ...s, startDate: v })); }} />
+        <div className={`${grid4} mt-0`}>
+          <FieldShell label="Start Date" labelHi="सुरुवात तारीख" required error={errors.startDate}>
+            <DateInput value={si.startDate} onChange={(v) => { markDirty("startDate"); setSi((s) => ({ ...s, startDate: v })); }} error={errors.startDate} />
           </FieldShell>
-          <FieldShell label="End Date" labelHi="समाप्तीची तारीख" required>
-            <DateInput value={si.endDate} onChange={(v) => { markDirty(); setSi((s) => ({ ...s, endDate: v })); }} />
+          <FieldShell label="End Date" labelHi="समाप्तीची तारीख" required error={errors.endDate}>
+            <DateInput value={si.endDate} onChange={(v) => { markDirty("endDate"); setSi((s) => ({ ...s, endDate: v })); }} error={errors.endDate} />
           </FieldShell>
-          <FieldShell label="Next Due Date" labelHi="पुढील देय तारीख" required>
-            <DateInput value={si.nextDueDate} onChange={(v) => { markDirty(); setSi((s) => ({ ...s, nextDueDate: v })); }} />
+          <FieldShell label="Next Due Date" labelHi="पुढील देय तारीख" required error={errors.nextDueDate}>
+            <DateInput value={si.nextDueDate} onChange={(v) => { markDirty("nextDueDate"); setSi((s) => ({ ...s, nextDueDate: v })); }} error={errors.nextDueDate} />
           </FieldShell>
-          <FieldShell label="Maturity Date" labelHi="परिपक्वता तारीख" required>
-            <DateInput value={si.maturityDate} onChange={(v) => { markDirty(); setSi((s) => ({ ...s, maturityDate: v })); }} />
+          <FieldShell label="Maturity Date" labelHi="परिपक्वता तारीख" required error={errors.maturityDate}>
+            <DateInput value={si.maturityDate} onChange={(v) => { markDirty("maturityDate"); setSi((s) => ({ ...s, maturityDate: v })); }} error={errors.maturityDate} />
           </FieldShell>
-          <FieldShell label="Debit Acc. Particular" labelHi="नावे खात्याचा तपशील" required>
+          <FieldShell label="Debit Acc. Particular" labelHi="नावे खात्याचा तपशील" required noWrap error={errors.debitParticular}>
             <TextInput
               icon={<FileText size={16} />}
               value={si.debitParticular}
-              onChange={(v) => { markDirty(); setSi((s) => ({ ...s, debitParticular: v })); }}
+              onChange={(v) => { markDirty("debitParticular"); setSi((s) => ({ ...s, debitParticular: v })); }}
               placeholder="Enter Debit Account Particular"
+              error={errors.debitParticular}
             />
           </FieldShell>
-          <FieldShell label="Credit Acc. Particular" labelHi="जमा खात्याचा तपशील" required>
+          <FieldShell label="Credit Acc. Particular" labelHi="जमा खात्याचा तपशील" required noWrap error={errors.creditParticular}>
             <TextInput
               icon={<FileText size={16} />}
               value={si.creditParticular}
-              onChange={(v) => { markDirty(); setSi((s) => ({ ...s, creditParticular: v })); }}
+              onChange={(v) => { markDirty("creditParticular"); setSi((s) => ({ ...s, creditParticular: v })); }}
               placeholder="Enter Credit Account Particular"
+              error={errors.creditParticular}
             />
           </FieldShell>
-          <FieldShell label="Amount" labelHi="रक्कम" required>
+          <FieldShell label="Amount" labelHi="रक्कम" required error={errors.amount}>
             <TextInput
               icon={<IndianRupee size={16} />}
               value={si.amount}
-              onChange={(v) => { markDirty(); setSi((s) => ({ ...s, amount: v })); }}
+              onChange={(v) => { markDirty("amount"); setSi((s) => ({ ...s, amount: v })); }}
               placeholder="Enter Amount"
+              error={errors.amount}
             />
           </FieldShell>
-          <FieldShell label="SI Frequency" labelHi="SI वारंवारता" required>
+          <FieldShell label="SI Frequency" labelHi="SI वारंवारता" required error={errors.frequency}>
             <SelectInput
               icon={<Calendar size={16} />}
               value={si.frequency}
-              onChange={(v) => { markDirty(); setSi((s) => ({ ...s, frequency: v })); }}
+              onChange={(v) => { markDirty("frequency"); setSi((s) => ({ ...s, frequency: v })); }}
               options={SI_FREQUENCIES}
               placeholder="Select SI Frequency"
+              error={errors.frequency}
             />
           </FieldShell>
         </div>
@@ -233,12 +246,7 @@ const grid4 =
         <button
           type="button"
           onClick={handleValidate}
-          disabled={isValidated || !isFormComplete()}
-          className={`flex items-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${
-            isValidated || !isFormComplete()
-              ? "cursor-not-allowed bg-slate-100 text-slate-400"
-              : "bg-blue-600 text-white hover:bg-blue-700"
-          }`}
+          className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
         >
           Validate <span>✓</span>
         </button>

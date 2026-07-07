@@ -46,14 +46,14 @@ const StopSI = ({ onClose, onSave, data }: StopSIProps) => {
       hideFooter
     >
       <SectionCard titleEn="Account Details" titleHi="खात्याचा तपशील" icon={<User size={16} />}>
-        <div className={`${grid4} mt-2`}>
+        <div className={`${grid4} mt-0`}>
           <FieldShell label="Debit Account Code" labelHi="नावे खाते संकेत" required>
             <TextInput icon={<CreditCard size={16} />} value={data.debitAccountCode} onChange={() => {}} readOnly />
           </FieldShell>
           <FieldShell label="Name" labelHi="नाव" required>
             <TextInput icon={<User size={16} />} value={data.debitName} onChange={() => {}} readOnly />
           </FieldShell>
-          <FieldShell label="Credit Account Code" labelHi="जमा खात्याचा कोड" required>
+          <FieldShell label="Credit Account Code" labelHi="जमा खात्याचा कोड" required noWrap>
             <TextInput icon={<CreditCard size={16} />} value={data.creditAccountCode} onChange={() => {}} readOnly />
           </FieldShell>
           <FieldShell label="Name" labelHi="नाव" required>
@@ -63,7 +63,7 @@ const StopSI = ({ onClose, onSave, data }: StopSIProps) => {
       </SectionCard>
 
       <SectionCard titleEn="SI Details" titleHi="SI तपशील" icon={<Repeat size={16} />}>
-        <div className={`${grid4} mt-2`}>
+        <div className={`${grid4} mt-0`}>
           <FieldShell label="Start Date" labelHi="सुरुवात तारीख" required>
             <TextInput icon={<Calendar size={16} />} value={data.startDate} onChange={() => {}} readOnly />
           </FieldShell>

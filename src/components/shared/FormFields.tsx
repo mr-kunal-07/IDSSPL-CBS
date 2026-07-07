@@ -12,6 +12,7 @@ export interface FieldShellProps {
   children: ReactNode;
   className?: string;
   variant?: "default" | "large";
+  noWrap?: boolean;
 }
 
 export const FieldShell = ({
@@ -22,16 +23,23 @@ export const FieldShell = ({
   children,
   className = "",
   variant = "default",
+  noWrap = false,
 }: FieldShellProps) => (
   <div className={className}>
     <label
-      className={`mb-1.5 block text-black ${
+      className={`mb-0.5 flex items-end text-black ${
         variant === "large"
-          ? "text-[16px] font-semibold"
-          : "text-sm font-medium"
+          ? "min-h-10 text-[16px] font-semibold"
+          : noWrap
+            ? "min-h-8 text-xs font-medium"
+            : "min-h-8 text-sm font-medium"
       }`}
     >
-      <span className="inline-flex flex-wrap items-center gap-1">
+      <span
+        className={`flex items-center gap-1 ${
+          noWrap ? "flex-nowrap whitespace-nowrap" : "flex-wrap"
+        }`}
+      >
         <span>{label}</span>
         {labelHi && (
           <span className={variant === "large" ? "font-medium text-gray-500" : "text-slate-600"}>
@@ -195,7 +203,7 @@ export const SectionCard = ({
   children,
 }: SectionCardProps) => (
   <div className="bg-white rounded-[20px] border-x border-b-2 border-t-4 border-[#0A66D8] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)] no-scrollbar">
-    <div className="mb-5 flex items-center gap-3">
+    <div className="mb-3 flex items-center gap-3 border-b border-blue-100 pb-3">
       {icon && (
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#EEF4FF] text-[#0A66D8]">
           {icon}
