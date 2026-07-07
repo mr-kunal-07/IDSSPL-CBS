@@ -60,7 +60,7 @@ interface TextFieldProps {
 function TextField({ labelEn, labelHi, icon: Icon, placeholder, value, onChange, hasError, readOnly = false, trailing }: TextFieldProps) {
   return (
     <div className="mb-4 last:mb-0">
-      <label className="mb-1.5 block text-[14px] font-medium text-black">
+      <label className="mb-1.5 block text-[13px] font-medium text-black">
         {labelEn} <span className="font-medium text-gray-500">/ {labelHi}</span>
         <span className="text-red-500">*</span>
       </label>
@@ -109,7 +109,7 @@ interface SelectFieldProps {
 function SelectField({ labelEn, labelHi, icon: Icon, placeholder, value, options, onChange, hasError, readOnly = false, trailing }: SelectFieldProps) {
   return (
     <div className="mb-4 last:mb-0">
-      <label className="mb-1.5 block text-[16px] font-medium text-black">
+      <label className="mb-1.5 block text-[13px] font-medium text-black">
         {labelEn} <span className="font-medium text-gray-500">/ {labelHi}</span>
         <span className="text-red-500">*</span>
       </label>
@@ -154,7 +154,7 @@ function SectionHeader({ icon: Icon, titleEn, titleHi }: SectionHeaderProps) {
       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#EEF4FF] text-[#0B63C1]">
         <Icon size={18} />
       </div>
-      <h3 className="text-lg font-bold text-[#1C398E]">
+      <h3 className="text-lg font-bold text-black">
         {titleEn} <span className="font-bold text-[#64748B]">/ {titleHi}</span>
       </h3>
     </div>
@@ -249,7 +249,7 @@ export default function BranchChequeBookLotModal({ open, initialData = emptyCheq
           </div>
         </div>
 
-        <div className="mt-4 bg-white rounded-[20px] border border-[#0A66D8] p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+        <div className="mt-4 bg-white rounded-[20px] border-x border-b border-t-4 border-[#0A66D8] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
           <SectionHeader icon={IdCard} titleEn="Cheque Details" titleHi="तपशील तपासा" />
           <div className="grid grid-cols-1 gap-x-4 md:grid-cols-3">
             <SelectField labelEn="Cheque Type" labelHi="चेक प्रकार" icon={IdCard} placeholder="Select Cheque Type" value={formData.chequeType} options={CHEQUE_TYPE_OPTIONS} onChange={(v) => handleChange("chequeType", v)} hasError={errors.chequeType} />
@@ -263,17 +263,17 @@ export default function BranchChequeBookLotModal({ open, initialData = emptyCheq
         </div>
 
         <div className="flex items-center justify-end gap-3 border-t border-slate-100 pt-4 ">
-          <button type="button" onClick={handleValidate} className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700">
+          <button type="button" onClick={handleValidate} className="flex items-center gap-1.5 rounded-lg bg-[#0B63C1] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700">
             Validate <Check size={16} />
           </button>
-          <button type="button" onClick={onClose} className="flex items-center gap-1.5 rounded-lg border border-blue-500 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50">
+          <button type="button" onClick={onClose} className="flex items-center gap-1.5 rounded-lg border border-blue-500 px-4 py-2.5 text-sm font-medium text-[#0B63C1] transition-colors hover:bg-blue-50">
             Cancel <X size={16} />
           </button>
           <button
             type="button"
             disabled={!validated}
             onClick={handleSave}
-            className={`flex items-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${validated ? "bg-blue-100 text-blue-600 hover:bg-blue-200" : "cursor-not-allowed bg-gray-100 text-gray-400"
+            className={`flex items-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${validated ? "bg-blue-100 text-[#0B63C1] hover:bg-blue-200" : "cursor-not-allowed bg-gray-100 text-gray-400"
               }`}
           >
             Save <ChevronDown size={16} />
