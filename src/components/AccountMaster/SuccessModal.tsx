@@ -56,7 +56,7 @@ function SuccessIcon() {
       <span className="absolute h-[105px] w-[105px] rounded-full border border-dashed border-[#3F73F5]/20" />
 
       {[
-        "top-0 left-1/2",
+        "top-0 left-1/2",y
         "top-4 left-3",
         "top-6 right-3",
         "left-0 top-1/2",

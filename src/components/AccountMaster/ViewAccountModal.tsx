@@ -146,20 +146,48 @@ interface ViewAccountModalProps {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Date helpers — power the native calendar picker on date fields     */
+/* ------------------------------------------------------------------ */
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+// "23-May-2026" -> "2026-05-23" (what <input type="date"> needs)
+function toISODate(value?: string | number): string {
+  if (!value) return "";
+  const str = String(value);
+  const match = str.match(/^(\d{1,2})-([A-Za-z]{3,})-(\d{4})$/);
+  if (!match) return "";
+  const day = match[1].padStart(2, "0");
+  const monthIdx = MONTHS.findIndex((m) => m.toLowerCase() === match[2].slice(0, 3).toLowerCase());
+  if (monthIdx === -1) return "";
+  const month = String(monthIdx + 1).padStart(2, "0");
+  return `${match[3]}-${month}-${day}`;
+}
+
+// "2026-05-23" -> "23-May-2026" (what the rest of the UI displays)
+function fromISODate(iso: string): string {
+  if (!iso) return "";
+  const [y, mo, d] = iso.split("-");
+  const monthIdx = parseInt(mo, 10) - 1;
+  if (Number.isNaN(monthIdx) || monthIdx < 0 || monthIdx > 11) return iso;
+  return `${parseInt(d, 10)}-${MONTHS[monthIdx]}-${y}`;
+}
+
+/* ------------------------------------------------------------------ */
 /*  Primitive: BilingualLabel — single line, no wrap                   */
 /* ------------------------------------------------------------------ */
 
 function BilingualLabel({ en, mr, required }: { en: string; mr?: string; required?: boolean }) {
   return (
     <label
-      className="mb-1.5 block truncate whitespace-nowrap text-[13px] font-medium text-slate-700"
+      className="mb-2.5 block truncate whitespace-nowrap text-base font-medium leading-5 text-[#101828]"
       title={mr ? `${en} / ${mr}` : en}
     >
       {en}
       {mr && (
         <>
           <span className="text-slate-400"> / </span>
-          <span className="text-gray-500">{mr}</span>
+          <span className="text-[#64748B]">{mr}</span>
         </>
       )}
       {required && <span className="ml-0.5 text-rose-500">*</span>}
@@ -200,6 +228,7 @@ function Field({
   onMenuClick,
 }: FieldProps) {
   const isCurrency = type === "currency";
+  const isDate = type === "date";
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(value !== undefined ? String(value) : "");
 
@@ -219,12 +248,12 @@ function Field({
   };
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full min-w-0 flex-col">
       <BilingualLabel en={labelEn} mr={labelMr} required={required} />
       <div className="flex flex-1 items-stretch gap-2">
         <div
-          className={`flex flex-1 items-center rounded-lg border bg-slate-50 transition ${
-            isEditing ? "border-blue-500 ring-1 ring-blue-500/40 bg-white" : "border-slate-200 hover:border-slate-300"
+          className={`flex h-12 flex-1 min-w-0 items-center gap-2 rounded-xl border shadow-[0_1px_0.5px_0.05px_rgba(29,41,61,0.02)] transition ${
+            isEditing ? "border-blue-500 ring-1 ring-blue-500/40 bg-white" : "border-[#737373] bg-[#F3F3F3] hover:border-[#525252]"
           }`}
         >
           {Icon && (
@@ -233,25 +262,42 @@ function Field({
             </span>
           )}
           {isEditing ? (
-            <input
-              autoFocus
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              onBlur={commit}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") commit();
-                if (e.key === "Escape") setIsEditing(false);
-              }}
-              className={`w-full flex-1 bg-transparent py-2.5 pr-3 text-[14px] text-slate-700 outline-none ${
-                !Icon ? "pl-3" : ""
-              }`}
-            />
+            isDate ? (
+              <input
+                autoFocus
+                type="date"
+                value={toISODate(draft)}
+                onChange={(e) => setDraft(fromISODate(e.target.value))}
+                onBlur={commit}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") commit();
+                  if (e.key === "Escape") setIsEditing(false);
+                }}
+                className={`w-full flex-1 bg-transparent py-3 pr-3.5 text-[14px] text-[#101828] outline-none ${
+                  !Icon ? "pl-3.5" : ""
+                }`}
+              />
+            ) : (
+              <input
+                autoFocus
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                onBlur={commit}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") commit();
+                  if (e.key === "Escape") setIsEditing(false);
+                }}
+                className={`w-full flex-1 bg-transparent py-3 pr-3.5 text-[14px] text-[#101828] outline-none ${
+                  !Icon ? "pl-3.5" : ""
+                }`}
+              />
+            )
           ) : (
             <button
               type="button"
               onClick={startEditing}
-              className={`flex-1 truncate py-2.5 pr-3 text-left text-[14px] ${!Icon ? "pl-3" : ""} ${
-                value !== undefined && value !== "" ? "text-slate-700" : "text-slate-300"
+              className={`flex-1 truncate py-3 pr-3.5 text-left text-[14px] ${!Icon ? "pl-3.5" : ""} ${
+                value !== undefined && value !== "" ? "text-[#101828]" : "text-slate-300"
               }`}
             >
               {displayValue}
@@ -263,13 +309,13 @@ function Field({
             type="button"
             onClick={onMenuClick}
             aria-label={`More options for ${labelEn}`}
-            className={`flex w-9 shrink-0 items-center justify-center rounded-lg border transition ${
+            className={`flex h-12 w-[60px] shrink-0 items-center justify-center gap-3 rounded-lg transition ${
               menuActive
-                ? "border-blue-200 bg-blue-50 text-blue-500 hover:bg-blue-100"
-                : "border-slate-200 bg-white text-slate-400 hover:bg-slate-50 hover:text-slate-600"
+                ? "bg-blue-50 text-blue-500 hover:bg-blue-100"
+                : "bg-[#E2E8F0] text-slate-500 hover:bg-slate-300/70"
             }`}
           >
-            <MoreVertical className="h-4 w-4" />
+            <MoreVertical className="h-5 w-5" />
           </button>
         )}
       </div>
@@ -331,7 +377,7 @@ function SelectField({
   // Dropdown mode (real select-like behavior with a fixed options list)
   if (options && options.length > 0) {
     return (
-      <div className="flex h-full flex-col" ref={containerRef}>
+      <div className="flex h-full min-w-0 flex-col" ref={containerRef}>
         <BilingualLabel en={labelEn} mr={labelMr} required={required} />
         <div className="relative flex-1">
           <button
@@ -339,8 +385,8 @@ function SelectField({
             onClick={() => setIsOpen((prev) => !prev)}
             aria-haspopup="listbox"
             aria-expanded={isOpen}
-            className={`flex h-full w-full items-center rounded-lg border bg-slate-50 text-left transition ${
-              isOpen ? "border-blue-500 ring-1 ring-blue-500/40 bg-white" : "border-slate-200 hover:border-slate-300"
+            className={`flex h-12 w-full items-center gap-2 rounded-xl border text-left shadow-[0_1px_0.5px_0.05px_rgba(29,41,61,0.02)] transition ${
+              isOpen ? "border-blue-500 ring-1 ring-blue-500/40 bg-white" : "border-[#737373] bg-[#F3F3F3] hover:border-[#525252]"
             }`}
           >
             {Icon && (
@@ -348,11 +394,11 @@ function SelectField({
                 <Icon className="h-4 w-4" strokeWidth={1.75} />
               </span>
             )}
-            <span className={`flex-1 truncate py-2.5 text-[14px] ${!Icon ? "pl-3" : ""} ${value ? "text-slate-700" : "text-slate-300"}`}>
+            <span className={`flex-1 truncate py-2.5 text-[14px] ${!Icon ? "pl-3" : ""} ${value ? "text-[#101828]" : "text-slate-300"}`}>
               {value || "\u2014"}
             </span>
             <ChevronDown
-              className={`mr-3 h-4 w-4 shrink-0 text-slate-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
+              className={`mr-3 h-5 w-5 shrink-0 text-slate-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
               strokeWidth={1.75}
             />
           </button>
@@ -390,11 +436,11 @@ function SelectField({
 
   // Fallback: inline-editable text (unchanged legacy behavior)
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full min-w-0 flex-col">
       <BilingualLabel en={labelEn} mr={labelMr} required={required} />
       <div
-        className={`flex flex-1 items-center rounded-lg border bg-slate-50 transition ${
-          isEditing ? "border-blue-500 ring-1 ring-blue-500/40 bg-white" : "border-slate-200 hover:border-slate-300"
+        className={`flex h-12 flex-1 min-w-0 items-center gap-2 rounded-xl border shadow-[0_1px_0.5px_0.05px_rgba(29,41,61,0.02)] transition ${
+          isEditing ? "border-blue-500 ring-1 ring-blue-500/40 bg-white" : "border-[#737373] bg-[#F3F3F3] hover:border-[#525252]"
         }`}
       >
         {Icon && (
@@ -412,7 +458,7 @@ function SelectField({
               if (e.key === "Enter") commit();
               if (e.key === "Escape") setIsEditing(false);
             }}
-            className={`w-full flex-1 bg-transparent py-2.5 text-[14px] text-slate-700 outline-none ${
+            className={`w-full flex-1 bg-transparent py-2.5 text-[14px] text-[#101828] outline-none ${
               !Icon ? "pl-3" : ""
             }`}
           />
@@ -420,12 +466,12 @@ function SelectField({
           <button
             type="button"
             onClick={startEditing}
-            className={`flex-1 truncate py-2.5 text-left text-[14px] text-slate-700 ${!Icon ? "pl-3" : ""}`}
+            className={`flex-1 truncate py-2.5 text-left text-[14px] text-[#101828] ${!Icon ? "pl-3" : ""}`}
           >
             {value || "\u2014"}
           </button>
         )}
-        <ChevronDown className="mr-3 h-4 w-4 shrink-0 text-slate-300" strokeWidth={1.75} />
+        <ChevronDown className="mr-3 h-5 w-5 shrink-0 text-slate-300" strokeWidth={1.75} />
       </div>
     </div>
   );
@@ -433,9 +479,9 @@ function SelectField({
 
 function SrNoField({ value }: { value?: string | number }) {
   return (
-    <div className="flex h-full flex-col">
-      <span className="mb-1.5 block truncate whitespace-nowrap text-[13px] font-medium text-slate-700">Sr No</span>
-      <div className="flex flex-1 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 py-2.5 text-[14px] text-slate-700">
+    <div className="flex h-full min-w-0 flex-col">
+      <span className="mb-2.5 block truncate whitespace-nowrap text-base font-medium leading-5 text-[#101828]">Sr No</span>
+      <div className="flex h-12 flex-1 items-center justify-center rounded-xl border border-[#737373] bg-[#F3F3F3] shadow-[0_1px_0.5px_0.05px_rgba(29,41,61,0.02)] text-[14px] text-[#101828]">
         {value ?? "\u2014"}
       </div>
     </div>
@@ -445,7 +491,7 @@ function SrNoField({ value }: { value?: string | number }) {
 function FieldGrid({ children, cols = 4 }: { children: React.ReactNode; cols?: 3 | 4 }) {
   return (
     <div
-      className={`grid grid-cols-1 gap-x-6 gap-y-5 rounded-xl border border-blue-400/40 border-t-4 border-t-blue-600 p-5 sm:grid-cols-2 ${
+      className={`grid grid-cols-1 gap-x-6 gap-y-5 rounded-xl border border-t-4 border-[#0B63C1] shadow-[0_1px_5px_rgba(3,0,55,0.08)] p-5 sm:grid-cols-2 [&>*]:min-w-0 ${
         cols === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4"
       }`}
     >
@@ -454,6 +500,8 @@ function FieldGrid({ children, cols = 4 }: { children: React.ReactNode; cols?: 3
   );
 }
 
+/* Single line, vertically centered in the full cell height so it sits
+   dead-center next to its neighbors instead of clinging to the top. */
 function RadioGroup({
   labelEn,
   labelMr,
@@ -466,14 +514,14 @@ function RadioGroup({
   onChange?: (value: "Day" | "Month") => void;
 }) {
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full min-w-0 flex-col justify-center">
       <div className="flex items-center justify-between gap-4">
-        <span className="whitespace-nowrap text-[13px] font-medium text-slate-700">
+        <span className="whitespace-nowrap text-base font-medium leading-5 text-[#101828]">
           {labelEn}
           {labelMr && (
             <>
               <span className="text-slate-400"> / </span>
-              <span className="text-gray-500">{labelMr}</span>
+              <span className="text-[#64748B]">{labelMr}</span>
             </>
           )}
         </span>
@@ -504,7 +552,7 @@ function RadioGroup({
 
 function Tabs({ tabs, active, onChange }: { tabs: TabKey[]; active: TabKey; onChange: (t: TabKey) => void }) {
   return (
-    <div className="flex gap-6 border-b border-slate-200 px-6">
+    <div className="flex gap-[28.82px] border-b border-slate-200 bg-white px-6">
       {tabs.map((tab) => {
         const isActive = tab === active;
         return (
@@ -527,6 +575,8 @@ function Tabs({ tabs, active, onChange }: { tabs: TabKey[]; active: TabKey; onCh
 
 /* ------------------------------------------------------------------ */
 /*  ListModal — shared popup for "Customer Type List" and "Branch List" */
+/*  Styled per the Figma spec: 36px corner radius, soft blurred corner   */
+/*  ellipses, F9FAFB search field, EEF2FF "Select" pill.                 */
 /* ------------------------------------------------------------------ */
 
 interface ListModalProps<T> {
@@ -551,26 +601,29 @@ function ListModal<T>({ title, idLabel, nameLabel, items, getId, getName, onSele
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4">
-      <div className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+      <div className="relative flex max-h-[85vh] w-full max-w-[841px] flex-col overflow-hidden rounded-[36px] bg-white shadow-2xl">
+        <div className="pointer-events-none absolute -right-16 -top-32 h-64 w-64 rounded-full bg-[#DFEEFE] blur-2xl" aria-hidden />
+        <div className="pointer-events-none absolute -left-24 bottom-0 h-64 w-64 rounded-full bg-[#DFEEFE] blur-2xl" aria-hidden />
+
         {/* Header */}
-        <div className="flex items-center justify-between gap-4 px-6 pt-5 pb-4">
+        <div className="relative z-10 flex items-center justify-between gap-4 px-8 pt-7 pb-5">
           <h3 className="text-[19px] font-semibold text-slate-800">{title}</h3>
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5">
-              <Search className="h-4 w-4 text-slate-400" strokeWidth={1.75} />
+            <div className="flex h-9 w-[300px] items-center gap-2 rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] px-2.5 py-2 shadow-[0_1px_0.5px_0.05px_rgba(29,41,61,0.02)]">
+              <Search className="h-4 w-4 shrink-0 text-slate-400" strokeWidth={1.75} />
               <input
                 autoFocus
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search"
-                className="w-40 bg-transparent text-[14px] text-slate-700 outline-none placeholder:text-slate-400"
+                className="w-full bg-transparent text-[14px] text-slate-700 outline-none placeholder:text-slate-400"
               />
             </div>
             <button
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+              className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
             >
               <X className="h-5 w-5" strokeWidth={1.75} />
             </button>
@@ -578,7 +631,7 @@ function ListModal<T>({ title, idLabel, nameLabel, items, getId, getName, onSele
         </div>
 
         {/* Table */}
-        <div className="flex-1 overflow-y-auto px-6 pb-6">
+        <div className="scrollbar-hide relative z-10 flex-1 overflow-y-auto overflow-x-hidden px-8 pb-8">
           <table className="w-full border-separate border-spacing-0">
             <thead className="sticky top-0">
               <tr className="bg-blue-50">
@@ -600,7 +653,7 @@ function ListModal<T>({ title, idLabel, nameLabel, items, getId, getName, onSele
                     <button
                       type="button"
                       onClick={() => onSelect(item)}
-                      className="rounded-md bg-indigo-50 px-4 py-1.5 text-[13px] font-semibold text-blue-600 transition hover:bg-indigo-100"
+                      className="flex h-10 w-[120px] items-center justify-center rounded-lg bg-[#EEF2FF] px-4 text-[13px] font-semibold text-blue-600 transition hover:bg-indigo-100"
                     >
                       Select
                     </button>
@@ -754,9 +807,12 @@ function NomineeTab({ data }: { data: NomineeDetails }) {
   const update = (key: keyof NomineeDetails) => (value: string) =>
     setFormData((prev) => ({ ...prev, [key]: value }));
 
+  const [isCustomerListOpen, setIsCustomerListOpen] = useState(false);
+
   return (
-    <div className="rounded-xl border border-blue-400/40 border-t-4 border-t-blue-600 p-5">
-      <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-[80px_1.3fr_1fr_1fr_1fr]">
+    <>
+    <div className="rounded-xl border border-t-4 border-[#0B63C1] shadow-[0_1px_5px_rgba(3,0,55,0.08)] p-5">
+      <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-[80px_1.3fr_1fr_1fr_1fr] [&>*]:min-w-0">
         <SrNoField value={formData.srNo} />
         <SelectField
           labelEn="Salutation Code"
@@ -765,24 +821,42 @@ function NomineeTab({ data }: { data: NomineeDetails }) {
           options={SALUTATION_OPTIONS}
           onChange={update("salutationCode")}
         />
-        <Field icon={IdCard} labelEn="Nominee Customer ID" labelMr="नॉमिनी ग्राहक आयडी" value={formData.nomineeCustomerId} menu menuActive onChange={update("nomineeCustomerId")} />
+        <Field icon={IdCard} labelEn="Nominee Customer ID" labelMr="नॉमिनी ग्राहक आयडी" value={formData.nomineeCustomerId} menu menuActive onMenuClick={() => setIsCustomerListOpen(true)} onChange={update("nomineeCustomerId")} />
         <Field icon={User} labelEn="Nominee Name" labelMr="नॉमिनी नाव" value={formData.nomineeName} onChange={update("nomineeName")} />
         <SelectField icon={User} labelEn="Relation" value={formData.relation} onChange={update("relation")} />
       </div>
 
-      <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-4 [&>*]:min-w-0">
         <Field icon={Home} labelEn="Address 1" labelMr="पत्ता १" value={formData.address1} onChange={update("address1")} />
         <Field icon={Home} labelEn="Address 2" labelMr="पत्ता २" value={formData.address2} onChange={update("address2")} />
         <Field icon={Home} labelEn="Address 3" labelMr="पत्ता ३" value={formData.address3} required={false} onChange={update("address3")} />
         <Field icon={Home} labelEn="Zip" labelMr="पिन कोड" value={formData.zip} onChange={update("zip")} />
       </div>
 
-      <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3 [&>*]:min-w-0">
         <SelectField icon={Landmark} labelEn="City" labelMr="शहरे" value={formData.city} onChange={update("city")} />
         <Field icon={Landmark} labelEn="State" labelMr="राज्य" value={formData.state} onChange={update("state")} />
         <Field icon={Flag} labelEn="Country" labelMr="देश" value={formData.country} onChange={update("country")} />
       </div>
     </div>
+
+    {isCustomerListOpen && (
+      <ListModal
+        title="Customer Type List"
+        idLabel="Customer ID"
+        nameLabel="Customer Name"
+        items={CUSTOMER_LIST}
+        getId={(item) => item.id}
+        getName={(item) => item.name}
+        onSelect={(item) => {
+          update("nomineeCustomerId")(item.id);
+          update("nomineeName")(item.name);
+          setIsCustomerListOpen(false);
+        }}
+        onClose={() => setIsCustomerListOpen(false)}
+      />
+    )}
+    </>
   );
 }
 
@@ -795,9 +869,12 @@ function JointHolderTab({ data }: { data: JointHolderDetails }) {
   const update = (key: keyof JointHolderDetails) => (value: string) =>
     setFormData((prev) => ({ ...prev, [key]: value }));
 
+  const [isCustomerListOpen, setIsCustomerListOpen] = useState(false);
+
   return (
-    <div className="rounded-xl border border-blue-400/40 border-t-4 border-t-blue-600 p-5">
-      <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-[80px_1.3fr_1fr_1fr]">
+    <>
+    <div className="rounded-xl border border-t-4 border-[#0B63C1] shadow-[0_1px_5px_rgba(3,0,55,0.08)] p-5">
+      <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-[80px_1.3fr_1fr_1fr] [&>*]:min-w-0">
         <SrNoField value={formData.srNo} />
         <SelectField
           labelEn="Salutation Code"
@@ -806,33 +883,51 @@ function JointHolderTab({ data }: { data: JointHolderDetails }) {
           options={SALUTATION_OPTIONS}
           onChange={update("salutationCode")}
         />
-        <Field icon={IdCard} labelEn="J/T Holder Customer ID" labelMr="J/T धारक ग्राहक आयडी" required={false} value={formData.jtHolderCustomerId} menu menuActive onChange={update("jtHolderCustomerId")} />
+        <Field icon={IdCard} labelEn="J/T Holder Customer ID" labelMr="J/T धारक ग्राहक आयडी" required={false} value={formData.jtHolderCustomerId} menu menuActive onMenuClick={() => setIsCustomerListOpen(true)} onChange={update("jtHolderCustomerId")} />
         <Field icon={User} labelEn="J/T Holder Name" labelMr="J/T धारकाचे नाव" value={formData.jtHolderName} onChange={update("jtHolderName")} />
       </div>
 
-      <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3 [&>*]:min-w-0">
         <Field icon={Home} labelEn="Address 1" labelMr="पत्ता १" value={formData.address1} onChange={update("address1")} />
         <Field icon={Home} labelEn="Address 2" labelMr="पत्ता २" value={formData.address2} onChange={update("address2")} />
         <Field icon={Home} labelEn="Address 3" labelMr="पत्ता ३" value={formData.address3} required={false} onChange={update("address3")} />
       </div>
 
-      <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3 [&>*]:min-w-0">
         <Field icon={Home} labelEn="Zip" labelMr="पिन कोड" value={formData.zip} onChange={update("zip")} />
         <SelectField icon={Home} labelEn="City" labelMr="शहरे" value={formData.city} onChange={update("city")} />
         <Field icon={Landmark} labelEn="State" labelMr="राज्य" value={formData.state} onChange={update("state")} />
       </div>
 
-      <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3 [&>*]:min-w-0">
         <Field icon={Flag} labelEn="Country" labelMr="देश" value={formData.country} onChange={update("country")} />
       </div>
     </div>
+
+    {isCustomerListOpen && (
+      <ListModal
+        title="Customer Type List"
+        idLabel="Customer ID"
+        nameLabel="Customer Name"
+        items={CUSTOMER_LIST}
+        getId={(item) => item.id}
+        getName={(item) => item.name}
+        onSelect={(item) => {
+          update("jtHolderCustomerId")(item.id);
+          update("jtHolderName")(item.name);
+          setIsCustomerListOpen(false);
+        }}
+        onClose={() => setIsCustomerListOpen(false)}
+      />
+    )}
+    </>
   );
 }
 
 function HeaderIcon() {
   return (
     <span className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#5B6EF5]">
-      <Image src="/person-icon.png" alt="" fill sizes="44px" className="object-cover" />
+      <Image src="/person1.png" alt="" fill sizes="44px" className="object-cover" />
     </span>
   );
 }
@@ -936,15 +1031,13 @@ export default function ViewAccountModal({
           <div className="flex items-start gap-3">
             <HeaderIcon />
             <div>
-              <h2 className="text-[19px] font-semibold text-slate-800">
+              <h2 className="text-[32px] font-bold leading-[120%] tracking-[0.0025em] text-[#1E1B4B]">
                 View Deposit Account Details
                 <span className="text-slate-400"> / </span>
-                <span className="text-gray-500">ठेव खाते तपशील पहा</span>
+                <span className="text-[#64748B]">ठेव खाते तपशील पहा</span>
               </h2>
-              <p className="mt-0.5 text-[13px] text-slate-400">
-                Only can view some basic information related to the Employee
-                <span className="text-slate-300"> / </span>
-                कर्मचाऱ्याशी संबंधित काही मूलभूत माहिती
+              <p className="mt-1 text-[16px] font-normal leading-5 tracking-[0.0025em] text-[#64748B]">
+                Only can view some basic information related to the Employee / कर्मचाऱ्याशी संबंधित काही मूलभूत माहिती
               </p>
             </div>
           </div>
@@ -952,9 +1045,9 @@ export default function ViewAccountModal({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+            className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
           >
-            <X className="h-5 w-5" strokeWidth={1.75} />
+            <X className="h-6 w-6" strokeWidth={1.75} />
           </button>
         </div>
 
@@ -964,15 +1057,24 @@ export default function ViewAccountModal({
         </div>
 
         {/* Body */}
-        <div className="flex-1 overflow-y-auto px-6 py-5">
+        <div className="scrollbar-hide flex-1 overflow-y-auto overflow-x-hidden px-6 py-5">
           {activeTab === "Details" && <DetailsTab data={data} />}
           {activeTab === "Deposit" && <DepositTab data={depositData} />}
           {activeTab === "Nominee" && <NomineeTab data={nomineeData} />}
           {activeTab === "Joint Holder" && <JointHolderTab data={jointHolderData} />}
         </div>
+        <style jsx global>{`
+          .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+          }
+          .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+        `}</style>
 
         {/* Footer */}
-        <div className="flex justify-end gap-3 border-t border-slate-100 px-6 py-4">
+        <div className="flex items-center justify-end gap-6 border-t border-slate-100 px-6 py-4">
           <button
             type="button"
             onClick={onClose}
