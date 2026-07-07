@@ -117,13 +117,8 @@ const grid4 =
       <SuccessModal
         onClose={() => setShowSuccess(false)}
         onDone={handleSuccessDone}
-        heading={
-          <>
-            Standing Instruction Added Successfully
-            <br />
-            Please Authorize
-          </>
-        }
+        title="Standing Instruction Added Successfully"
+        subtitle="Please Authorize"
       />
     );
   }

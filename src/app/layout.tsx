@@ -1,4 +1,5 @@
 import { ToastContainer } from "react-toastify";
+import { Inter } from "next/font/google";
 import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
 
@@ -8,7 +9,7 @@ const inter = Inter({
   display: "swap",
 });
 
-const metadata = {
+export const metadata = {
   title: "IDSSPL",
   description: "Core Banking Application",
 };
