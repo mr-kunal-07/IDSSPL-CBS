@@ -153,8 +153,8 @@ export const MASTER_CONFIG: Record<string, MasterConfigEntry> = {
     fields: [
       { key: "capacityId", labelEn: "Account Operation Capacity ID", labelHi: "खाते संचालन क्षमता आयडी", placeholder: "Enter Account Operation Capacity ID", icon: "shield", readOnlyOnEdit: true },
       { key: "description", labelEn: "Description", labelHi: "वर्णन", placeholder: "Enter Description", icon: "text" },
-      { key: "hasNominee", labelEn: "Has Nominee", labelHi: "नामनिर्देशित व्यक्ती आहे", type: "radio", options: ["Yes", "No"], icon: "user" },
-      { key: "hasJointHolder", labelEn: "Has Joint Holder", labelHi: "सह-धारक आहे", type: "radio", options: ["Yes", "No"], icon: "user" },
+      { key: "hasNominee", labelEn: "Has Nominee", labelHi: "नामनिर्देशित व्यक्ती आहे", placeholder: "Select Has Nominee", type: "radio", options: ["Yes", "No"], icon: "user" },
+      { key: "hasJointHolder", labelEn: "Has Joint Holder", labelHi: "सह-धारक आहे", placeholder: "Select Has Joint Holder", type: "radio", options: ["Yes", "No"], icon: "user" },
     ],
     filterFields: [
       { key: "capacityId", label: "Account Operation Capacity ID" },
