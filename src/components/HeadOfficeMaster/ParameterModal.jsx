@@ -115,7 +115,7 @@ const ParameterModal = ({
         </div>
 
         {/* Form */}
-        <div className="mt-4 rounded-xl border-2 border-[#0B63C1]/30 p-5">
+        <div className="bg-white rounded-[20px] border-x border-b border-t-4 border-[#0A66D8] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
           {config.fields.map((field) => {
             const Icon = getFieldIcon(field.icon);
             const isReadOnly =

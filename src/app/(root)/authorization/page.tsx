@@ -1,9 +1,25 @@
-import React from 'react'
+"use client";
 
-const page = () => {
+import GlobalNav from "@/components/GlobalMaster/GlobalNav";
+import AuthorizationCards from "@/components/Authorization/AuthorizationCards";
+
+const Page = () => {
   return (
-    <div>Authorization</div>
-  )
-}
+    <div className="min-h-screen bg-[#E7EAEF]">
+      <GlobalNav
+        titleEn="Authorization"
+        titleHi="अधिकृतीकरण"
+        breadcrumbs={[
+          { label: "Home", href: "/" },
+          { label: "MIS Activity", href: "/" },
+          { label: "Authorization", href: "#" },
+        ]}
+        onBack={() => window.history.back()}
+      />
 
-export default page
+      <AuthorizationCards />
+    </div>
+  );
+};
+
+export default Page;
