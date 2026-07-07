@@ -1,7 +1,8 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import type { MouseEvent as ReactMouseEvent } from "react";
 import { ArrowUpDown, MoreVertical, ExternalLink, Eye, SquarePen, UserRoundCog } from "lucide-react";
+import ViewAccountModal from "./ViewAccountModal";
+import EditAccountModal from "./EditAccountModal";
 
 type RowData = {
   srNo: number;
@@ -41,10 +42,11 @@ const menuOptions = [
 ];
 
 const AccountMasterTable = () => {
-  const [activeTab, setActiveTab] = useState("Deposit");
   const [sortKey, setSortKey] = useState<keyof RowData | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
   const [openMenuRow, setOpenMenuRow] = useState<number | null>(null);
+  const [viewRow, setViewRow] = useState<RowData | null>(null);
+  const [editRow, setEditRow] = useState<RowData | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -74,6 +76,16 @@ const AccountMasterTable = () => {
     if (valA > valB) return sortAsc ? 1 : -1;
     return 0;
   });
+
+  const handleMenuOptionClick = (optionKey: string, row: RowData) => {
+    setOpenMenuRow(null);
+    if (optionKey === "view") {
+      setViewRow(row);
+    } else if (optionKey === "edit") {
+      setEditRow(row);
+    }
+    // "freeze" action can be wired up the same way here
+  };
 
   return (
     <div className="w-full bg-white rounded-xl overflow-hidden shadow-sm">
@@ -110,7 +122,7 @@ const AccountMasterTable = () => {
                     {row.srNo}
                   </span>
                 </td>
-                
+
                 <td className="px-6 py-3 relative">
                   <button
                     onClick={() => setOpenMenuRow(openMenuRow === row.srNo ? null : row.srNo)}
@@ -129,7 +141,7 @@ const AccountMasterTable = () => {
                         return (
                           <button
                             key={opt.key}
-                            onClick={() => setOpenMenuRow(null)}
+                            onClick={() => handleMenuOptionClick(opt.key, row)}
                             className="flex w-full items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50"
                           >
                             <Icon size={16} className="text-blue-600" />
@@ -160,6 +172,40 @@ const AccountMasterTable = () => {
           </tbody>
         </table>
       </div>
+
+      {/* View Account modal */}
+      {viewRow && (
+        <ViewAccountModal
+          onClose={() => setViewRow(null)}
+          data={{
+            accountCode: viewRow.accountId,
+            accountName: viewRow.accountName,
+            customerId: viewRow.customerId,
+            customerName: viewRow.accountName,
+            createdBy: viewRow.createdBy,
+            applicationNumber: viewRow.applicationNo,
+            accountOpenDate: viewRow.openingDate,
+            accountStatus: viewRow.status,
+          }}
+        />
+      )}
+
+      {/* Edit Account modal */}
+      {editRow && (
+        <EditAccountModal
+          onClose={() => setEditRow(null)}
+          data={{
+            accountCode: editRow.accountId,
+            accountName: editRow.accountName,
+            customerId: editRow.customerId,
+            customerName: editRow.accountName,
+            createdBy: editRow.createdBy,
+            applicationNumber: editRow.applicationNo,
+            accountOpenDate: editRow.openingDate,
+            accountStatus: editRow.status,
+          }}
+        />
+      )}
     </div>
   );
 };

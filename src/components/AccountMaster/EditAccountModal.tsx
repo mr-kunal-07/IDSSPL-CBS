@@ -1,0 +1,853 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import {
+  X,
+  Calendar,
+  IdCard,
+  Landmark,
+  Coins,
+  Wallet,
+  FileText,
+  ClipboardList,
+  Tag,
+  UserCog,
+  Activity,
+  Link2,
+  UserCheck,
+  AlertTriangle,
+  ChevronDown,
+  MoreVertical,
+  User,
+  Percent,
+  Home,
+  Flag,
+  Check,
+  Wrench,
+  ArrowLeftRight,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+
+/* ------------------------------------------------------------------ */
+/*  Types                                                              */
+/* ------------------------------------------------------------------ */
+
+export interface AccountDetails {
+  accountCode?: string;
+  accountName?: string;
+  accountOpenDate?: string;
+  accountClosedDate?: string;
+  customerId?: string;
+  customerName?: string;
+  createdBy?: string;
+  branchCode?: string;
+  ledgerBalance?: number | string;
+  availableBalance?: number | string;
+  minBalanceId?: string;
+  lastOperatedDate?: string;
+  todApplicable?: string;
+  todLimit?: string | number;
+  todInterestRate?: string | number;
+  todInterest?: string | number;
+  accountOperationCapacityId?: string;
+  applicationNumber?: string;
+  categoryCode?: string;
+  agentId?: string;
+  accountStatus?: string;
+  introducerAccountCode?: string;
+  officerId?: string;
+  riskCategory?: string;
+}
+
+export interface DepositDetails {
+  accountType?: string;
+  accountOpenDate?: string;
+  unitOfPeriod?: "Day" | "Month";
+  periodDeposit?: string | number;
+  interestRate?: string | number;
+  maturityDate?: string;
+  interestPaidInCash?: "Day" | "Month";
+  rateDiscounted?: "Day" | "Month";
+  interestPaymentFrequency?: string;
+  depositAmount?: string | number;
+  depositAmountInWords?: string;
+  cash?: string | number;
+  clearing?: string | number;
+  transfer?: string | number;
+  creditAccountCode?: string;
+  creditAccountName?: string;
+  maturityAmount?: string | number;
+}
+
+export interface NomineeDetails {
+  srNo?: string | number;
+  salutationCode?: string;
+  nomineeCustomerId?: string;
+  nomineeName?: string;
+  relation?: string;
+  address1?: string;
+  address2?: string;
+  address3?: string;
+  zip?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+}
+
+export interface JointHolderDetails {
+  srNo?: string | number;
+  salutationCode?: string;
+  jtHolderCustomerId?: string;
+  jtHolderName?: string;
+  address1?: string;
+  address2?: string;
+  address3?: string;
+  zip?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+}
+
+type TabKey = "Details" | "Deposit" | "Nominee" | "Joint Holder";
+const TABS: TabKey[] = ["Details", "Deposit", "Nominee", "Joint Holder"];
+
+// Salutation options shown in the Salutation Code dropdown
+const SALUTATION_OPTIONS = ["MR", "MS", "MRS"];
+
+interface EditAccountModalProps {
+  onClose: () => void;
+  onNext?: () => void;
+  data?: AccountDetails;
+  depositData?: DepositDetails;
+  nomineeData?: NomineeDetails;
+  jointHolderData?: JointHolderDetails;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Primitive: BilingualLabel — single line, no wrap                   */
+/* ------------------------------------------------------------------ */
+
+function BilingualLabel({ en, mr, required }: { en: string; mr?: string; required?: boolean }) {
+  return (
+    <label
+      className="mb-1.5 block truncate whitespace-nowrap text-[13px] font-medium text-slate-700"
+      title={mr ? `${en} / ${mr}` : en}
+    >
+      {en}
+      {mr && (
+        <>
+          <span className="text-slate-400"> / </span>
+          <span className="text-gray-500">{mr}</span>
+        </>
+      )}
+      {required && <span className="ml-0.5 text-rose-500">*</span>}
+    </label>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Primitive: Field — read-only display, icon sits beside the value  */
+/*  (not inside the input) so labels never push fields out of line     */
+/* ------------------------------------------------------------------ */
+
+const iconWrap = "flex h-9 w-9 shrink-0 items-center justify-center text-slate-400";
+
+interface FieldProps {
+  icon?: LucideIcon;
+  labelEn: string;
+  labelMr?: string;
+  value?: string | number;
+  required?: boolean;
+  type?: "text" | "date" | "currency";
+  menu?: boolean;
+  menuActive?: boolean;
+  onChange?: (value: string) => void;
+}
+
+function Field({
+  icon: Icon,
+  labelEn,
+  labelMr,
+  value,
+  required = true,
+  type = "text",
+  menu = false,
+  menuActive = false,
+  onChange,
+}: FieldProps) {
+  const isCurrency = type === "currency";
+  const [isEditing, setIsEditing] = useState(false);
+  const [draft, setDraft] = useState(value !== undefined ? String(value) : "");
+
+  const displayValue =
+    isCurrency && value !== undefined && value !== ""
+      ? Number(value).toLocaleString("en-IN", { minimumFractionDigits: 1 })
+      : value || "\u2014";
+
+  const startEditing = () => {
+    setDraft(value !== undefined ? String(value) : "");
+    setIsEditing(true);
+  };
+
+  const commit = () => {
+    setIsEditing(false);
+    onChange?.(draft);
+  };
+
+  return (
+    <div className="flex h-full flex-col">
+      <BilingualLabel en={labelEn} mr={labelMr} required={required} />
+      <div className="flex flex-1 items-stretch gap-2">
+        <div
+          className={`flex flex-1 items-center rounded-lg border bg-slate-50 transition ${
+            isEditing ? "border-blue-500 ring-1 ring-blue-500/40 bg-white" : "border-slate-200 hover:border-slate-300"
+          }`}
+        >
+          {Icon && (
+            <span className={iconWrap}>
+              <Icon className="h-4 w-4" strokeWidth={1.75} />
+            </span>
+          )}
+          {isEditing ? (
+            <input
+              autoFocus
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onBlur={commit}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") commit();
+                if (e.key === "Escape") setIsEditing(false);
+              }}
+              className={`w-full flex-1 bg-transparent py-2.5 pr-3 text-[14px] text-slate-700 outline-none ${
+                !Icon ? "pl-3" : ""
+              }`}
+            />
+          ) : (
+            <button
+              type="button"
+              onClick={startEditing}
+              className={`flex-1 truncate py-2.5 pr-3 text-left text-[14px] ${!Icon ? "pl-3" : ""} ${
+                value !== undefined && value !== "" ? "text-slate-700" : "text-slate-300"
+              }`}
+            >
+              {displayValue}
+            </button>
+          )}
+        </div>
+        {menu && (
+          <button
+            type="button"
+            aria-label={`More options for ${labelEn}`}
+            className={`flex w-9 shrink-0 items-center justify-center rounded-lg border transition ${
+              menuActive
+                ? "border-blue-200 bg-blue-50 text-blue-500 hover:bg-blue-100"
+                : "border-slate-200 bg-white text-slate-400 hover:bg-slate-50 hover:text-slate-600"
+            }`}
+          >
+            <MoreVertical className="h-4 w-4" />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * SelectField
+ * - If `options` is provided, this renders a real dropdown: clicking it opens
+ *   a list of the given options, and picking one commits the value and closes
+ *   the list (click-outside also closes it).
+ * - If `options` is omitted, it falls back to the old inline-editable-text
+ *   behavior so every other usage of SelectField keeps working unchanged.
+ */
+function SelectField({
+  icon: Icon,
+  labelEn,
+  labelMr,
+  value,
+  required = true,
+  options,
+  onChange,
+}: {
+  icon?: LucideIcon;
+  labelEn: string;
+  labelMr?: string;
+  value?: string;
+  required?: boolean;
+  options?: string[];
+  onChange?: (value: string) => void;
+}) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [draft, setDraft] = useState(value ?? "");
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isOpen]);
+
+  const startEditing = () => {
+    setDraft(value ?? "");
+    setIsEditing(true);
+  };
+
+  const commit = () => {
+    setIsEditing(false);
+    onChange?.(draft);
+  };
+
+  // Dropdown mode (real select-like behavior with a fixed options list)
+  if (options && options.length > 0) {
+    return (
+      <div className="flex h-full flex-col" ref={containerRef}>
+        <BilingualLabel en={labelEn} mr={labelMr} required={required} />
+        <div className="relative flex-1">
+          <button
+            type="button"
+            onClick={() => setIsOpen((prev) => !prev)}
+            aria-haspopup="listbox"
+            aria-expanded={isOpen}
+            className={`flex h-full w-full items-center rounded-lg border bg-slate-50 text-left transition ${
+              isOpen ? "border-blue-500 ring-1 ring-blue-500/40 bg-white" : "border-slate-200 hover:border-slate-300"
+            }`}
+          >
+            {Icon && (
+              <span className={iconWrap}>
+                <Icon className="h-4 w-4" strokeWidth={1.75} />
+              </span>
+            )}
+            <span className={`flex-1 truncate py-2.5 text-[14px] ${!Icon ? "pl-3" : ""} ${value ? "text-slate-700" : "text-slate-300"}`}>
+              {value || "\u2014"}
+            </span>
+            <ChevronDown
+              className={`mr-3 h-4 w-4 shrink-0 text-slate-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
+              strokeWidth={1.75}
+            />
+          </button>
+
+          {isOpen && (
+            <ul
+              role="listbox"
+              className="absolute left-0 right-0 top-[calc(100%+4px)] z-20 max-h-52 overflow-auto rounded-lg border border-slate-200 bg-white py-1 shadow-lg"
+            >
+              {options.map((opt) => (
+                <li key={opt}>
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected={opt === value}
+                    onClick={() => {
+                      onChange?.(opt);
+                      setIsOpen(false);
+                    }}
+                    className={`flex w-full items-center justify-between px-3 py-2 text-left text-[14px] transition ${
+                      opt === value ? "bg-blue-50 text-blue-600" : "text-slate-700 hover:bg-slate-50"
+                    }`}
+                  >
+                    {opt}
+                    {opt === value && <Check className="h-4 w-4" strokeWidth={1.75} />}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Fallback: inline-editable text (unchanged legacy behavior)
+  return (
+    <div className="flex h-full flex-col">
+      <BilingualLabel en={labelEn} mr={labelMr} required={required} />
+      <div
+        className={`flex flex-1 items-center rounded-lg border bg-slate-50 transition ${
+          isEditing ? "border-blue-500 ring-1 ring-blue-500/40 bg-white" : "border-slate-200 hover:border-slate-300"
+        }`}
+      >
+        {Icon && (
+          <span className={iconWrap}>
+            <Icon className="h-4 w-4" strokeWidth={1.75} />
+          </span>
+        )}
+        {isEditing ? (
+          <input
+            autoFocus
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onBlur={commit}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") commit();
+              if (e.key === "Escape") setIsEditing(false);
+            }}
+            className={`w-full flex-1 bg-transparent py-2.5 text-[14px] text-slate-700 outline-none ${
+              !Icon ? "pl-3" : ""
+            }`}
+          />
+        ) : (
+          <button
+            type="button"
+            onClick={startEditing}
+            className={`flex-1 truncate py-2.5 text-left text-[14px] text-slate-700 ${!Icon ? "pl-3" : ""}`}
+          >
+            {value || "\u2014"}
+          </button>
+        )}
+        <ChevronDown className="mr-3 h-4 w-4 shrink-0 text-slate-300" strokeWidth={1.75} />
+      </div>
+    </div>
+  );
+}
+
+function SrNoField({ value }: { value?: string | number }) {
+  return (
+    <div className="flex h-full flex-col">
+      <span className="mb-1.5 block truncate whitespace-nowrap text-[13px] font-medium text-slate-700">Sr No</span>
+      <div className="flex flex-1 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 py-2.5 text-[14px] text-slate-700">
+        {value ?? "\u2014"}
+      </div>
+    </div>
+  );
+}
+
+function FieldGrid({ children, cols = 4 }: { children: React.ReactNode; cols?: 3 | 4 }) {
+  return (
+    <div
+      className={`grid grid-cols-1 gap-x-6 gap-y-5 rounded-xl border border-blue-400/40 border-t-4 border-t-blue-600 p-5 sm:grid-cols-2 ${
+        cols === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4"
+      }`}
+    >
+      {children}
+    </div>
+  );
+}
+
+function RadioGroup({
+  labelEn,
+  labelMr,
+  value,
+  onChange,
+}: {
+  labelEn: string;
+  labelMr?: string;
+  value?: "Day" | "Month";
+  onChange?: (value: "Day" | "Month") => void;
+}) {
+  return (
+    <div className="flex h-full flex-col">
+      <div className="flex items-center justify-between gap-4">
+        <span className="whitespace-nowrap text-[13px] font-medium text-slate-700">
+          {labelEn}
+          {labelMr && (
+            <>
+              <span className="text-slate-400"> / </span>
+              <span className="text-gray-500">{labelMr}</span>
+            </>
+          )}
+        </span>
+        <div className="flex items-center gap-6">
+          {(["Day", "Month"] as const).map((opt) => (
+            <label key={opt} className="flex cursor-pointer items-center gap-2 whitespace-nowrap text-[14px] text-slate-600">
+              <span
+                className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 ${
+                  value === opt ? "border-blue-600" : "border-slate-300"
+                }`}
+              >
+                {value === opt && <span className="h-2 w-2 rounded-full bg-blue-600" />}
+              </span>
+              <input
+                type="radio"
+                className="hidden"
+                checked={value === opt}
+                onChange={() => onChange?.(opt)}
+              />
+              {opt}
+            </label>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Tabs({ tabs, active, onChange }: { tabs: TabKey[]; active: TabKey; onChange: (t: TabKey) => void }) {
+  return (
+    <div className="flex gap-6 border-b border-slate-200 px-6">
+      {tabs.map((tab) => {
+        const isActive = tab === active;
+        return (
+          <button
+            key={tab}
+            type="button"
+            onClick={() => onChange(tab)}
+            className={`relative -mb-px py-3 text-[14px] font-medium transition ${
+              isActive ? "text-blue-600" : "text-slate-500 hover:text-slate-700"
+            }`}
+          >
+            {tab}
+            {isActive && <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-blue-600" />}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Details tab                                                        */
+/* ------------------------------------------------------------------ */
+
+function DetailsTab({ data }: { data: AccountDetails }) {
+  const [formData, setFormData] = useState<AccountDetails>(data);
+  const update = (key: keyof AccountDetails) => (value: string) =>
+    setFormData((prev) => ({ ...prev, [key]: value }));
+
+  return (
+    <FieldGrid>
+      <Field icon={IdCard} labelEn="Account Code" labelMr="खाते कोड" value={formData.accountCode} onChange={update("accountCode")} />
+      <Field icon={User} labelEn="Account Name" labelMr="खाते नाव" value={formData.accountName} onChange={update("accountName")} />
+      <Field icon={Calendar} labelEn="Account Open Date" labelMr="खाते उघडण्याची तारीख" value={formData.accountOpenDate} type="date" onChange={update("accountOpenDate")} />
+      <Field icon={Calendar} labelEn="Account Closed Date" labelMr="खाते बंद झाल्याची तारीख" value={formData.accountClosedDate} type="date" onChange={update("accountClosedDate")} />
+
+      <Field icon={IdCard} labelEn="Customer ID" labelMr="ग्राहक आयडी" value={formData.customerId} menu onChange={update("customerId")} />
+      <Field icon={User} labelEn="Customer Name" labelMr="ग्राहकाचे नाव" value={formData.customerName} onChange={update("customerName")} />
+      <Field icon={User} labelEn="Created By" labelMr="किंमत तयार केली" value={formData.createdBy} onChange={update("createdBy")} />
+      <Field icon={Landmark} labelEn="Branch Code" labelMr="शाखा कोड" value={formData.branchCode} menu onChange={update("branchCode")} />
+
+      <Field icon={Coins} labelEn="Ledger Balance" labelMr="लेजर शिल्लक" value={formData.ledgerBalance} type="currency" onChange={update("ledgerBalance")} />
+      <Field icon={Wallet} labelEn="Available Balance" labelMr="उपलब्ध शिल्लक" value={formData.availableBalance} type="currency" onChange={update("availableBalance")} />
+      <SelectField icon={UserCheck} labelEn="Min Balance ID" labelMr="किमान शिल्लक आयडी" value={formData.minBalanceId} onChange={update("minBalanceId")} />
+      <Field icon={Calendar} labelEn="Last Operated Date" labelMr="शेवटची ऑपरेशन तारीख" value={formData.lastOperatedDate} type="date" onChange={update("lastOperatedDate")} />
+
+      <SelectField icon={FileText} labelEn="Is TOD Applicable" labelMr="TOD लागू आहे का?" value={formData.todApplicable} onChange={update("todApplicable")} />
+      <Field icon={FileText} labelEn="TOD Limit" labelMr="TOD मर्यादा" value={formData.todLimit} onChange={update("todLimit")} />
+      <Field icon={FileText} labelEn="TOD Interest Rate" labelMr="TOD व्याजदर" value={formData.todInterestRate} onChange={update("todInterestRate")} />
+      <Field icon={FileText} labelEn="TOD Interest" labelMr="TOD व्याज" value={formData.todInterest} onChange={update("todInterest")} />
+
+      <SelectField icon={ClipboardList} labelEn="Account Operation Capacity ID" labelMr="खाते ऑपरेशन क्षमता आयडी" value={formData.accountOperationCapacityId} onChange={update("accountOperationCapacityId")} />
+      <Field icon={ClipboardList} labelEn="Application Number" labelMr="अर्ज क्रमांक" value={formData.applicationNumber} onChange={update("applicationNumber")} />
+      <SelectField icon={Tag} labelEn="Category Code" labelMr="कॅटेगरी कोड" value={formData.categoryCode} onChange={update("categoryCode")} />
+
+      <Field icon={UserCog} labelEn="Agent ID" labelMr="एजंट आयडी" value={formData.agentId} onChange={update("agentId")} />
+      <SelectField icon={Activity} labelEn="Account Status" labelMr="आकाउंट स्थीती" value={formData.accountStatus} onChange={update("accountStatus")} />
+      <Field icon={Link2} labelEn="Introducer Account Code" labelMr="ओळखपत्र खात्याचा कोड" value={formData.introducerAccountCode} onChange={update("introducerAccountCode")} />
+
+      <Field icon={UserCog} labelEn="Officer ID" labelMr="कर्मचारी आयडी" value={formData.officerId} onChange={update("officerId")} />
+      <SelectField icon={AlertTriangle} labelEn="Risk Category" labelMr="धोक्याचा प्रकार" value={formData.riskCategory} onChange={update("riskCategory")} />
+    </FieldGrid>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Deposit tab                                                        */
+/* ------------------------------------------------------------------ */
+
+function DepositTab({ data }: { data: DepositDetails }) {
+  const [formData, setFormData] = useState<DepositDetails>(data);
+  const update = (key: keyof DepositDetails) => (value: string) =>
+    setFormData((prev) => ({ ...prev, [key]: value }));
+  const updateRadio = (key: keyof DepositDetails) => (value: "Day" | "Month") =>
+    setFormData((prev) => ({ ...prev, [key]: value }));
+
+  return (
+    <FieldGrid cols={3}>
+      <Field icon={User} labelEn="Account Type" labelMr="आकाउंट प्रकार" value={formData.accountType} onChange={update("accountType")} />
+      <Field icon={Calendar} labelEn="Account Open Date" labelMr="खाते उघडण्याची तारीख" value={formData.accountOpenDate} type="date" onChange={update("accountOpenDate")} />
+      <RadioGroup labelEn="Unit Of Period" value={formData.unitOfPeriod} onChange={updateRadio("unitOfPeriod")} />
+
+      <Field icon={Calendar} labelEn="Period Deposit" labelMr="काळजी ठेव" value={formData.periodDeposit} onChange={update("periodDeposit")} />
+      <Field icon={Percent} labelEn="Interest Rate" labelMr="व्याज दर" value={formData.interestRate} onChange={update("interestRate")} />
+      <Field icon={Calendar} labelEn="Maturity Date" labelMr="परिपक्वता तारीख" value={formData.maturityDate} type="date" onChange={update("maturityDate")} />
+
+      <RadioGroup labelEn="Interest Paid in Cash" value={formData.interestPaidInCash} onChange={updateRadio("interestPaidInCash")} />
+      <RadioGroup labelEn="Rate Discounted" value={formData.rateDiscounted} onChange={updateRadio("rateDiscounted")} />
+      <SelectField icon={Calendar} labelEn="Interest Payment Frequency" labelMr="व्याज भरण्याची वारंवारिता" value={formData.interestPaymentFrequency} onChange={update("interestPaymentFrequency")} />
+
+      <Field icon={Coins} labelEn="Deposit Amount" labelMr="ठेव रक्कम" value={formData.depositAmount} onChange={update("depositAmount")} />
+      <Field icon={Coins} labelEn="Deposit Amount in words" labelMr="ठेव रक्कम शब्दांमध्ये" value={formData.depositAmountInWords} onChange={update("depositAmountInWords")} />
+      <span className="hidden lg:block" aria-hidden />
+
+      <Field icon={IdCard} labelEn="Cash" labelMr="रोख" value={formData.cash} onChange={update("cash")} />
+      <Field icon={Wrench} labelEn="Clearing" labelMr="क्लीअरिंग" value={formData.clearing} onChange={update("clearing")} />
+      <Field icon={ArrowLeftRight} labelEn="Transfer" labelMr="हस्तांतरण" value={formData.transfer} onChange={update("transfer")} />
+
+      <Field icon={Landmark} labelEn="Credit Account Code" labelMr="क्रेडिट अकाउंट कोड" value={formData.creditAccountCode} menu menuActive onChange={update("creditAccountCode")} />
+      <Field icon={User} labelEn="Credit Account Name" labelMr="क्रेडिट खाते नाव" value={formData.creditAccountName} onChange={update("creditAccountName")} />
+      <Field icon={Coins} labelEn="Maturity Amount" labelMr="परिपक्वतेची रक्कम" value={formData.maturityAmount} onChange={update("maturityAmount")} />
+    </FieldGrid>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Nominee tab                                                        */
+/* ------------------------------------------------------------------ */
+
+function NomineeTab({ data }: { data: NomineeDetails }) {
+  const [formData, setFormData] = useState<NomineeDetails>(data);
+  const update = (key: keyof NomineeDetails) => (value: string) =>
+    setFormData((prev) => ({ ...prev, [key]: value }));
+
+  return (
+    <div className="rounded-xl border border-blue-400/40 border-t-4 border-t-blue-600 p-5">
+      <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-[80px_1.3fr_1fr_1fr_1fr]">
+        <SrNoField value={formData.srNo} />
+        <SelectField
+          labelEn="Salutation Code"
+          labelMr="संबोधनी"
+          value={formData.salutationCode}
+          options={SALUTATION_OPTIONS}
+          onChange={update("salutationCode")}
+        />
+        <Field icon={IdCard} labelEn="Nominee Customer ID" labelMr="नॉमिनी ग्राहक आयडी" value={formData.nomineeCustomerId} menu menuActive onChange={update("nomineeCustomerId")} />
+        <Field icon={User} labelEn="Nominee Name" labelMr="नॉमिनी नाव" value={formData.nomineeName} onChange={update("nomineeName")} />
+        <SelectField icon={User} labelEn="Relation" value={formData.relation} onChange={update("relation")} />
+      </div>
+
+      <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
+        <Field icon={Home} labelEn="Address 1" labelMr="पत्ता १" value={formData.address1} onChange={update("address1")} />
+        <Field icon={Home} labelEn="Address 2" labelMr="पत्ता २" value={formData.address2} onChange={update("address2")} />
+        <Field icon={Home} labelEn="Address 3" labelMr="पत्ता ३" value={formData.address3} required={false} onChange={update("address3")} />
+        <Field icon={Home} labelEn="Zip" labelMr="पिन कोड" value={formData.zip} onChange={update("zip")} />
+      </div>
+
+      <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+        <SelectField icon={Landmark} labelEn="City" labelMr="शहरे" value={formData.city} onChange={update("city")} />
+        <Field icon={Landmark} labelEn="State" labelMr="राज्य" value={formData.state} onChange={update("state")} />
+        <Field icon={Flag} labelEn="Country" labelMr="देश" value={formData.country} onChange={update("country")} />
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Joint Holder tab                                                   */
+/* ------------------------------------------------------------------ */
+
+function JointHolderTab({ data }: { data: JointHolderDetails }) {
+  const [formData, setFormData] = useState<JointHolderDetails>(data);
+  const update = (key: keyof JointHolderDetails) => (value: string) =>
+    setFormData((prev) => ({ ...prev, [key]: value }));
+
+  return (
+    <div className="rounded-xl border border-blue-400/40 border-t-4 border-t-blue-600 p-5">
+      <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-[80px_1.3fr_1fr_1fr]">
+        <SrNoField value={formData.srNo} />
+        <SelectField
+          labelEn="Salutation Code"
+          labelMr="संबोधनी"
+          value={formData.salutationCode}
+          options={SALUTATION_OPTIONS}
+          onChange={update("salutationCode")}
+        />
+        <Field icon={IdCard} labelEn="J/T Holder Customer ID" labelMr="J/T धारक ग्राहक आयडी" required={false} value={formData.jtHolderCustomerId} menu menuActive onChange={update("jtHolderCustomerId")} />
+        <Field icon={User} labelEn="J/T Holder Name" labelMr="J/T धारकाचे नाव" value={formData.jtHolderName} onChange={update("jtHolderName")} />
+      </div>
+
+      <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+        <Field icon={Home} labelEn="Address 1" labelMr="पत्ता १" value={formData.address1} onChange={update("address1")} />
+        <Field icon={Home} labelEn="Address 2" labelMr="पत्ता २" value={formData.address2} onChange={update("address2")} />
+        <Field icon={Home} labelEn="Address 3" labelMr="पत्ता ३" value={formData.address3} required={false} onChange={update("address3")} />
+      </div>
+
+      <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+        <Field icon={Home} labelEn="Zip" labelMr="पिन कोड" value={formData.zip} onChange={update("zip")} />
+        <SelectField icon={Home} labelEn="City" labelMr="शहरे" value={formData.city} onChange={update("city")} />
+        <Field icon={Landmark} labelEn="State" labelMr="राज्य" value={formData.state} onChange={update("state")} />
+      </div>
+
+      <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+        <Field icon={Flag} labelEn="Country" labelMr="देश" value={formData.country} onChange={update("country")} />
+      </div>
+    </div>
+  );
+}
+
+function HeaderIcon() {
+  return (
+    <span className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#5B6EF5]">
+      <Image src="/person-icon.png" alt="" fill sizes="44px" className="object-cover" />
+    </span>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Main: ViewAccountModal                                             */
+/* ------------------------------------------------------------------ */
+
+const defaultData: AccountDetails = {
+  accountCode: "4022399911",
+  accountName: "Nitish Sai Readdy",
+  accountOpenDate: "23-May-2026",
+  accountClosedDate: "01-June-2026",
+  customerId: "00021",
+  customerName: "Nitish Sai Readdy",
+  createdBy: "Admin",
+  branchCode: "0002",
+  ledgerBalance: 408493.5,
+  availableBalance: 408493.5,
+  minBalanceId: "200",
+  lastOperatedDate: "18-Jan-2026",
+  todApplicable: "No",
+  todLimit: "0.0",
+  todInterestRate: "0.0",
+  todInterest: "0.0",
+  accountOperationCapacityId: "Self",
+  applicationNumber: "12",
+  categoryCode: "Public",
+  agentId: "0",
+  accountStatus: "Live",
+  introducerAccountCode: "1001",
+  officerId: "Admin",
+  riskCategory: "Low",
+};
+
+const defaultDepositData: DepositDetails = {
+  accountType: "TD",
+  accountOpenDate: "23-May-2026",
+  unitOfPeriod: "Day",
+  periodDeposit: "7",
+  interestRate: "1.2",
+  maturityDate: "23-May-2026",
+  interestPaidInCash: "Day",
+  rateDiscounted: "Day",
+  interestPaymentFrequency: "Monthly",
+  depositAmount: "100/-",
+  depositAmountInWords: "One Hundred",
+  cash: "100",
+  clearing: "0",
+  transfer: "0",
+  creditAccountCode: "2001",
+  creditAccountName: "Akshay Om More",
+  maturityAmount: "23,990/-",
+};
+
+const defaultNomineeData: NomineeDetails = {
+  srNo: 1,
+  salutationCode: "MR",
+  nomineeCustomerId: "00021",
+  nomineeName: "Nitish Sai Readdy",
+  relation: "Father",
+  address1: "Kolhapur",
+  address2: "Kolhapur",
+  address3: "Kolhapur",
+  zip: "416005",
+  city: "Kolhapur",
+  state: "Maharashtra",
+  country: "India",
+};
+
+const defaultJointHolderData: JointHolderDetails = {
+  srNo: 1,
+  salutationCode: "MR",
+  jtHolderCustomerId: "00021",
+  jtHolderName: "Nitish Sai Readdy",
+  address1: "Kolhapur",
+  address2: "Kolhapur",
+  address3: "Kolhapur",
+  zip: "416005",
+  city: "Kolhapur",
+  state: "Maharashtra",
+  country: "India",
+};
+
+export default function EditAccountModal({
+  onClose,
+  onNext,
+  data = defaultData,
+  depositData = defaultDepositData,
+  nomineeData = defaultNomineeData,
+  jointHolderData = defaultJointHolderData,
+}: EditAccountModalProps) {
+  const [activeTab, setActiveTab] = useState<TabKey>("Details");
+  const isLastTab = activeTab === TABS[TABS.length - 1];
+
+  const handleNext = () => {
+    if (isLastTab) {
+      onNext?.();
+    } else {
+      const currentIndex = TABS.indexOf(activeTab);
+      setActiveTab(TABS[currentIndex + 1]);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+      <div className="flex max-h-[90vh] w-[95vw] max-w-[1400px] flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+        {/* Header */}
+        <div className="flex items-start justify-between gap-4 px-6 pt-6">
+          <div className="flex items-start gap-3">
+            <HeaderIcon />
+            <div>
+              <h2 className="text-[19px] font-semibold text-slate-800">
+                Edit Deposit Account Details
+                <span className="text-slate-400"> / </span>
+                <span className="text-gray-500">ठेवी खात्याचे तपशील संपादित करा</span>
+              </h2>
+              <p className="mt-0.5 text-[13px] text-slate-400">
+                Edit some basic information related to the Employee
+                <span className="text-slate-300"> / </span>
+                कर्मचाऱ्याशी संबंधित काही मूलभूत माहिती
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+          >
+            <X className="h-5 w-5" strokeWidth={1.75} />
+          </button>
+        </div>
+
+        {/* Tabs */}
+        <div className="mt-4">
+          <Tabs tabs={TABS} active={activeTab} onChange={setActiveTab} />
+        </div>
+
+        {/* Body */}
+        <div className="flex-1 overflow-y-auto px-6 py-5">
+          {activeTab === "Details" && <DetailsTab data={data} />}
+          {activeTab === "Deposit" && <DepositTab data={depositData} />}
+          {activeTab === "Nominee" && <NomineeTab data={nomineeData} />}
+          {activeTab === "Joint Holder" && <JointHolderTab data={jointHolderData} />}
+        </div>
+
+        {/* Footer */}
+        <div className="flex justify-end gap-3 border-t border-slate-100 px-6 py-4">
+          <button
+            type="button"
+            className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-5 py-2 text-[14px] font-medium text-white transition hover:bg-blue-700"
+          >
+            Validate
+            <Check className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex items-center gap-1.5 rounded-lg border border-blue-600 px-5 py-2 text-[14px] font-medium text-blue-600 transition hover:bg-blue-50"
+          >
+            Cancel
+            <X className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={handleNext}
+            className="flex items-center gap-1.5 rounded-lg bg-blue-100 px-5 py-2 text-[14px] font-medium text-blue-300 transition hover:bg-blue-200"
+          >
+            Next
+            <ChevronDown className="h-4 w-4 -rotate-90" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

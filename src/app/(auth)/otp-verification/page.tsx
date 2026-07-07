@@ -107,13 +107,13 @@ const OtpVerificationPage = () => {
             {/* OTP Card */}
             <div className="flex flex-col justify-center items-center px-[54px] py-10 gap-2.5 w-[557px] h-[433px] bg-gradient-to-br from-white to-[#EAF8FB] shadow-[0px_10px_32px_rgba(0,0,0,0.15)] rounded-[22px] mt-8">
               <div className="flex flex-col items-center gap-2.5 w-[412px] h-[369px]">
-                <Image
-                  src="/Sidebar/Icon.png"
-                  alt="otp-icon"
-                  width={82}
-                  height={82}
-                  className="w-[82px] h-[82px]"
-                />
+              <Image
+  src="/Icon.png"
+  alt="otp-icon"
+  width={82}
+  height={82}
+  className="w-[82px] h-[82px]"
+/>
               <p
   className="font-medium text-[24px] leading-[24px] text-center w-[332px] h-[24px]"
   style={{ fontFamily: "'Instrument Sans'", color: "#000000" }}
