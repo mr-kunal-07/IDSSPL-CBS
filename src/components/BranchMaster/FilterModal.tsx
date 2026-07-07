@@ -1,0 +1,206 @@
+"use client";
+
+import { useState } from "react";
+import type { ChangeEvent } from "react";
+import { X, Filter as FilterIcon, Landmark, MapPin, ShieldCheck, Hash } from "lucide-react";
+
+const filterOptions = [
+  {
+    id: "branchCode",
+    label: "Branch Code",
+    icon: <Hash size={18} className="text-[#0B63C1]" />,
+    placeholder: "Branch Code",
+    inputIcon: <Hash size={18} className="text-[#0B63C1]" />,
+  },
+  {
+    id: "branchName",
+    label: "Branch Name",
+    icon: <Landmark size={18} className="text-[#0B63C1]" />,
+    placeholder: "Branch Name",
+    inputIcon: <Landmark size={18} className="text-[#0B63C1]" />,
+  },
+  {
+    id: "cityCode",
+    label: "City Code",
+    icon: <MapPin size={18} className="text-[#0B63C1]" />,
+    placeholder: "City Code",
+    inputIcon: <MapPin size={18} className="text-[#0B63C1]" />,
+  },
+  {
+    id: "isImplemented",
+    label: "Is Implemented",
+    icon: <ShieldCheck size={18} className="text-[#0B63C1]" />,
+    placeholder: "Is Implemented",
+    inputIcon: <ShieldCheck size={18} className="text-[#0B63C1]" />,
+  },
+] as const;
+
+type FilterKey = (typeof filterOptions)[number]["id"];
+
+export type BranchFilters = Record<FilterKey, string>;
+
+type FilterModalProps = {
+  onClose: () => void;
+  onApply: (filters: BranchFilters) => void;
+  initialValues?: BranchFilters;
+};
+
+export const defaultBranchFilterValues: BranchFilters = {
+  branchCode: "",
+  branchName: "",
+  cityCode: "",
+  isImplemented: "",
+};
+
+export default function FilterModal({
+  onClose,
+  onApply,
+  initialValues = defaultBranchFilterValues,
+}: FilterModalProps) {
+  const [activeFilter, setActiveFilter] = useState<FilterKey>("branchCode");
+  const [values, setValues] = useState<BranchFilters>(initialValues);
+
+  const active = filterOptions.find((f) => f.id === activeFilter);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setValues((prev) => ({ ...prev, [activeFilter]: e.target.value }));
+  };
+
+  const handleClearAll = () => {
+    setValues(defaultBranchFilterValues);
+    onApply(defaultBranchFilterValues);
+    onClose();
+  };
+
+  const handleApply = () => {
+    onApply(values);
+    onClose();
+  };
+
+  return (
+    <div className="relative w-full max-w-4xl overflow-hidden rounded-3xl border-2 border-[#0B63C1] bg-white p-8">
+      <div className="pointer-events-none absolute -top-10 right-10 h-40 w-40 rounded-full bg-[#DCEBFC]" />
+      <div className="pointer-events-none absolute -bottom-16 -left-10 h-48 w-48 rounded-full bg-[#DCEBFC]" />
+
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Close"
+        className="absolute right-8 top-8 z-50 flex h-9 w-9 items-center justify-center rounded-full border border-black text-black hover:bg-gray-100"
+      >
+        <X size={18} />
+      </button>
+
+      <div className="relative z-10 flex items-center gap-4">
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-[#0B63C1]">
+          <FilterIcon size={24} className="text-[#0B63C1]" />
+        </div>
+        <div>
+          <h2 className="text-2xl font-semibold text-gray-900">Filter</h2>
+          <p className="text-gray-400">Use filter for fast and efficient searching</p>
+        </div>
+      </div>
+
+      <div className="relative z-10 mt-5 border-b border-gray-200" />
+
+      <div className="relative z-10 mt-8 flex items-start gap-0">
+        <div className="flex w-full max-w-[470px] flex-col gap-4">
+          {filterOptions.map((option) => {
+            const isActive = activeFilter === option.id;
+            return (
+              <div key={option.id} className="relative flex items-center">
+                <button
+                  type="button"
+                  onClick={() => setActiveFilter(option.id)}
+                  className={`flex w-full items-center gap-3 rounded-2xl border px-5 py-4 text-left transition-colors ${
+                    isActive
+                      ? "border-[#0B63C1] bg-[#E8F1FD]"
+                      : "border-[#0B63C1] bg-white"
+                  }`}
+                >
+                  {option.icon}
+                  <span className="text-lg font-medium text-gray-900">
+                    {option.label}
+                  </span>
+                </button>
+
+                {isActive && (
+                  <div className="absolute -right-9 flex h-10 w-10 items-center justify-center">
+                    <div className="h-0 w-0 border-y-[18px] border-l-[24px] border-y-transparent border-l-[#DCEBFC]" />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="ml-10 w-[800px] rounded-2xl bg-[#DCEBFC] p-6 h-[220px] flex flex-col justify-center">
+          <h3 className="mb-3 text-lg font-semibold text-gray-900">
+            {active?.label}
+          </h3>
+          {activeFilter === "isImplemented" ? (
+            <div className="flex items-center gap-6">
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="isImplemented"
+                  className="h-5 w-5 border-gray-300 text-[#0B63C1] focus:ring-[#0B63C1]"
+                  checked={values.isImplemented === "Yes"}
+                  onChange={() => setValues((prev) => ({ ...prev, isImplemented: "Yes" }))}
+                />
+                <span className="ml-2 text-gray-900">Yes</span>
+              </label>
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="isImplemented"
+                  className="h-5 w-5 border-gray-300 text-[#0B63C1] focus:ring-[#0B63C1]"
+                  checked={values.isImplemented === "No"}
+                  onChange={() => setValues((prev) => ({ ...prev, isImplemented: "No" }))}
+                />
+                <span className="ml-2 text-gray-900">No</span>
+              </label>
+              {values.isImplemented && (
+                <button
+                  type="button"
+                  onClick={() => setValues((prev) => ({ ...prev, isImplemented: "" }))}
+                  className="text-sm font-medium text-[#0B63C1] underline hover:text-[#0a56aa]"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center gap-3 rounded-xl border border-[#0B63C1] bg-white px-4 py-3">
+              {active?.inputIcon}
+              <input
+                type="text"
+                value={values[activeFilter]}
+                onChange={handleChange}
+                placeholder={active?.placeholder}
+                className="w-full bg-transparent text-gray-700 placeholder-gray-400 outline-none"
+              />
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="relative z-10 mt-10 flex justify-center gap-4">
+        <button
+          type="button"
+          onClick={handleClearAll}
+          className="rounded-full border border-[#0B63C1] px-8 py-3 font-semibold text-[#0B63C1] hover:bg-[#F2F8FE]"
+        >
+          Clear All
+        </button>
+        <button
+          type="button"
+          onClick={handleApply}
+          className="rounded-full bg-[#0B63C1] px-10 py-3 font-semibold text-white hover:bg-[#0a56aa]"
+        >
+          Apply
+        </button>
+      </div>
+    </div>
+  );
+}
