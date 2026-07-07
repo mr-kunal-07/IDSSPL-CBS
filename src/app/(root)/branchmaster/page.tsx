@@ -5,6 +5,7 @@ import GlobalNav from "@/components/GlobalMaster/GlobalNav";
 import BranchMasterTable, { DEFAULT_BRANCH_ROWS, rowToBranchFormData, type BranchRow } from "@/components/BranchMaster/BranchMasterTable";
 import AddBranchModal, { emptyBranchFormData, type BranchFormData } from "@/components/BranchMaster/AddBranchModal";
 import FilterModal, { defaultBranchFilterValues, type BranchFilters } from "@/components/BranchMaster/FilterModal";
+import BranchChequeBookLotModal, { rowToChequeBookLotFormData, type ChequeBookLotFormData } from "@/components/BranchMaster/BranchChequeBookLotModal";
 
 const breadcrumbs = [
   { label: "Home", href: "/" },
@@ -24,6 +25,7 @@ export default function BranchMasterPage() {
   const [showAdd, setShowAdd] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [viewRow, setViewRow] = useState<BranchRow | null>(null);
+  const [chequeBookLotRow, setChequeBookLotRow] = useState<BranchRow | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState<BranchFilters>(defaultBranchFilterValues);
 
@@ -73,6 +75,11 @@ export default function BranchMasterPage() {
     setShowAdd(false);
   }, []);
 
+  const handleChequeBookLotSave = useCallback((data: ChequeBookLotFormData) => {
+    console.log("Branch Cheque Book Lot saved", data);
+    setChequeBookLotRow(null);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#E7EAEF]">
       <GlobalNav
@@ -98,7 +105,7 @@ export default function BranchMasterPage() {
           rows={filteredRows}
           onView={setViewRow}
           onBranchNonCbsParameter={(row) => console.log("Branch Non CBS Parameter", row)}
-          onBranchChequeBookLot={(row) => console.log("Branch Cheque Book Lot", row)}
+          onBranchChequeBookLot={setChequeBookLotRow}
           onBranchTdReceiptLot={(row) => console.log("Branch TD Receipt Lot", row)}
         />
       </div>
@@ -116,6 +123,13 @@ export default function BranchMasterPage() {
         mode="view"
         initialData={viewRow ? rowToBranchFormData(viewRow) : emptyBranchFormData}
         onClose={() => setViewRow(null)}
+      />
+
+      <BranchChequeBookLotModal
+        open={!!chequeBookLotRow}
+        initialData={chequeBookLotRow ? rowToChequeBookLotFormData(chequeBookLotRow) : undefined}
+        onClose={() => setChequeBookLotRow(null)}
+        onSave={handleChequeBookLotSave}
       />
 
       {showFilter && (
