@@ -22,6 +22,7 @@ export interface FormModalProps {
   headerIcon?: ReactNode;
   tabActions?: ReactNode;
   maxWidth?: string;
+  hideFooter?: boolean;
 }
 
 const FormModal = ({
@@ -41,6 +42,7 @@ const FormModal = ({
   headerIcon,
   tabActions,
   maxWidth = "max-w-6xl",
+  hideFooter = false,
 }: FormModalProps) => {
   const [saveMenuOpen, setSaveMenuOpen] = useState(false);
 
@@ -106,66 +108,68 @@ const FormModal = ({
         </div>
 
         {/* Footer */}
-        <div className="mt-6 flex items-center justify-end gap-3 border-t border-slate-100 pt-4">
-          <button
-            type="button"
-            onClick={onValidate}
-            className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
-          >
-            Validate <Check size={16} />
-          </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex items-center gap-1.5 rounded-lg border border-blue-500 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50"
-          >
-            Cancel <X size={16} />
-          </button>
-
-          {!isLastTab ? (
+        {!hideFooter && (
+          <div className="mt-6 flex items-center justify-end gap-3 border-t border-slate-100 pt-4">
             <button
               type="button"
-              onClick={onNext}
-              className="flex items-center gap-1.5 rounded-lg bg-blue-100 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-200"
+              onClick={onValidate}
+              className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
             >
-              Next <ChevronRight size={16} />
+              Validate <Check size={16} />
             </button>
-          ) : (
-            <div className="relative">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex items-center gap-1.5 rounded-lg border border-blue-500 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50"
+            >
+              Cancel <X size={16} />
+            </button>
+
+            {!isLastTab ? (
               <button
                 type="button"
-                onClick={() => setSaveMenuOpen((o) => !o)}
+                onClick={onNext}
                 className="flex items-center gap-1.5 rounded-lg bg-blue-100 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-200"
               >
-                Save <ChevronDown size={16} />
+                Next <ChevronRight size={16} />
               </button>
-              {saveMenuOpen && (
-                <div className="absolute bottom-12 right-0 w-40 rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSaveMenuOpen(false);
-                      onSave?.();
-                    }}
-                    className="block w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-blue-50"
-                  >
-                    Save
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSaveMenuOpen(false);
-                      onSave?.();
-                    }}
-                    className="block w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-blue-50"
-                  >
-                    Save & New
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+            ) : (
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setSaveMenuOpen((o) => !o)}
+                  className="flex items-center gap-1.5 rounded-lg bg-blue-100 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-200"
+                >
+                  Save <ChevronDown size={16} />
+                </button>
+                {saveMenuOpen && (
+                  <div className="absolute bottom-12 right-0 w-40 rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSaveMenuOpen(false);
+                        onSave?.();
+                      }}
+                      className="block w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-blue-50"
+                    >
+                      Save
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSaveMenuOpen(false);
+                        onSave?.();
+                      }}
+                      className="block w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-blue-50"
+                    >
+                      Save & New
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

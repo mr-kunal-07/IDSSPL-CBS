@@ -11,6 +11,7 @@ import {
   Phone,
   Mail,
   Copy,
+  SquarePenIcon,
 } from "lucide-react";
 
 type RowData = {
@@ -59,7 +60,15 @@ const menuOptions = [
 
 type SortKey = keyof Omit<RowData, "phone" | "email">;
 
-const TableCM = () => {
+type TableCMProps = {
+  onView?: (row: RowData) => void;
+  onEdit?: (row: RowData) => void;
+  onServices?: (row: RowData) => void;
+  onEditPhone?: (row: RowData) => void;
+  onEditEmail?: (row: RowData) => void;
+};
+
+const TableCM = ({ onView, onEdit, onServices, onEditPhone, onEditEmail }: TableCMProps) => {
   const [sortKey, setSortKey] = useState<SortKey | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
   const [openMenuRow, setOpenMenuRow] = useState<number | null>(null);
@@ -111,7 +120,7 @@ const TableCM = () => {
                   onClick={() =>
                     col.sortable && handleSort(col.key as SortKey)
                   }
-                  className={`text-left text-[16px] font-semibold text-white px-6 py-3 whitespace-nowrap ${
+                  className={`text-left text-[16px] font-semibold text-white px-4 py-2 whitespace-nowrap ${
                     col.sortable ? "cursor-pointer select-none" : ""
                   }`}
                 >
@@ -157,10 +166,15 @@ const TableCM = () => {
                         return (
                           <button
                             key={opt.key}
-                            onClick={() => setOpenMenuRow(null)}
-                            className="flex w-full items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50"
+                            onClick={() => {
+                              setOpenMenuRow(null);
+                              if (opt.key === "view" && onView) onView(row);
+                              if (opt.key === "edit" && onEdit) onEdit(row);
+                              if (opt.key === "services" && onServices) onServices(row);
+                            }}
+                            className="flex w-full items-center gap-3 px-4 py-2 text-sm text-black hover:bg-gray-50"
                           >
-                            <Icon size={16} className="text-blue-600" />
+                            <Icon size={16} className="text-[#0B63C1]" />
                             {opt.label}
                           </button>
                         );
@@ -169,23 +183,29 @@ const TableCM = () => {
                   )}
                 </td>
 
-                <td className="px-6 py-3 text-[16px] text-gray-700">
+                <td className="px-6 py-3 text-[16px] text-[#0B63C1]">
                   <div className="flex flex-col gap-1">
-                    <span className="font-medium text-gray-900">
+                    <span className="font-medium text-black">
                       {row.customerId}
                     </span>
-                    <span className="inline-flex items-center gap-1.5 text-sm text-gray-600">
-                      <Phone size={13} className="text-gray-400" />
+                    <span className="inline-flex items-center gap-1.5 text-sm text-[#0B63C1]  ">
+                      <Phone size={14} className="text-black" />
                       {row.phone}
-                      <button className="text-blue-600 hover:text-blue-700">
-                        <Copy size={12} />
+                      <button 
+                        onClick={() => onEditPhone?.(row)}
+                        className="text-[#0B63C1] hover:text-blue-700"
+                      >
+                        <SquarePenIcon size={16} />
                       </button>
                     </span>
-                    <span className="inline-flex items-center gap-1.5 text-sm text-gray-600">
-                      <Mail size={13} className="text-gray-400" />
+                    <span className="inline-flex items-center gap-1.5 text-sm text-[#0B63C1]  ">
+                      <Mail size={14} className="text-black" />
                       {row.email}
-                      <button className="text-blue-600 hover:text-blue-700">
-                        <Copy size={12} />
+                      <button 
+                        onClick={() => onEditEmail?.(row)}
+                        className="text-[#0B63C1] hover:text-blue-700"
+                      >
+                        <SquarePenIcon size={16} />
                       </button>
                     </span>
                   </div>
@@ -205,10 +225,10 @@ const TableCM = () => {
 
                 <td className="px-6 py-3">
                   <span
-                    className={`inline-flex h-7 w-7 items-center justify-center rounded-md text-xs font-semibold ${
+                    className={`inline-flex h-10 w-10 items-center justify-center rounded-md text-sm font-semibold ${
                       row.gender === "M"
-                        ? "bg-blue-50 text-[#0B63C1]"
-                        : "bg-pink-50 text-pink-600"
+                        ? "bg-blue-50 text-[#0B63C1] border border-blue-200"
+                        : "bg-pink-50 text-pink-600 border border-pink-200"
                     }`}
                   >
                     {row.gender}

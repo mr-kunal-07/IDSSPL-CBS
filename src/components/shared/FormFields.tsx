@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, Calendar, FileText, MoreVertical } from "lucide-react";
+import { ChevronDown, Calendar, FileText, MoreVertical, X, Upload } from "lucide-react";
 import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 
@@ -25,10 +25,10 @@ export const FieldShell = ({
 }: FieldShellProps) => (
   <div className={className}>
     <label
-      className={`mb-1.5 block text-[#1F2858] ${
+      className={`mb-1.5 block text-black ${
         variant === "large"
           ? "text-[16px] font-semibold"
-          : "text-xs font-medium"
+          : "text-sm font-medium"
       }`}
     >
       {label}
@@ -40,7 +40,7 @@ export const FieldShell = ({
       {required && <span className="text-red-500">{variant === "large" ? "*" : " *"}</span>}
     </label>
     {children}
-    {error && <p className="mt-1 text-xs text-red-500">This field is required</p>}
+    {error && <p className="mt-1 text-sm text-red-500">This field is required</p>}
   </div>
 );
 
@@ -77,7 +77,7 @@ export const TextInput = ({
       onChange={(e) => onChange(e.target.value)}
       className={`w-full rounded-lg border bg-white py-2.5 ${icon ? "pl-9" : "pl-3"} ${trailing ? "pr-11" : "pr-3"} text-sm text-slate-700 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${
         readOnly ? "bg-slate-50 text-slate-500" : ""
-      } ${error ? "border-red-400" : "border-slate-300"}`}
+      } ${error ? "border-red-400" : "border-slate-600"}`}
     />
     {trailing && <span className="absolute right-2">{trailing}</span>}
   </div>
@@ -108,7 +108,7 @@ export const SelectInput = ({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       className={`w-full appearance-none rounded-lg border bg-white py-2.5 ${icon ? "pl-9" : "pl-3"} pr-9 text-sm text-slate-700 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${
-        error ? "border-red-400" : "border-slate-300"
+        error ? "border-red-400" : "border-slate-600"
       } ${!value ? "text-slate-400" : ""}`}
     >
       <option value="">{placeholder}</option>
@@ -140,7 +140,7 @@ export const DateInput = ({ value, onChange, placeholder, error }: DateInputProp
       placeholder={placeholder}
       onChange={(e) => onChange(e.target.value)}
       className={`w-full rounded-lg border bg-white py-2.5 pl-9 pr-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${
-        error ? "border-red-400" : "border-slate-300"
+        error ? "border-red-400" : "border-slate-600"
       }`}
     />
   </div>
@@ -195,16 +195,16 @@ export const SectionCard = ({
   <div className="bg-white rounded-[20px] border-x border-b border-t-4 border-[#0A66D8] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)] no-scrollbar">
     <div className="mb-4 flex items-start gap-2">
       {icon && (
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600">
           {icon}
         </div>
       )}
       <div>
-        <h3 className="text-sm font-semibold text-[#1F2858]">
+        <h3 className="text-md font-semibold text-[#1F2858]">
           {titleEn} / <span className="text-slate-600">{titleHi}</span>
         </h3>
         {(subtitleEn || subtitleHi) && (
-          <p className="mt-0.5 text-xs text-slate-500">
+          <p className="mt-0.5 text-xs text-[#64748B]">
             {subtitleEn}
             {subtitleHi && ` / ${subtitleHi}`}
           </p>
@@ -440,4 +440,39 @@ export const UploadZone = ({ titleEn, titleHi, subtitleEn, subtitleHi }: UploadZ
       </div>
     </div>
   </SectionCard>
+);
+
+export interface ActionButtonsProps {
+  onCancel?: () => void;
+  onSubmit?: () => void;
+  cancelText?: string;
+  submitText?: string;
+  className?: string;
+}
+
+export const ActionButtons = ({
+  onCancel,
+  onSubmit,
+  cancelText = "Cancel",
+  submitText = "Submit",
+  className = "",
+}: ActionButtonsProps) => (
+  <div className={`flex items-center justify-end gap-3 ${className}`}>
+    <button
+      type="button"
+      onClick={onCancel}
+      className="flex items-center gap-2 rounded-lg border-2 border-[#0A66D8] bg-white px-6 py-2.5 text-sm font-medium text-[#0A66D8] transition-colors hover:bg-blue-50"
+    >
+      <X size={16} />
+      {cancelText}
+    </button>
+    <button
+      type="button"
+      onClick={onSubmit}
+      className="flex items-center gap-2 rounded-lg bg-[#0A66D8] px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+    >
+      {submitText}
+      <Upload size={16} />
+    </button>
+  </div>
 );

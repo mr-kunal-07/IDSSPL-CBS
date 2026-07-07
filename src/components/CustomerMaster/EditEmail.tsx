@@ -1,0 +1,128 @@
+"use client";
+
+import { useState } from "react";
+import { Mail, X, UserCircle2, IdCard, Upload } from "lucide-react";
+
+interface EditEmailModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (email: string) => void;
+  customerId: string;
+  customerName: string;
+  currentEmail: string;
+}
+
+export default function EditEmailModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  customerId,
+  customerName,
+  currentEmail,
+}: EditEmailModalProps) {
+  const [email, setEmail] = useState(currentEmail);
+
+  if (!isOpen) return null;
+
+  const handleSubmit = () => {
+    onSubmit(email);
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+      <div className="relative w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-2xl">
+        {/* Decorative background circles */}
+        <div className="pointer-events-none absolute -right-10 -top-16 h-40 w-40 rounded-full bg-blue-100/70" />
+        <div className="pointer-events-none absolute -bottom-16 -left-10 h-40 w-40 rounded-full bg-blue-100/70" />
+
+        <div className="relative px-8 py-8 sm:px-10 sm:py-10">
+          {/* Header */}
+          <div className="mb-8 flex items-start justify-between">
+            <div className="flex items-center gap-3">
+              <span className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-blue-600 bg-blue-50">
+                <Mail className="h-6 w-6 fill-blue-600 text-white" strokeWidth={2} />
+              </span>
+              <h2 className="text-2xl font-bold sm:text-3xl">
+                <span className="text-slate-900">Email ID</span>{" "}
+                <span className="text-slate-400">/ ईमेल आयडी</span>
+              </h2>
+            </div>
+
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-300 text-slate-400 transition hover:bg-slate-50"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          {/* Read-only info fields */}
+          <div className="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-slate-800">
+                Customer ID <span className="text-slate-400 font-medium">/ ग्राहकाचे आयडी</span>
+                <span className="text-red-500"> *</span>
+              </label>
+              <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                <UserCircle2 className="h-5 w-5 shrink-0 text-slate-400" />
+                <span className="truncate text-slate-500">{customerId}</span>
+              </div>
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-slate-800">
+                Customer Name <span className="text-slate-400 font-medium">/ ग्राहकाचे नाव</span>
+                <span className="text-red-500"> *</span>
+              </label>
+              <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                <IdCard className="h-5 w-5 shrink-0 text-slate-400" />
+                <span className="truncate text-slate-500">{customerName}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Editable email field */}
+          <div className="mb-10">
+            <label className="mb-2 block text-sm font-semibold text-slate-900">
+              Edit Email ID <span className="text-slate-500 font-medium">/ ईमेल आयडी एडिट करा</span>
+              <span className="text-red-500"> *</span>
+            </label>
+            <div className="flex items-center gap-2 rounded-xl border border-blue-600 px-4 py-3 focus-within:ring-2 focus-within:ring-blue-100">
+              <Mail className="h-5 w-5 shrink-0 text-slate-500" />
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-transparent text-slate-800 outline-none placeholder:text-slate-400"
+                placeholder="Enter email ID"
+              />
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center justify-center gap-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex w-40 items-center justify-center gap-2 rounded-xl border border-blue-600 py-3 font-semibold text-blue-600 transition hover:bg-blue-50"
+            >
+              Cancel
+              <X className="h-4 w-4" strokeWidth={3} />
+            </button>
+
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className="flex w-40 items-center justify-center gap-2 rounded-xl bg-blue-700 py-3 font-semibold text-white transition hover:bg-blue-800"
+            >
+              Submit
+              <Upload className="h-4 w-4" strokeWidth={2.5} />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
