@@ -2,28 +2,29 @@
 
 import { useState } from "react";
 import NavbarAM from "./NavbarAM";
-import FilterModal, { type AccountFilters } from "../shared/FilterModal";
-import AccountMasterTable from "./AccountMasterTable";
+import FilterModal, { type AccountFilters } from '../shared/FilterModal';
+
+interface Breadcrumb {
+  label: string;
+  href: string;
+}
 
 export default function AccountMasterPage() {
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filters, setFilters] = useState<AccountFilters>({
-    accountName: "",
-    accountNumber: "",
-    accountType: "",
-  });
+  const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
+
+  const breadcrumbs: Breadcrumb[] = [
+    { label: "Home", href: "/" },
+    { label: "User Master", href: "/user-master" },
+  ];
 
   return (
     <div>
       <NavbarAM
         titleEn="Account Master"
         titleHi="खाता मास्टर"
-        breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "Account Master", href: "/account-master" },
-        ]}
+        breadcrumbs={breadcrumbs}
         onBack={() => console.log("back")}
-        onOpenFilter={() => setIsFilterOpen(true)}
+        onFilter={() => setIsFilterOpen(true)}
         onAdd={() => console.log("add")}
       />
 
@@ -34,18 +35,17 @@ export default function AccountMasterPage() {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
           onClick={() => setIsFilterOpen(false)}
         >
-          <div onClick={(e) => e.stopPropagation()}>
+          <div onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}>
             <FilterModal
               onClose={() => setIsFilterOpen(false)}
-              onApply={(vals) => setFilters(vals)}
+              onApply={(_filters: AccountFilters) => {
+                // hook up filtering of the account list here
+                setIsFilterOpen(false);
+              }}
             />
           </div>
         </div>
       )}
-
-      <div className="mt-6">
-        <AccountMasterTable filters={filters} />
-      </div>
     </div>
   );
 }

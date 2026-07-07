@@ -3,7 +3,7 @@ import { useState } from "react";
 import AccountMasterTable from "@/components/AccountMaster/AccountMasterTable";
 import NavbarAM from "@/components/AccountMaster/NavbarAM";
 import AddAccountMaster from "@/components/AccountMaster/AddAccountMaster";
-import FilterModal, { type AccountFilters } from "@/components/AccountMaster/FilterModal";
+import FilterModal, { type AccountFilters } from "@/components/shared/FilterModal";
 
 const AccountMasterPage = () => {
   const [openAddModal, setOpenAddModal] = useState(false);

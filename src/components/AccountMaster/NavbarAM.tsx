@@ -1,5 +1,5 @@
 import { ArrowLeft, Home, ChevronRight, Filter, Plus, Search, RefreshCw } from "lucide-react";
-import { type AccountFilters } from "./FilterModal";
+import { type AccountFilters } from "../shared/FilterModal";
 
 type BreadcrumbItem = {
   label: string;

@@ -12,7 +12,7 @@ import {
   Search,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import SuccessModal from "./SuccessModal";
+import SuccessModal from "../shared/SuccessModal";
 import Image from "next/image";
 import ListModal from "./ListModal";
 import AddSavingAccountModal from "./AddSavingAccountModal";

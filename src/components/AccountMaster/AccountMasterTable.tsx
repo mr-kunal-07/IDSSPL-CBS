@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import type { MouseEvent as ReactMouseEvent } from "react";
 import { ArrowUpDown, MoreVertical, ExternalLink, Eye, SquarePen, UserRoundCog } from "lucide-react";
-import type { AccountFilters } from "./FilterModal";
+import type { AccountFilters } from "../shared/FilterModal";
 
 type RowData = {
   srNo: number;
