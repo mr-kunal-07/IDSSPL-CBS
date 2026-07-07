@@ -53,7 +53,7 @@ const FormModal = ({
       >
         {/* Header */}
         <div className="flex items-start justify-between border-b border-slate-100 pb-4">
-          <div className="flex items-start gap-3">
+          <div className="flex items-center gap-3">
             {headerIcon ?? (
               <Image src="/add-icn.png" alt="Add Icon" width={50} height={50} />
             )}

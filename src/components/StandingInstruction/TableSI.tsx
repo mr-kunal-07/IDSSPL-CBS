@@ -1,0 +1,175 @@
+"use client";
+
+import { useRef, useState, useEffect } from "react";
+import { ArrowUpDown, MoreVertical, ExternalLink, Ban } from "lucide-react";
+
+export type SIRow = {
+  srNo: number;
+  debitAccountCode: string;
+  debitName: string;
+  creditAccountCode: string;
+  creditName: string;
+  startDate: string;
+  endDate: string;
+  nextDueDate: string;
+  amount: string;
+  frequency: string;
+  status: string;
+  executedCount: string;
+};
+
+const columns = [
+  { key: "srNo", label: "Sr No.", sortable: false },
+  { key: "action", label: "Action", sortable: false },
+  { key: "debit", label: "Debit A/c", sortable: false },
+  { key: "credit", label: "Credit A/c", sortable: false },
+  { key: "amount", label: "Amount", sortable: true },
+  { key: "frequency", label: "Frequency", sortable: true },
+  { key: "nextDueDate", label: "Next Due Date", sortable: true },
+  { key: "status", label: "Status", sortable: true },
+] as const;
+
+const rows: SIRow[] = [
+  { srNo: 1, debitAccountCode: "022010014255", debitName: "Mirji Chandrashekar Bhimgouda", creditAccountCode: "00024090001664", creditName: "Mirja Chandrashekar Bhimgouda", startDate: "24/03/2025", endDate: "23/03/2026", nextDueDate: "23/04/2026", amount: "6000.0", frequency: "Monthly", status: "Live", executedCount: "10" },
+  { srNo: 2, debitAccountCode: "022010098765", debitName: "Swami Vivekanand Printing Press", creditAccountCode: "00021010000008", creditName: "Anita Singh", startDate: "15/06/2026", endDate: "30/06/2026", nextDueDate: "23/07/2026", amount: "9999.0", frequency: "Yearly", status: "Live", executedCount: "1" },
+  { srNo: 3, debitAccountCode: "011203456789", debitName: "Rohit Kumar", creditAccountCode: "00024090005522", creditName: "Rajesh Kumar Sharma", startDate: "01/01/2024", endDate: "01/01/2027", nextDueDate: "01/08/2026", amount: "2500.0", frequency: "Quarterly", status: "Live", executedCount: "6" },
+];
+
+type SortKey = "amount" | "frequency" | "nextDueDate" | "status";
+
+interface TableSIProps {
+  onStop?: (row: SIRow) => void;
+}
+
+const TableSI = ({ onStop }: TableSIProps) => {
+  const [sortKey, setSortKey] = useState<SortKey | null>(null);
+  const [sortAsc, setSortAsc] = useState(true);
+  const [openMenuRow, setOpenMenuRow] = useState<number | null>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpenMenuRow(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortAsc(!sortAsc);
+    } else {
+      setSortKey(key);
+      setSortAsc(true);
+    }
+  };
+
+  const sortedRows = [...rows].sort((a, b) => {
+    if (!sortKey) return 0;
+    const valA = a[sortKey];
+    const valB = b[sortKey];
+    if (valA < valB) return sortAsc ? -1 : 1;
+    if (valA > valB) return sortAsc ? 1 : -1;
+    return 0;
+  });
+
+  return (
+    <div className="w-full bg-white rounded-xl overflow-hidden shadow-sm">
+      <div className="overflow-x-auto [-ms-overflow-style:none] scrollbar-none [&::-webkit-scrollbar]:hidden">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="bg-[#0B63C1] rounded-t-xl">
+              {columns.map((col) => (
+                <th
+                  key={col.key}
+                  onClick={() => col.sortable && handleSort(col.key as SortKey)}
+                  className={`text-left text-[16px] font-semibold text-white px-4 py-2 whitespace-nowrap ${
+                    col.sortable ? "cursor-pointer select-none" : ""
+                  }`}
+                >
+                  <span className="inline-flex items-center gap-1">
+                    {col.label}
+                    {col.sortable && <ArrowUpDown size={13} className="opacity-80" />}
+                  </span>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {sortedRows.map((row, idx) => (
+              <tr
+                key={row.srNo}
+                className={`${idx !== sortedRows.length - 1 ? "border-b border-gray-100" : ""} hover:bg-gray-50`}
+              >
+                <td className="px-6 py-3">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-blue-50 text-[#0B63C1] text-sm font-semibold">
+                    {row.srNo}
+                  </span>
+                </td>
+
+                <td className="px-6 py-3 relative">
+                  <button
+                    onClick={() => setOpenMenuRow(openMenuRow === row.srNo ? null : row.srNo)}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <MoreVertical size={18} />
+                  </button>
+
+                  {openMenuRow === row.srNo && (
+                    <div
+                      ref={menuRef}
+                      className="absolute left-6 top-10 z-10 w-56 rounded-xl border border-blue-200 bg-white py-2 shadow-lg"
+                    >
+                      <button
+                        onClick={() => {
+                          setOpenMenuRow(null);
+                          onStop?.(row);
+                        }}
+                        className="flex w-full items-center gap-3 px-4 py-2 text-sm text-black hover:bg-gray-50"
+                      >
+                        <Ban size={16} className="text-[#0B63C1]" />
+                        Stop
+                      </button>
+                    </div>
+                  )}
+                </td>
+
+                <td className="px-6 py-3 text-[16px]">
+                  <div className="flex flex-col gap-0.5">
+                    <span className="font-medium text-black">{row.debitAccountCode}</span>
+                    <span className="text-sm text-slate-500">{row.debitName}</span>
+                  </div>
+                </td>
+
+                <td className="px-6 py-3 text-[16px]">
+                  <div className="flex flex-col gap-0.5">
+                    <span className="font-medium text-black">{row.creditAccountCode}</span>
+                    <span className="text-sm text-slate-500">{row.creditName}</span>
+                  </div>
+                </td>
+
+                <td className="px-6 py-3 text-[16px] text-gray-700">{row.amount}</td>
+
+                <td className="px-6 py-3 text-[16px] text-gray-700">{row.frequency}</td>
+
+                <td className="px-6 py-3 text-[16px] text-gray-700">{row.nextDueDate}</td>
+
+                <td className="px-6 py-3">
+                  <span className="inline-flex items-center gap-1.5 rounded-md border border-emerald-500 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-600">
+                    <span className="h-2 w-1.5 rounded-full bg-emerald-700" />
+                    {row.status}
+                    <ExternalLink size={12} />
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+export default TableSI;

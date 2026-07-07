@@ -31,13 +31,15 @@ export const FieldShell = ({
           : "text-sm font-medium"
       }`}
     >
-      {label}
-      {labelHi && (
-        <span className={variant === "large" ? "font-medium text-gray-500" : "text-slate-600"}>
-          {" "}/ {labelHi}
-        </span>
-      )}
-      {required && <span className="text-red-500">{variant === "large" ? "*" : " *"}</span>}
+      <span className="inline-flex flex-wrap items-center gap-1">
+        <span>{label}</span>
+        {labelHi && (
+          <span className={variant === "large" ? "font-medium text-gray-500" : "text-slate-600"}>
+            / {labelHi}
+          </span>
+        )}
+        {required && <span className="text-red-500">*</span>}
+      </span>
     </label>
     {children}
     {error && <p className="mt-1 text-sm text-red-500">This field is required</p>}
@@ -65,7 +67,7 @@ export const TextInput = ({
   trailing,
   type = "text",
 }: TextInputProps) => (
-  <div className="relative flex items-center">
+  <div className="flex items-center gap-2">
     {icon && (
       <span className="pointer-events-none absolute left-3 text-slate-400">{icon}</span>
     )}
@@ -75,11 +77,11 @@ export const TextInput = ({
       readOnly={readOnly}
       placeholder={placeholder}
       onChange={(e) => onChange(e.target.value)}
-      className={`w-full rounded-lg border bg-white py-2.5 ${icon ? "pl-9" : "pl-3"} ${trailing ? "pr-11" : "pr-3"} text-sm text-slate-700 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${
+      className={`w-full rounded-lg border bg-white py-2.5 ${icon ? "pl-9" : "pl-3"} $pr-3 text-sm text-slate-700 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${
         readOnly ? "bg-slate-50 text-slate-500" : ""
-      } ${error ? "border-red-400" : "border-slate-600"}`}
+      } ${error ? "border-red-400" : readOnly ? "border-[#6A7282]" : "border-slate-600"}`}
     />
-    {trailing && <span className="absolute right-2">{trailing}</span>}
+    {trailing && <div className="shrink-0">{trailing}</div>}
   </div>
 );
 
@@ -192,15 +194,15 @@ export const SectionCard = ({
   icon,
   children,
 }: SectionCardProps) => (
-  <div className="bg-white rounded-[20px] border-x border-b border-t-4 border-[#0A66D8] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)] no-scrollbar">
-    <div className="mb-4 flex items-start gap-2">
+  <div className="bg-white rounded-[20px] border-x border-b-2 border-t-4 border-[#0A66D8] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)] no-scrollbar">
+    <div className="mb-5 flex items-center gap-3">
       {icon && (
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#EEF4FF] text-[#0A66D8]">
           {icon}
         </div>
       )}
       <div>
-        <h3 className="text-md font-semibold text-[#1F2858]">
+        <h3 className="text-lg font-semibold leading-none text-[#1F2858]">
           {titleEn} / <span className="text-slate-600">{titleHi}</span>
         </h3>
         {(subtitleEn || subtitleHi) && (
@@ -304,9 +306,9 @@ export const LookupButton = ({ items, onPick }: LookupButtonProps) => {
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex h-[38px] w-[38px] items-center justify-center rounded-lg border border-slate-200 bg-blue-50 text-blue-600 transition-colors hover:bg-blue-100"
+        className="flex h-11 w-11 items-center justify-center rounded-lg border border-slate-300 bg-[#EEF4FF] text-[#0A66D8] transition hover:bg-[#DDEAFF]"
       >
-        <MoreVertical size={16} />
+        <MoreVertical size={18} strokeWidth={2.4} />
       </button>
       {open && (
         <div className="absolute right-0 top-11 z-20 max-h-52 w-40 overflow-auto rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
