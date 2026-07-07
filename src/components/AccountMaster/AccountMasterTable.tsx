@@ -200,7 +200,7 @@ const sortedRows = [...filteredRows].sort((a, b) => {
                 >
                   <span className="inline-flex items-center gap-1">
                     {col.label}
-                    {col.sortable && <ArrowUpDown size={13} className="opacity-80" />}
+                    {col.sortable && <ArrowUpDown size={16} strokeWidth={2.5} className="" />}
                   </span>
                 </th>
               ))}

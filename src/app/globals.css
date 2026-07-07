@@ -35,3 +35,7 @@ body {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+.primery-cp {
+  background-color: #0B63C1;
+}

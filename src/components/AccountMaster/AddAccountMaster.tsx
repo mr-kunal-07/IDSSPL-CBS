@@ -109,11 +109,11 @@ function FormField({
   return (
     <div className="mb-3 last:mb-0">
       {/* Label */}
-      <label className="block text-[16px] font-semibold text-[#1F2858]">
+      <label className="block text-[16px] font-semibold text-black">
         {field.label}
-        <span className="text-gray-500 font-medium">
+        <span className="text-gray-500 font-semibold">
           {" "}
-          / {field.labelHi}
+          <span className="text-black">/</span> {field.labelHi}
         </span>
         <span className="text-red-500">*</span>
       </label>
@@ -129,9 +129,9 @@ function FormField({
             items-center
             w-full
             h-10
-            rounded-md
+            rounded-[12px]
             border
-            border-[#B8C2D6]
+            border-[#6A7282]
             bg-white
             px-4
             transition-all
@@ -149,7 +149,7 @@ function FormField({
         >
           <Icon
             size={18}
-            className="text-[#6B7280] shrink-0"
+            className="text-[#6A7282] shrink-0"
           />
 
           <input
@@ -162,9 +162,10 @@ function FormField({
               ml-3
               w-full
               bg-transparent
+              placeholder:font-medium
               text-[16px]
               text-[#4B5563]
-              placeholder:text-[#7C879B]
+              placeholder:text-[#6A7282]
               outline-none
               ${
                 isMenuField
@@ -319,7 +320,7 @@ export default function AddAccountFlow({ onClose = () => { } }: AddAccountFlowPr
               </p>
             </div>
           </div>
-          <div className="bg-white rounded-[20px] border-x border-b border-t-4 border-[#0A66D8] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+          <div className="bg-white rounded-[20px] border-x border-b border-t-4 border-[#0B63C1] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
             {fields.map((field) => (
               <FormField
                 key={field.key}
