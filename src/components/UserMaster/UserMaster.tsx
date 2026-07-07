@@ -24,7 +24,7 @@ export default function AccountMasterPage() {
         titleHi="खाता मास्टर"
         breadcrumbs={breadcrumbs}
         onBack={() => console.log("back")}
-        onFilter={() => setIsFilterOpen(true)}
+        onOpenFilter={() => setIsFilterOpen(true)}
         onAdd={() => console.log("add")}
       />
 
