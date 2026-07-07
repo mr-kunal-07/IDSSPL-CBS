@@ -42,7 +42,6 @@ const menuOptions = [
 ];
 
 const AccountMasterTable = ({ filters }: { filters?: AccountFilters }) => {
-  const [activeTab, setActiveTab] = useState("Deposit");
   const [sortKey, setSortKey] = useState<keyof RowData | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
   const [openMenuRow, setOpenMenuRow] = useState<number | null>(null);
@@ -239,7 +238,7 @@ const sortedRows = [...filteredRows].sort((a, b) => {
                           <button
                             key={opt.key}
                             onClick={() => setOpenMenuRow(null)}
-                            className="flex w-full items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50"
+                            className="flex w-full text-black items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50"
                           >
                             <Icon size={16} className="text-blue-600" />
                             {opt.label}

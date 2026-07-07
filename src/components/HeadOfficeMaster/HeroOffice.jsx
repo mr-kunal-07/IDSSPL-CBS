@@ -90,7 +90,7 @@ const HeroOffice = ({ openMaster, setOpenMaster, tableRows, onRowsChange, filter
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-4">
+    <div className="min-w-7xl mx-auto p-4">
       <div className="p-5 bg-white rounded-xl">
         <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-blue-900 px-6 py-10 text-center">
           <h1 className="text-white text-[38px] font-bold leading-tight">

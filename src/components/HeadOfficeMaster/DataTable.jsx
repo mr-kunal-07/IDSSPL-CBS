@@ -107,7 +107,7 @@ const DataTable = ({ master, rows, filters, onRowsChange }) => {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto p-4">
+      <div className="min-w-7xl mx-auto p-4">
         <div className="p-5 bg-white rounded-xl shadow-sm">
           <div className="overflow-x-auto rounded-lg border border-gray-200">
             <table className="w-full text-sm">
