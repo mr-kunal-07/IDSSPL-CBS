@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import type { MouseEvent as ReactMouseEvent } from "react";
 import { ArrowUpDown, MoreVertical, ExternalLink, Eye, SquarePen, UserRoundCog } from "lucide-react";
+import type { AccountFilters } from "./FilterModal";
 
 type RowData = {
   srNo: number;
@@ -40,12 +41,15 @@ const menuOptions = [
   { key: "freeze", label: "Account Freeze / Unfreeze", icon: UserRoundCog },
 ];
 
-const AccountMasterTable = () => {
+const AccountMasterTable = ({ filters }: { filters?: AccountFilters }) => {
   const [activeTab, setActiveTab] = useState("Deposit");
   const [sortKey, setSortKey] = useState<keyof RowData | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
   const [openMenuRow, setOpenMenuRow] = useState<number | null>(null);
+  const [menuPosition, setMenuPosition] = useState<'top' | 'bottom'>('bottom');
+  const [menuStyle, setMenuStyle] = useState<React.CSSProperties | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -57,6 +61,97 @@ const AccountMasterTable = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const repositionMenu = () => {
+    const btn = triggerRef.current;
+    if (!btn) return;
+    const rect = btn.getBoundingClientRect();
+    const estimatedHeight = Math.min(300, menuOptions.length * 44 + 16);
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    const willOpenTop = spaceBelow < estimatedHeight && spaceAbove > spaceBelow;
+
+    const menuWidth = 256;
+    const horizontalOffset = 12;
+    let left = rect.left + horizontalOffset;
+    if (left + menuWidth > window.innerWidth - 16) left = window.innerWidth - menuWidth - 16;
+    if (left < 8) left = 8;
+
+    if (willOpenTop) {
+      const top = rect.top - estimatedHeight - 8;
+      setMenuStyle({ position: 'fixed', left, top: Math.max(8, top), minWidth: 220, width: menuWidth, maxHeight: '50vh', overflowY: 'auto' });
+      setMenuPosition('top');
+    } else {
+      const top = rect.bottom + 8;
+      setMenuStyle({ position: 'fixed', left, top, minWidth: 220, width: menuWidth, maxHeight: '50vh', overflowY: 'auto' });
+      setMenuPosition('bottom');
+    }
+  };
+
+  useEffect(() => {
+    if (openMenuRow == null) return;
+
+    const rafIdRef: { id?: number } = {};
+    const onScrollOrResize = () => {
+      if (rafIdRef.id) cancelAnimationFrame(rafIdRef.id);
+      rafIdRef.id = requestAnimationFrame(() => repositionMenu());
+    };
+
+    window.addEventListener('scroll', onScrollOrResize, true);
+    window.addEventListener('resize', onScrollOrResize);
+
+    const ro = new ResizeObserver(() => onScrollOrResize());
+    if (triggerRef.current) ro.observe(triggerRef.current);
+    ro.observe(document.body);
+
+    // initial position
+    repositionMenu();
+
+    return () => {
+      window.removeEventListener('scroll', onScrollOrResize, true);
+      window.removeEventListener('resize', onScrollOrResize);
+      ro.disconnect();
+      if (rafIdRef.id) cancelAnimationFrame(rafIdRef.id);
+    };
+  }, [openMenuRow]);
+
+  const handleMenuToggle = (e: ReactMouseEvent<HTMLButtonElement>, srNo: number) => {
+    e.stopPropagation();
+    const btn = e.currentTarget as HTMLElement;
+    const rect = btn.getBoundingClientRect();
+    const estimatedHeight = Math.min(300, menuOptions.length * 44 + 16);
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+
+    if (openMenuRow === srNo) {
+      setOpenMenuRow(null);
+      setMenuStyle(null);
+      triggerRef.current = null;
+      return;
+    }
+
+    const willOpenTop = spaceBelow < estimatedHeight && spaceAbove > spaceBelow;
+    setMenuPosition(willOpenTop ? 'top' : 'bottom');
+
+    const menuWidth = 256; // desired menu width in px
+    const horizontalOffset = 12; // shift menu slightly to the right
+    let left = rect.left + horizontalOffset;
+    if (left + menuWidth > window.innerWidth - 16) left = window.innerWidth - menuWidth - 16;
+    if (left < 8) left = 8;
+
+    // save trigger so we can reposition while open
+    triggerRef.current = btn;
+
+    if (willOpenTop) {
+      const top = rect.top - estimatedHeight - 8; // position above the button
+      setMenuStyle({ position: 'fixed', left, top: Math.max(8, top), minWidth: 220, width: menuWidth, maxHeight: '50vh', overflowY: 'auto' });
+    } else {
+      const top = rect.bottom + 8; // position below the button
+      setMenuStyle({ position: 'fixed', left, top, minWidth: 220, width: menuWidth, maxHeight: '50vh', overflowY: 'auto' });
+    }
+
+    setOpenMenuRow(srNo);
+  };
+
   const handleSort = (key: keyof RowData) => {
     if (sortKey === key) {
       setSortAsc(!sortAsc);
@@ -66,14 +161,27 @@ const AccountMasterTable = () => {
     }
   };
 
-  const sortedRows = [...rows].sort((a, b) => {
-    if (!sortKey) return 0;
-    const valA = a[sortKey];
-    const valB = b[sortKey];
-    if (valA < valB) return sortAsc ? -1 : 1;
-    if (valA > valB) return sortAsc ? 1 : -1;
-    return 0;
-  });
+  const filteredRows = rows.filter((row) => {
+  let match = true;
+  if (filters?.accountName) {
+    match &&= row.accountName.toLowerCase().includes(filters.accountName.toLowerCase());
+  }
+  if (filters?.accountNumber) {
+    match &&= row.accountId.toLowerCase().includes(filters.accountNumber.toLowerCase());
+  }
+  if (filters?.accountType) {
+    match &&= row.accountType.toLowerCase().includes(filters.accountType.toLowerCase());
+  }
+  return match;
+});
+const sortedRows = [...filteredRows].sort((a, b) => {
+  if (!sortKey) return 0;
+  const valA = a[sortKey];
+  const valB = b[sortKey];
+  if (valA < valB) return sortAsc ? -1 : 1;
+  if (valA > valB) return sortAsc ? 1 : -1;
+  return 0;
+});
 
   return (
     <div className="w-full bg-white rounded-xl overflow-hidden shadow-sm">
@@ -113,7 +221,7 @@ const AccountMasterTable = () => {
                 
                 <td className="px-6 py-3 relative">
                   <button
-                    onClick={() => setOpenMenuRow(openMenuRow === row.srNo ? null : row.srNo)}
+                    onClick={(e) => handleMenuToggle(e, row.srNo)}
                     className="text-gray-400 hover:text-gray-600"
                   >
                     <MoreVertical size={18} />
@@ -122,7 +230,8 @@ const AccountMasterTable = () => {
                   {openMenuRow === row.srNo && (
                     <div
                       ref={menuRef}
-                      className="absolute left-6 top-10 z-10 w-64 rounded-xl border border-blue-200 bg-white py-2 shadow-lg"
+                      className={`z-50 rounded-xl border border-blue-200 bg-white py-2 shadow-lg`}
+                      style={menuStyle ?? { minWidth: 220, maxHeight: '50vh', overflowY: 'auto' }}
                     >
                       {menuOptions.map((opt) => {
                         const Icon = opt.icon;

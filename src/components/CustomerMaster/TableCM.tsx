@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { type CustomerFilters } from "./FilterModal";
 import {
   ArrowUpDown,
   MoreVertical,
@@ -10,7 +11,6 @@ import {
   List,
   Phone,
   Mail,
-  Copy,
   SquarePenIcon,
 } from "lucide-react";
 
@@ -60,15 +60,23 @@ const menuOptions = [
 
 type SortKey = keyof Omit<RowData, "phone" | "email">;
 
-type TableCMProps = {
+interface TableCMProps {
+  filters?: CustomerFilters;
   onView?: (row: RowData) => void;
   onEdit?: (row: RowData) => void;
   onServices?: (row: RowData) => void;
   onEditPhone?: (row: RowData) => void;
   onEditEmail?: (row: RowData) => void;
-};
+}
 
-const TableCM = ({ onView, onEdit, onServices, onEditPhone, onEditEmail }: TableCMProps) => {
+const TableCM = ({
+  filters,
+  onView,
+  onEdit,
+  onServices,
+  onEditPhone,
+  onEditEmail,
+}: TableCMProps) => {
   const [sortKey, setSortKey] = useState<SortKey | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
   const [openMenuRow, setOpenMenuRow] = useState<number | null>(null);
@@ -93,7 +101,15 @@ const TableCM = ({ onView, onEdit, onServices, onEditPhone, onEditEmail }: Table
     }
   };
 
-  const sortedRows = [...rows].sort((a, b) => {
+  const filteredRows = rows.filter((r) => {
+    if (!filters) return true;
+    if (filters.customerName && !r.name.toLowerCase().includes(filters.customerName.toLowerCase())) return false;
+    if (filters.customerId && !r.customerId.toLowerCase().includes(filters.customerId.toLowerCase())) return false;
+    if (filters.status && r.status.toLowerCase() !== filters.status.toLowerCase()) return false;
+    return true;
+  });
+
+  const sortedRows = [...filteredRows].sort((a, b) => {
     if (!sortKey) return 0;
     const valA = a[sortKey];
     const valB = b[sortKey];
@@ -168,9 +184,9 @@ const TableCM = ({ onView, onEdit, onServices, onEditPhone, onEditEmail }: Table
                             key={opt.key}
                             onClick={() => {
                               setOpenMenuRow(null);
-                              if (opt.key === "view" && onView) onView(row);
-                              if (opt.key === "edit" && onEdit) onEdit(row);
-                              if (opt.key === "services" && onServices) onServices(row);
+                              if (opt.key === "view") onView?.(row);
+                              if (opt.key === "edit") onEdit?.(row);
+                              if (opt.key === "services") onServices?.(row);
                             }}
                             className="flex w-full items-center gap-3 px-4 py-2 text-sm text-black hover:bg-gray-50"
                           >
@@ -188,20 +204,20 @@ const TableCM = ({ onView, onEdit, onServices, onEditPhone, onEditEmail }: Table
                     <span className="font-medium text-black">
                       {row.customerId}
                     </span>
-                    <span className="inline-flex items-center gap-1.5 text-sm text-[#0B63C1]  ">
+                    <span className="inline-flex items-center gap-1.5 text-sm text-[#0B63C1]">
                       <Phone size={14} className="text-black" />
                       {row.phone}
-                      <button 
+                      <button
                         onClick={() => onEditPhone?.(row)}
                         className="text-[#0B63C1] hover:text-blue-700"
                       >
                         <SquarePenIcon size={16} />
                       </button>
                     </span>
-                    <span className="inline-flex items-center gap-1.5 text-sm text-[#0B63C1]  ">
+                    <span className="inline-flex items-center gap-1.5 text-sm text-[#0B63C1]">
                       <Mail size={14} className="text-black" />
                       {row.email}
-                      <button 
+                      <button
                         onClick={() => onEditEmail?.(row)}
                         className="text-[#0B63C1] hover:text-blue-700"
                       >

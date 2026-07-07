@@ -1,16 +1,31 @@
-
 "use client";
-import AccountMasterTable from '@/components/AccountMaster/AccountMasterTable'
-import NavbarAM from '@/components/AccountMaster/NavbarAM'
+import { useState } from "react";
+import AccountMasterTable from "@/components/AccountMaster/AccountMasterTable";
+import NavbarAM from "@/components/AccountMaster/NavbarAM";
 import AddAccountMaster from "@/components/AccountMaster/AddAccountMaster";
-import { useState } from 'react';
+import FilterModal, { type AccountFilters } from "@/components/AccountMaster/FilterModal";
 
-
-const page = () => {
+const AccountMasterPage = () => {
   const [openAddModal, setOpenAddModal] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [filters, setFilters] = useState<AccountFilters>({
+    accountName: "",
+    accountNumber: "",
+    accountType: "",
+  });
+
+  const handleResetFilters = () => {
+    setFilters({
+      accountName: "",
+      accountNumber: "",
+      accountType: "",
+    });
+    setIsSearchVisible(false);
+  };
 
   return (
-    <div className="min-h-screen bg-[#F4F6FC] relative" >
+    <div className="min-h-screen bg-[#F4F6FC] relative">
       <NavbarAM
         titleEn="Account Master"
         titleHi="खाते मास्टर"
@@ -21,20 +36,39 @@ const page = () => {
         ]}
         onBack={() => window.history.back()}
         onAdd={() => setOpenAddModal(true)}
+        isSearchVisible={isSearchVisible}
+        filters={filters}
+        onToggleSearch={() => setIsSearchVisible((prev) => !prev)}
+        onOpenFilter={() => setIsFilterOpen(true)}
+        onResetFilters={handleResetFilters}
       />
 
       <div className="px-3 py-2">
-        <AccountMasterTable />
+        <AccountMasterTable filters={filters} />
       </div>
 
-      {/* Modal */}
+      {/* Filter Modal */}
+      {isFilterOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={() => setIsFilterOpen(false)}
+        >
+          <div onClick={(e) => e.stopPropagation()}>
+            <FilterModal
+              onClose={() => setIsFilterOpen(false)}
+              onApply={(newFilters) => setFilters(newFilters)}
+              initialValues={filters}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Add Modal */}
       {openAddModal && (
-        <AddAccountMaster
-          onClose={() => setOpenAddModal(false)}
-        />
+        <AddAccountMaster onClose={() => setOpenAddModal(false)} />
       )}
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default AccountMasterPage;
