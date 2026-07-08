@@ -26,9 +26,9 @@ import {
   Check,
   Wrench,
   ArrowLeftRight,
-  Search,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import ListModal from "./ListModal";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -586,108 +586,6 @@ function Tabs({ tabs, active, onChange }: { tabs: TabKey[]; active: TabKey; onCh
 }
 
 /* ------------------------------------------------------------------ */
-/*  ListModal — shared popup for "Customer Type List" and "Branch List" */
-/*  Styled per the Figma spec: 36px corner radius, soft blurred corner   */
-/*  ellipses, F9FAFB search field, EEF2FF "Select" pill.                 */
-/* ------------------------------------------------------------------ */
-
-interface ListModalProps<T> {
-  title: string;
-  idLabel: string;
-  nameLabel: string;
-  items: T[];
-  getId: (item: T) => string;
-  getName: (item: T) => string;
-  onSelect: (item: T) => void;
-  onClose: () => void;
-}
-
-function ListModal<T>({ title, idLabel, nameLabel, items, getId, getName, onSelect, onClose }: ListModalProps<T>) {
-  const [search, setSearch] = useState("");
-
-  const filtered = items.filter((item) => {
-    const q = search.trim().toLowerCase();
-    if (!q) return true;
-    return getId(item).toLowerCase().includes(q) || getName(item).toLowerCase().includes(q);
-  });
-
-  return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4">
-      <div className="relative flex max-h-[85vh] w-full max-w-[841px] flex-col overflow-hidden rounded-[36px] bg-white shadow-2xl">
-        <div className="pointer-events-none absolute -right-16 -top-32 h-64 w-64 rounded-full bg-primary-50 blur-2xl" aria-hidden />
-        <div className="pointer-events-none absolute -left-24 bottom-0 h-64 w-64 rounded-full bg-primary-50 blur-2xl" aria-hidden />
-
-        {/* Header */}
-        <div className="relative z-10 flex items-center justify-between gap-4 px-8 pt-7 pb-5">
-          <h3 className="text-[19px] font-semibold text-slate-800">{title}</h3>
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-[300px] items-center gap-2 rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] px-2.5 py-2 shadow-[0_1px_0.5px_0.05px_rgba(29,41,61,0.02)]">
-              <Search className="h-4 w-4 shrink-0 text-slate-400" strokeWidth={1.75} />
-              <input
-                autoFocus
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search"
-                className="w-full bg-transparent text-[14px] text-slate-700 outline-none placeholder:text-slate-400"
-              />
-            </div>
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label="Close"
-              className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
-            >
-              <X className="h-5 w-5" strokeWidth={1.75} />
-            </button>
-          </div>
-        </div>
-
-        {/* Table */}
-        <div className="scrollbar-hide relative z-10 flex-1 overflow-y-auto overflow-x-hidden px-8 pb-8">
-          <table className="w-full border-separate border-spacing-0">
-            <thead className="sticky top-0">
-              <tr className="bg-primary-50">
-                <th className="rounded-l-lg px-4 py-2.5 text-left text-[13px] font-semibold text-slate-700">{idLabel}</th>
-                <th className="px-4 py-2.5 text-left text-[13px] font-semibold text-slate-700">{nameLabel}</th>
-                <th className="rounded-r-lg px-4 py-2.5 text-left text-[13px] font-semibold text-slate-700">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((item, idx) => (
-                <tr key={`${getId(item)}-${idx}`} className="border-b border-slate-100 last:border-none">
-                  <td className="px-4 py-3">
-                    <span className="inline-block rounded-md bg-primary-50 px-3 py-1 text-[13px] font-medium text-primary">
-                      {getId(item)}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-[15px] font-medium text-slate-800">{getName(item)}</td>
-                  <td className="px-4 py-3">
-                    <button
-                      type="button"
-                      onClick={() => onSelect(item)}
-                      className="flex h-10 w-[120px] items-center justify-center rounded-lg bg-primary-50 px-4 text-[13px] font-semibold text-primary transition hover:bg-primary-100"
-                    >
-                      Select
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {filtered.length === 0 && (
-                <tr>
-                  <td colSpan={3} className="px-4 py-6 text-center text-[14px] text-slate-400">
-                    No results found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
 /*  Details tab                                                        */
 /* ------------------------------------------------------------------ */
 
@@ -737,11 +635,11 @@ function DetailsTab({ data }: { data: AccountDetails }) {
     {isCustomerListOpen && (
       <ListModal
         title="Customer Type List"
-        idLabel="Customer ID"
-        nameLabel="Customer Name"
-        items={CUSTOMER_LIST}
-        getId={(item) => item.id}
-        getName={(item) => item.name}
+        columns={[
+          { key: "id", label: "Customer ID" },
+          { key: "name", label: "Customer Name" },
+        ]}
+        rows={CUSTOMER_LIST}
         onSelect={(item) => {
           update("customerId")(item.id);
           update("customerName")(item.name);
@@ -754,11 +652,11 @@ function DetailsTab({ data }: { data: AccountDetails }) {
     {isBranchListOpen && (
       <ListModal
         title="Branch List"
-        idLabel="Branch Code"
-        nameLabel="Branch Name"
-        items={BRANCH_LIST}
-        getId={(item) => item.code}
-        getName={(item) => item.name}
+        columns={[
+          { key: "code", label: "Branch Code" },
+          { key: "name", label: "Branch Name" },
+        ]}
+        rows={BRANCH_LIST}
         onSelect={(item) => {
           update("branchCode")(item.code);
           setIsBranchListOpen(false);
@@ -855,11 +753,11 @@ function NomineeTab({ data }: { data: NomineeDetails }) {
     {isCustomerListOpen && (
       <ListModal
         title="Customer Type List"
-        idLabel="Customer ID"
-        nameLabel="Customer Name"
-        items={CUSTOMER_LIST}
-        getId={(item) => item.id}
-        getName={(item) => item.name}
+        columns={[
+          { key: "id", label: "Customer ID" },
+          { key: "name", label: "Customer Name" },
+        ]}
+        rows={CUSTOMER_LIST}
         onSelect={(item) => {
           update("nomineeCustomerId")(item.id);
           update("nomineeName")(item.name);
@@ -919,11 +817,11 @@ function JointHolderTab({ data }: { data: JointHolderDetails }) {
     {isCustomerListOpen && (
       <ListModal
         title="Customer Type List"
-        idLabel="Customer ID"
-        nameLabel="Customer Name"
-        items={CUSTOMER_LIST}
-        getId={(item) => item.id}
-        getName={(item) => item.name}
+        columns={[
+          { key: "id", label: "Customer ID" },
+          { key: "name", label: "Customer Name" },
+        ]}
+        rows={CUSTOMER_LIST}
         onSelect={(item) => {
           update("jtHolderCustomerId")(item.id);
           update("jtHolderName")(item.name);
