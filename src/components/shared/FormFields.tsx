@@ -76,14 +76,8 @@ export const TextInput = ({
       readOnly={readOnly}
       placeholder={placeholder}
       onChange={(e) => onChange(e.target.value)}
-<<<<<<< HEAD
-      className={`w-full rounded-lg border bg-white py-2.5 ${icon ? "pl-9" : "pl-3"} $pr-3 text-sm text-slate-700 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${
-        readOnly ? "bg-slate-50 text-slate-500" : ""
-      } ${error ? "border-red-400" : readOnly ? "border-[#6A7282]" : "border-slate-600"}`}
-=======
       className={`w-full rounded-lg border bg-white py-2.5 ${icon ? "pl-9" : "pl-3"} ${trailing ? "pr-11" : "pr-3"} text-sm text-slate-700 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${readOnly ? "bg-slate-50 text-slate-500" : ""
         } ${error ? "border-red-400" : "border-slate-600"}`}
->>>>>>> Development
     />
     {trailing && <div className="shrink-0">{trailing}</div>}
   </div>

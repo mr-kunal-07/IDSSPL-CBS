@@ -38,19 +38,11 @@ export default function SuccessModal({
 
           {/* Heading */}
           <h2 className="mt-10 text-center text-[28px] font-[700] leading-[34px] text-black">
-<<<<<<< HEAD
-            {heading ?? (
-              <>
-                Account Added Successfully
-                <br />
-                Please Authorize
-=======
             {title}
             {subtitle && (
               <>
                 <br />
                 {subtitle}
->>>>>>> Development
               </>
             )}
           </h2>
