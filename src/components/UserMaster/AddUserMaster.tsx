@@ -17,6 +17,7 @@ import {
 import CustomerIdPickerModal from "../common/CustomerPickListModal";
 import BranchListPickerModal from "../common/BranchPickListModal";
 import Image from "next/image";
+import SuccessModal from "../shared/SuccessModal";
 
 /* ===================== Shared types ===================== */
 
@@ -89,6 +90,7 @@ interface FieldProps {
    onChange?: (value: string) => void;
   readOnly?: boolean;
   onActionClick?: () => void;
+  error?: string;
 }
 
 function Field({
@@ -101,6 +103,7 @@ function Field({
   action,
   readOnly = false,
   onActionClick,
+  error,
 }: FieldProps) {
   return (
     <div className="flex-1 min-w-[220px] flex flex-col gap-2.5">
@@ -115,14 +118,13 @@ function Field({
       {/* Input */}
       <div className="flex items-center gap-2.5">
         <div
-          className=
-        //   {`
-            "flex-1 flex items-center gap-2 px-3.5 py-3 rounded-xl border shadow-[0px_1px_0.5px_0.05px_rgba(29,41,61,0.02)]"
-        //   ${
-        //     readOnly
-        //       ? "bg-gray-100 border-gray-200"
-        //       : "bg-white border-gray-300"
-        //   }`}
+          className={`flex-1 flex items-center gap-2 px-3.5 py-2 rounded-md border outline-none ${
+            error
+              ? "border-red-400"
+              : readOnly
+              ? "bg-gray-100 border-gray-200"
+              : "bg-white border-gray-300"
+          }`}
         >
           <Icon className="w-5 h-5 text-gray-400 shrink-0" />
 
@@ -140,7 +142,7 @@ function Field({
               value={value ?? ""}
               placeholder={placeholder}
               onChange={(e) => onChange?.(e.target.value)}
-              className="flex-1 bg-transparent outline-none text-base text-gray-900 placeholder:text-gray-400"
+              className="flex-1 min-w-0 outline-none text-base text-gray-900 placeholder:text-gray-400 bg-transparent"
             />
           )}
         </div>
@@ -155,6 +157,7 @@ function Field({
           </button>
         )}
       </div>
+      {error && <span className="text-sm text-red-500">{error}</span>}
     </div>
   );
 }
@@ -214,6 +217,80 @@ const [state, setState] = useState("");
 const [country, setCountry] = useState("India");
 const [loading, setLoading] = useState(false);
 
+  const [userId, setUserId] = useState("");
+  const [userName, setUserName] = useState("");
+  const [employeeCode, setEmployeeCode] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [emailId, setEmailId] = useState("");
+  const [currentAddress1, setCurrentAddress1] = useState("");
+  const [currentAddress2, setCurrentAddress2] = useState("");
+  const [currentAddress3, setCurrentAddress3] = useState("");
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isValidated, setIsValidated] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const validate = (): boolean => {
+    const nextErrors: Record<string, string> = {};
+
+    if (!userId.trim()) nextErrors.userId = "User Id is required";
+    if (!userName.trim()) nextErrors.userName = "User Name is required";
+    if (existingCustomer === "yes" && !customerId.trim()) {
+      nextErrors.customerId = "Customer Id is required";
+    }
+    if (!employeeCode.trim()) nextErrors.employeeCode = "Employee Code is required";
+    if (!branchCode.trim()) nextErrors.branchCode = "Branch Code is required";
+    if (!mobileNumber.trim()) {
+      nextErrors.mobileNumber = "Mobile Number is required";
+    } else if (!/^\d{10}$/.test(mobileNumber.trim())) {
+      nextErrors.mobileNumber = "Enter a valid 10-digit mobile number";
+    }
+    if (!emailId.trim()) {
+      nextErrors.emailId = "Email ID is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailId.trim())) {
+      nextErrors.emailId = "Enter a valid email address";
+    }
+
+    if (!currentAddress1.trim()) nextErrors.currentAddress1 = "Current Address 1 is required";
+    if (!zip.trim()) {
+      nextErrors.zip = "Pin code is required";
+    } else if (!/^\d{6}$/.test(zip.trim())) {
+      nextErrors.zip = "Enter a valid 6-digit pin code";
+    }
+    if (!city.trim()) nextErrors.city = "City is required";
+    if (!state.trim()) nextErrors.state = "State is required";
+    if (!country.trim()) nextErrors.country = "Country is required";
+
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
+
+  const handleValidate = () => {
+    if (!validate()) return;
+    setIsValidated(true);
+  };
+
+  const handleSave = () => {
+    if (!isValidated) return;
+    setShowSuccess(true);
+  };
+
+  const handleSuccessDone = () => {
+    setShowSuccess(false);
+    onClose?.();
+  };
+
+  if (showSuccess) {
+    return (
+      <SuccessModal
+        title="User Created Successfully"
+        subtitle=""
+        onClose={handleSuccessDone}
+        onDone={handleSuccessDone}
+      />
+    );
+  }
+
 const fetchPincode = async (pin: string) => {
   if (pin.length !== 6) return;
 
@@ -235,6 +312,7 @@ const fetchPincode = async (pin: string) => {
       setCity(office.District);
       setState(office.State);
       setCountry(office.Country);
+      setErrors((prev) => ({ ...prev, city: "", state: "", country: "" }));
     } else {
       setCity("");
       setState("");
@@ -249,7 +327,7 @@ const fetchPincode = async (pin: string) => {
 };
 
   return (
-    <div className="w-full max-w-[1476px] mx-auto bg-white rounded-2xl sm:rounded-[36px] flex flex-col h-full sm:h-auto sm:max-h-[90vh] overflow-hidden">
+    <div className="w-full max-w-6xl mx-auto bg-white rounded-2xl sm:rounded-[36px] flex flex-col h-full sm:h-auto sm:max-h-[90vh] overflow-hidden">
       {/* Header (fixed, does not scroll) */}
       <div className="shrink-0 flex items-start justify-between gap-4 p-4 sm:p-6 lg:p-8 pb-4 sm:pb-6">
         <div className="flex items-start gap-3 mb-6">
@@ -304,8 +382,32 @@ const fetchPincode = async (pin: string) => {
           </div>
 
           <div className="flex flex-wrap gap-4 sm:gap-6">
-            <Field label="User Id" labelHi="वापरकर्ता आयडी" icon={User} placeholder="Enter User ID" />
-            <Field label="User Name" labelHi="वापरकर्त्याचे नाव" icon={User} placeholder="Enter User Name" />
+            <Field
+              label="User Id"
+              labelHi="वापरकर्ता आयडी"
+              icon={User}
+              placeholder="Enter User ID"
+              value={userId}
+              onChange={(v) => {
+                setUserId(v);
+                setErrors((prev) => ({ ...prev, userId: "" }));
+                setIsValidated(false);
+              }}
+              error={errors.userId}
+            />
+            <Field
+              label="User Name"
+              labelHi="वापरकर्त्याचे नाव"
+              icon={User}
+              placeholder="Enter User Name"
+              value={userName}
+              onChange={(v) => {
+                setUserName(v);
+                setErrors((prev) => ({ ...prev, userName: "" }));
+                setIsValidated(false);
+              }}
+              error={errors.userName}
+            />
             <Field
               label="Customer Id"
               labelHi="ग्राहक आयडी"
@@ -314,8 +416,21 @@ const fetchPincode = async (pin: string) => {
               value={customerId}
               action
               onActionClick={() => setCustomerPickerOpen(true)}
+              error={errors.customerId}
             />
-            <Field label="Employee Code" labelHi="कर्मचारी कोड" icon={IdCard} placeholder="Enter Employee Code" />
+            <Field
+              label="Employee Code"
+              labelHi="कर्मचारी कोड"
+              icon={IdCard}
+              placeholder="Enter Employee Code"
+              value={employeeCode}
+              onChange={(v) => {
+                setEmployeeCode(v);
+                setErrors((prev) => ({ ...prev, employeeCode: "" }));
+                setIsValidated(false);
+              }}
+              error={errors.employeeCode}
+            />
           </div>
 
           <div className="flex flex-wrap gap-4 sm:gap-6">
@@ -327,6 +442,7 @@ const fetchPincode = async (pin: string) => {
               value={branchCode}
               action
               onActionClick={() => setBranchPickerOpen(true)}
+              error={errors.branchCode}
             />
             <Field
               label="Branch Name"
@@ -336,8 +452,32 @@ const fetchPincode = async (pin: string) => {
               value={branchName}
               readOnly
             />
-            <Field label="Mobile Number" labelHi="मोबाईल नंबर" icon={Phone} placeholder="Enter Mobile Number" />
-            <Field label="Email ID" labelHi="ईमेल आयडी" icon={Mail} placeholder="Enter Email ID" />
+            <Field
+              label="Mobile Number"
+              labelHi="मोबाईल नंबर"
+              icon={Phone}
+              placeholder="Enter Mobile Number"
+              value={mobileNumber}
+              onChange={(v) => {
+                setMobileNumber(v);
+                setErrors((prev) => ({ ...prev, mobileNumber: "" }));
+                setIsValidated(false);
+              }}
+              error={errors.mobileNumber}
+            />
+            <Field
+              label="Email ID"
+              labelHi="ईमेल आयडी"
+              icon={Mail}
+              placeholder="Enter Email ID"
+              value={emailId}
+              onChange={(v) => {
+                setEmailId(v);
+                setErrors((prev) => ({ ...prev, emailId: "" }));
+                setIsValidated(false);
+              }}
+              error={errors.emailId}
+            />
           </div>
         </section>
 
@@ -353,24 +493,59 @@ const fetchPincode = async (pin: string) => {
           <div className="h-px bg-gray-200" />
 
           <div className="flex flex-wrap gap-4 sm:gap-6">
-            <Field label="Current Address 1" labelHi="सध्याचा पत्ता १" icon={Home} placeholder="Enter Current Address 1" />
-            <Field label="Current Address 2" labelHi="सध्याचा पत्ता २" icon={Home} placeholder="Enter Current Address 2" />
-            <Field label="Current Address 3" labelHi="सध्याचा पत्ता ३" icon={Home} placeholder="Enter Current Address 3" />
+            <Field
+              label="Current Address 1"
+              labelHi="सध्याचा पत्ता १"
+              icon={Home}
+              placeholder="Enter Current Address 1"
+              value={currentAddress1}
+              onChange={(v) => {
+                setCurrentAddress1(v);
+                setErrors((prev) => ({ ...prev, currentAddress1: "" }));
+                setIsValidated(false);
+              }}
+              error={errors.currentAddress1}
+            />
+            <Field
+              label="Current Address 2"
+              labelHi="सध्याचा पत्ता २"
+              icon={Home}
+              placeholder="Enter Current Address 2"
+              value={currentAddress2}
+              onChange={setCurrentAddress2}
+            />
+            <Field
+              label="Current Address 3"
+              labelHi="सध्याचा पत्ता ३"
+              icon={Home}
+              placeholder="Enter Current Address 3"
+              value={currentAddress3}
+              onChange={setCurrentAddress3}
+            />
           </div>
 
           <div className="flex flex-wrap gap-4 sm:gap-6">
-            <Field label="Zip" labelHi="पिन कोड" icon={Home} placeholder="Enter Pin Code" 
-              onChange={(value:string) => {
-    const pin = value.replace(/\D/g, "");
-    setZip(pin);
+            <Field
+              label="Zip"
+              labelHi="पिन कोड"
+              icon={Home}
+              placeholder="Enter Pin Code"
+              value={zip}
+              onChange={(value: string) => {
+                const pin = value.replace(/\D/g, "");
+                setZip(pin);
+                setErrors((prev) => ({ ...prev, zip: "" }));
+                setIsValidated(false);
 
-    if (pin.length === 6) {
-      fetchPincode(pin);
-    }
-  }}/>
-            <Field label="City" labelHi="शहरे" icon={Building2} placeholder="City" readOnly />
-            <Field label="State" labelHi="राज्य" icon={Building2} placeholder="Select State" readOnly />
-            <Field label="Country" labelHi="देश" icon={Flag} placeholder="Select Country" readOnly />
+                if (pin.length === 6) {
+                  fetchPincode(pin);
+                }
+              }}
+              error={errors.zip}
+            />
+            <Field label="City" labelHi="शहरे" icon={Building2} placeholder="City" value={city} readOnly error={errors.city} />
+            <Field label="State" labelHi="राज्य" icon={Building2} placeholder="Select State" value={state} readOnly error={errors.state} />
+            <Field label="Country" labelHi="देश" icon={Flag} placeholder="Select Country" value={country} readOnly error={errors.country} />
           </div>
         </section>
 
@@ -416,7 +591,13 @@ const fetchPincode = async (pin: string) => {
       <div className="shrink-0 flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-4 p-4 sm:p-6 lg:p-8 pt-4 sm:pt-6 border-t border-gray-100">
         <button
           type="button"
-          className="w-full sm:w-36 h-12 px-6 py-4 bg-sky-700 rounded-lg flex items-center justify-center gap-2 text-white text-base font-medium hover:bg-sky-800 transition-colors"
+          onClick={handleValidate}
+          disabled={isValidated}
+          className={`w-full sm:w-36 h-12 px-6 py-4 rounded-lg flex items-center justify-center gap-2 text-base font-medium transition-colors ${
+            isValidated
+              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+              : "bg-sky-700 text-white hover:bg-sky-800"
+          }`}
         >
           Validate
           <Check className="w-4 h-4" />
@@ -431,7 +612,13 @@ const fetchPincode = async (pin: string) => {
         </button>
         <button
           type="button"
-          className="w-full sm:w-36 h-12 px-6 py-3.5 bg-gray-100 rounded-lg flex items-center justify-center gap-2 text-gray-500 text-base font-medium hover:bg-gray-200 transition-colors"
+          onClick={handleSave}
+          disabled={!isValidated}
+          className={`w-full sm:w-36 h-12 px-6 py-3.5 rounded-lg flex items-center justify-center gap-2 text-base font-medium transition-colors ${
+            isValidated
+              ? "bg-sky-700 text-white hover:bg-sky-800"
+              : "bg-gray-100 text-gray-400 cursor-not-allowed"
+          }`}
         >
           Save
           <ChevronDown className="w-4 h-4" />
@@ -441,7 +628,11 @@ const fetchPincode = async (pin: string) => {
       <CustomerIdPickerModal
         open={customerPickerOpen}
         onClose={() => setCustomerPickerOpen(false)}
-        onSelect={(customer) => setCustomerId(customer.id)}
+        onSelect={(customer) => {
+          setCustomerId(customer.id);
+          setErrors((prev) => ({ ...prev, customerId: "" }));
+          setIsValidated(false);
+        }}
       />
 
       <BranchListPickerModal
@@ -450,6 +641,8 @@ const fetchPincode = async (pin: string) => {
         onSelect={(branch) => {
           setBranchCode(branch.code);
           setBranchName(branch.name);
+          setErrors((prev) => ({ ...prev, branchCode: "" }));
+          setIsValidated(false);
         }}
       />
     </div>
@@ -472,7 +665,7 @@ export default function AddUserModal({ open, onClose }: AddUserModalProps) {
       onClick={onClose}
     >
       <div
-        className="w-full h-full sm:h-auto sm:max-w-[1476px]"
+        className="w-full h-full sm:h-auto sm:max-w-6xl"
         onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
       >
         <AddUserForm onClose={onClose} />
