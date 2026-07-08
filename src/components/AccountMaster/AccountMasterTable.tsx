@@ -3,6 +3,8 @@ import { useState, useRef, useEffect } from "react";
 import type { MouseEvent as ReactMouseEvent } from "react";
 import { ArrowUpDown, MoreVertical, ExternalLink, Eye, SquarePen, UserRoundCog } from "lucide-react";
 import type { AccountFilters } from "../shared/FilterModal";
+import ViewAccountModal from "./ViewAccount";
+import AccountFreezeModal from "./AccountFreezeModal";
 
 type RowData = {
   srNo: number;
@@ -45,6 +47,8 @@ const AccountMasterTable = ({ filters }: { filters?: AccountFilters }) => {
   const [sortKey, setSortKey] = useState<keyof RowData | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
   const [openMenuRow, setOpenMenuRow] = useState<number | null>(null);
+  const [detailsModal, setDetailsModal] = useState<{ row: RowData; mode: "view" | "edit" } | null>(null);
+  const [freezeRow, setFreezeRow] = useState<RowData | null>(null);
   const [menuPosition, setMenuPosition] = useState<'top' | 'bottom'>('bottom');
   const [menuStyle, setMenuStyle] = useState<React.CSSProperties | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -237,7 +241,12 @@ const sortedRows = [...filteredRows].sort((a, b) => {
                         return (
                           <button
                             key={opt.key}
-                            onClick={() => setOpenMenuRow(null)}
+                            onClick={() => {
+                              if (opt.key === "view") setDetailsModal({ row, mode: "view" });
+                              if (opt.key === "edit") setDetailsModal({ row, mode: "edit" });
+                              if (opt.key === "freeze") setFreezeRow(row);
+                              setOpenMenuRow(null);
+                            }}
                             className="flex w-full text-black items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50"
                           >
                             <Icon size={16} className="text-primary" />
@@ -268,6 +277,36 @@ const sortedRows = [...filteredRows].sort((a, b) => {
           </tbody>
         </table>
       </div>
+
+      {detailsModal && (
+        <ViewAccountModal
+          mode={detailsModal.mode}
+          data={{
+            accountCode: detailsModal.row.accountId,
+            accountName: detailsModal.row.accountName,
+            accountOpenDate: detailsModal.row.openingDate,
+            customerId: detailsModal.row.customerId,
+            customerName: detailsModal.row.accountName,
+            createdBy: detailsModal.row.createdBy,
+            applicationNumber: detailsModal.row.applicationNo,
+            accountStatus: detailsModal.row.status,
+          }}
+          onClose={() => setDetailsModal(null)}
+          onNext={() => setDetailsModal(null)}
+          onValidate={() => setDetailsModal(null)}
+        />
+      )}
+
+      {freezeRow && (
+        <AccountFreezeModal
+          data={{
+            accountCode: freezeRow.accountId,
+            name: freezeRow.accountName,
+          }}
+          onClose={() => setFreezeRow(null)}
+          onSubmit={() => setFreezeRow(null)}
+        />
+      )}
     </div>
   );
 };
