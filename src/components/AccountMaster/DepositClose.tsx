@@ -498,12 +498,12 @@ export default function DepositCloseModal({ open, initialData, onClose, onSubmit
               {errors.periodOfDeposit && <p className="mt-1 text-sm text-red-500">{errors.periodOfDeposit}</p>}
             </FieldShell>
             <FieldShell label="Available Balance" labelHi="ठेव कालावधी" required>
-              <TextInput icon={<Wallet size={16} />} value={data.availableBalance} onChange={set("availableBalance")} suffixIcon={<IndianRupee size={16} />} error={!!errors.availableBalance} />
+              <TextInput icon={<Wallet size={16} />} value={data.availableBalance} onChange={set("availableBalance")} trailing={<IndianRupee size={16} />} error={!!errors.availableBalance} />
               {errors.availableBalance && <p className="mt-1 text-sm text-red-500">{errors.availableBalance}</p>}
             </FieldShell>
  
             <FieldShell label="Ledger Balance" labelHi="उपलब्ध शिल्लक" required>
-              <TextInput icon={<Wallet size={16} />} value={data.ledgerBalance} onChange={set("ledgerBalance")} suffixIcon={<IndianRupee size={16} />} error={!!errors.ledgerBalance} />
+              <TextInput icon={<Wallet size={16} />} value={data.ledgerBalance} onChange={set("ledgerBalance")} trailing={<IndianRupee size={16} />} error={!!errors.ledgerBalance} />
               {errors.ledgerBalance && <p className="mt-1 text-sm text-red-500">{errors.ledgerBalance}</p>}
             </FieldShell>
  
@@ -511,12 +511,12 @@ export default function DepositCloseModal({ open, initialData, onClose, onSubmit
           </div>
           <div className={`${grid3} mt-4`}>
             <FieldShell label="Total Withdrawal Amount" labelHi="काढलेली रक्कम" required>
-              <TextInput icon={<Calendar size={16} />} value={data.totalWithdrawalAmount} onChange={set("totalWithdrawalAmount")} suffixIcon={<IndianRupee size={16} />} error={!!errors.totalWithdrawalAmount} />
+              <TextInput icon={<Calendar size={16} />} value={data.totalWithdrawalAmount} onChange={set("totalWithdrawalAmount")} trailing={<IndianRupee size={16} />} error={!!errors.totalWithdrawalAmount} />
               {errors.totalWithdrawalAmount && <p className="mt-1 text-sm text-red-500">{errors.totalWithdrawalAmount}</p>}
             </FieldShell>
  
             <FieldShell label="Amount in Matured Deposit" labelHi="मुदतपूर्ती रक्कम" required>
-              <TextInput icon={<Calendar size={16} />} value={data.amountInMaturedDeposit} onChange={set("amountInMaturedDeposit")} suffixIcon={<IndianRupee size={16} />} error={!!errors.amountInMaturedDeposit} />
+              <TextInput icon={<Calendar size={16} />} value={data.amountInMaturedDeposit} onChange={set("amountInMaturedDeposit")} trailing={<IndianRupee size={16} />} error={!!errors.amountInMaturedDeposit} />
               {errors.amountInMaturedDeposit && <p className="mt-1 text-sm text-red-500">{errors.amountInMaturedDeposit}</p>}
             </FieldShell>
           </div>
