@@ -1,13 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowUpDown,
-  ChevronUp,
-  ChevronDown,
   MoreVertical,
+  ExternalLink,
   Phone,
   Mail,
-  Pencil,
-  SquareArrowOutUpRight,
+  SquarePenIcon,
   Eye,
   KeyRound,
   Lock,
@@ -18,6 +16,7 @@ import UserDetailsModal from "./UserDetailsModal";
 import EditMobileEmailModal from "../common/EditMobileEmailModal";
 import SetUserPasswordModal, { type SetUserPasswordData } from "./SetUserPassword";
 import SetOtpModal, { type SetOtpData } from "./SetOTP";
+import { type UserFilters } from "./FilterModal";
 
 /* ===================== Types ===================== */
 
@@ -119,29 +118,15 @@ function StatusBadge({ status }: StatusBadgeProps) {
   const isActive = status === "Active";
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-md border ${
+      className={`inline-flex items-center gap-1.5 rounded-md border px-3 py-1 text-xs font-medium ${
         isActive
-          ? "bg-green-100 border-green-500"
-          : "bg-slate-50 border-slate-200"
+          ? "border-emerald-500 bg-emerald-50 text-emerald-600"
+          : "border-slate-200 bg-slate-50 text-slate-600"
       }`}
     >
-      <span
-        className={`w-2 h-2 rounded-full ${
-          isActive ? "bg-green-500" : "bg-slate-400"
-        }`}
-      />
-      <span
-        className={`text-sm font-medium ${
-          isActive ? "text-green-700" : "text-slate-600"
-        }`}
-      >
-        {status}
-      </span>
-      <SquareArrowOutUpRight
-        className={`w-3 h-3 ${
-          isActive ? "text-green-700" : "text-slate-600"
-        }`}
-      />
+      <span className={`h-2 w-1.5 rounded-full ${isActive ? "bg-emerald-700" : "bg-slate-400"}`} />
+      {status}
+      <ExternalLink size={12} />
     </span>
   );
 }
@@ -156,18 +141,13 @@ interface ContactLineProps {
 
 function ContactLine({ icon: Icon, value, onEdit }: ContactLineProps) {
   return (
-    <div className="flex items-center gap-1.5 text-blue-700 min-w-0">
-      <Icon className="w-4 h-4 text-slate-400 shrink-0" />
-      <span className="text-sm sm:text-base font-medium truncate">{value}</span>
-      <button
-        type="button"
-        onClick={onEdit}
-        className="shrink-0 p-0.5 rounded hover:bg-blue-50"
-        aria-label="Edit"
-      >
-        <Pencil className="w-3.5 h-3.5 text-blue-700 cursor-pointer" />
+    <span className="inline-flex items-center gap-1.5 text-sm text-[#0B63C1]">
+      <Icon size={14} className="text-black shrink-0" />
+      <span className="truncate">{value}</span>
+      <button type="button" onClick={onEdit} className="text-[#0B63C1] hover:text-blue-700" aria-label="Edit">
+        <SquarePenIcon size={16} />
       </button>
-    </div>
+    </span>
   );
 }
 
@@ -215,20 +195,12 @@ function ActionMenuButton({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open]);
 
-  // isActive kept for parity with original implementation, even though it's
-  // not currently used to alter the menu items shown.
-  const isActive = row.status === "Active";
-
   const items: ActionMenuItem[] = [
     { label: "View", icon: Eye, onClick: () => onView?.(row) },
-    { label: "Edit", icon: Pencil, onClick: () => onEdit?.(row) },
+    { label: "Edit", icon: SquarePenIcon, onClick: () => onEdit?.(row) },
     { label: "Set/Rest Password", icon: Lock, onClick: () => onSetPassword?.(row) },
     { label: "Set OTP", icon: KeyRound, onClick: () => onSetOtp?.(row) },
-    {
-      label: "User Enable/ Disable",
-      icon: Power,
-      onClick: () => onToggleStatus?.(row),
-    },
+    { label: "User Enable/ Disable", icon: Power, onClick: () => onToggleStatus?.(row) },
   ];
 
   return (
@@ -236,20 +208,17 @@ function ActionMenuButton({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-500"
+        className="text-gray-400 hover:text-gray-600"
         aria-label="Row actions"
         aria-haspopup="menu"
         aria-expanded={open}
       >
-        <MoreVertical className="w-4 h-4" />
+        <MoreVertical size={18} />
       </button>
 
       {open && (
-        <div
-          role="menu"
-          className="absolute z-20 right-0 mt-1 w-44 bg-white rounded-lg shadow-lg border border-slate-200 py-1 overflow-hidden"
-        >
-          {items.map(({ label, icon: Icon, onClick, danger }) => (
+        <div role="menu" className="absolute left-6 top-10 z-20 w-64 rounded-xl border border-blue-200 bg-white py-2 shadow-lg">
+          {items.map(({ label, icon: Icon, onClick }) => (
             <button
               key={label}
               type="button"
@@ -258,11 +227,9 @@ function ActionMenuButton({
                 onClick();
                 setOpen(false);
               }}
-              className={`w-full flex items-center gap-2.5 px-3.5 py-2 text-sm font-medium text-left hover:bg-slate-50 transition-colors ${
-                danger ? "text-red-600" : "text-slate-700"
-              }`}
+              className="flex w-full items-center gap-3 px-4 py-2 text-sm text-black hover:bg-gray-50"
             >
-              <Icon className="w-4 h-4 shrink-0" />
+              <Icon size={16} className="text-[#0B63C1]" />
               {label}
             </button>
           ))}
@@ -272,35 +239,11 @@ function ActionMenuButton({
   );
 }
 
-/* ===================== SortableHeader ===================== */
-
-interface SortableHeaderProps {
-  label: string;
-  active: boolean;
-  direction: SortDirection | null;
-}
-
-function SortableHeader({ label, active, direction }: SortableHeaderProps) {
-  return (
-    <span className="inline-flex items-center gap-1.5">
-      {label}
-      {active ? (
-        direction === "asc" ? (
-          <ChevronUp className="w-4 h-4" />
-        ) : (
-          <ChevronDown className="w-4 h-4" />
-        )
-      ) : (
-        <ArrowUpDown className="w-3.5 h-3.5 opacity-70" />
-      )}
-    </span>
-  );
-}
-
 /* ===================== UserTable ===================== */
 
 export interface UserTableProps {
   rows?: UserRow[];
+  filters?: UserFilters;
   onView?: (row: UserRow) => void;
   onEdit?: (row: UserRow) => void;
   onSetOtp?: (row: UserRow) => void;
@@ -309,6 +252,7 @@ export interface UserTableProps {
 
 export default function UserMasterTable({
   rows: initialRows = ROWS,
+  filters,
   onView,
   onEdit,
   onSetOtp,
@@ -344,10 +288,20 @@ export default function UserMasterTable({
     });
   };
 
+  const filteredRows = useMemo(() => {
+    if (!filters) return rows;
+    return rows.filter((r) => {
+      if (filters.userName && !r.name.toLowerCase().includes(filters.userName.toLowerCase())) return false;
+      if (filters.userId && !r.code.toLowerCase().includes(filters.userId.toLowerCase())) return false;
+      if (filters.status && r.status.toLowerCase() !== filters.status.toLowerCase()) return false;
+      return true;
+    });
+  }, [rows, filters]);
+
   const sortedRows = useMemo(() => {
-    if (!sortConfig) return rows;
+    if (!sortConfig) return filteredRows;
     const { key, direction } = sortConfig;
-    const sorted = [...rows].sort((a, b) => {
+    const sorted = [...filteredRows].sort((a, b) => {
       const aVal = String(a[key] ?? "").toLowerCase();
       const bVal = String(b[key] ?? "").toLowerCase();
       if (aVal < bVal) return direction === "asc" ? -1 : 1;
@@ -355,7 +309,7 @@ export default function UserMasterTable({
       return 0;
     });
     return sorted;
-  }, [rows, sortConfig]);
+  }, [filteredRows, sortConfig]);
 
   const handleToggleStatus = (row: UserRow) => {
     setRows((prev) =>
@@ -421,45 +375,38 @@ export default function UserMasterTable({
 
   return (
     <div className="w-full bg-white rounded-xl overflow-hidden shadow-sm">
-      <div className="overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {/* ===================== DESKTOP / TABLET TABLE (md and up) ===================== */}
-        <table className="hidden md:table w-full border-collapse">
+      <div className="overflow-x-auto [-ms-overflow-style:none] scrollbar-none [&::-webkit-scrollbar]:hidden">
+        <table className="w-full border-collapse">
           <thead>
             <tr className="bg-[#0B63C1] rounded-t-xl">
               {columns.map((col) => (
                 <th
                   key={col.key}
                   onClick={() => handleSort(col)}
-                  className={`text-left text-[16px] font-semibold text-white px-6 py-3 whitespace-nowrap ${
+                  className={`text-left text-[16px] font-semibold text-white px-4 py-2 whitespace-nowrap ${
                     col.sortable ? "cursor-pointer select-none" : ""
                   }`}
                 >
-                  {col.sortable ? (
-                    <SortableHeader
-                      label={col.label}
-                      active={sortConfig?.key === col.sortKey}
-                      direction={
-                        sortConfig && sortConfig.key === col.sortKey
-                          ? sortConfig.direction
-                          : null
-                      }
-                    />
-                  ) : (
-                    col.label
-                  )}
+                  <span className="inline-flex items-center gap-1">
+                    {col.label}
+                    {col.sortable && <ArrowUpDown size={13} className="opacity-80" />}
+                  </span>
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-200">
-            {sortedRows.map((r) => (
-              <tr key={r.sr} className="bg-white hover:bg-slate-50 transition-colors">
-                <td className="px-6 py-3 align-middle">
-                  <span className="inline-flex items-center justify-center px-3 py-1.5 bg-indigo-50 rounded-md text-blue-700 text-sm font-semibold">
+          <tbody>
+            {sortedRows.map((r, idx) => (
+              <tr
+                key={r.sr}
+                className={`${idx !== sortedRows.length - 1 ? "border-b border-gray-100" : ""} hover:bg-gray-50`}
+              >
+                <td className="px-6 py-3">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-blue-50 text-[#0B63C1] text-sm font-semibold">
                     {r.sr}
                   </span>
                 </td>
-                <td className="px-3 py-3 align-middle">
+                <td className="px-6 py-3">
                   <ActionMenuButton
                     row={r}
                     onView={handleView}
@@ -469,107 +416,34 @@ export default function UserMasterTable({
                     onToggleStatus={handleToggleStatus}
                   />
                 </td>
-                <td className="px-3 py-3 align-middle">
-                  <div className="flex flex-col gap-1.5">
-                    <div className="text-slate-900 text-base font-medium uppercase">
-                      {r.code}
-                    </div>
+                <td className="px-6 py-3 text-[16px] text-[#0B63C1]">
+                  <div className="flex flex-col gap-1">
+                    <span className="font-medium text-black">{r.code}</span>
                     <ContactLine icon={Phone} value={r.phone} onEdit={() => openFieldEdit(r.sr, "mobile")} />
                     <ContactLine icon={Mail} value={r.email} onEdit={() => openFieldEdit(r.sr, "email")} />
                   </div>
                 </td>
-                <td className="px-3 py-3 align-middle">
+                <td className="px-6 py-3">
                   <StatusBadge status={r.status} />
                 </td>
-                <td className="px-3 py-3 align-middle text-slate-800 text-sm font-medium capitalize">
-                  {r.name}
-                </td>
-                <td className="px-3 py-3 align-middle text-slate-800 text-sm font-medium capitalize">
-                  {r.role}
-                </td>
-                <td className="px-3 py-3 align-middle text-slate-800 text-sm font-medium capitalize">
-                  {r.createdBy}
-                </td>
-                <td className="px-3 py-3 align-middle text-slate-800 text-sm font-medium">
-                  {r.date}
-                </td>
-                <td className="px-3 py-3 align-middle text-slate-800 text-sm font-medium">
-                  {r.branchCode}
-                </td>
-                <td className="px-6 py-3 align-middle text-slate-800 text-sm font-medium capitalize">
-                  {r.branchName}
-                </td>
+                <td className="px-6 py-3 text-[16px] text-gray-700">{r.name}</td>
+                <td className="px-6 py-3 text-[16px] text-gray-700">{r.role}</td>
+                <td className="px-6 py-3 text-[16px] text-gray-700">{r.createdBy}</td>
+                <td className="px-6 py-3 text-[16px] text-gray-700">{r.date}</td>
+                <td className="px-6 py-3 text-[16px] text-gray-700">{r.branchCode}</td>
+                <td className="px-6 py-3 text-[16px] text-gray-700">{r.branchName}</td>
               </tr>
             ))}
           </tbody>
         </table>
-
-        {/* ===================== MOBILE CARD LIST (below md) ===================== */}
-        <div className="md:hidden divide-y divide-slate-200">
-          {sortedRows.map((r) => (
-            <div key={r.sr} className="p-4 bg-white">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center justify-center px-2.5 py-1 bg-indigo-50 rounded-md text-blue-700 text-xs font-semibold">
-                    {r.sr}
-                  </span>
-                  <span className="text-slate-900 text-base font-semibold uppercase">
-                    {r.code}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <StatusBadge status={r.status} />
-                  <ActionMenuButton
-                    row={r}
-                    onView={onView}
-                    onEdit={onEdit}
-                    onSetOtp={handleSetOtp}
-                    onSetPassword={handleSetPassword}
-                    onToggleStatus={handleToggleStatus}
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-1.5 mb-3">
-                <ContactLine icon={Phone} value={r.phone} onEdit={() => openFieldEdit(r.sr, "mobile")} />
-                <ContactLine icon={Mail} value={r.email} onEdit={() => openFieldEdit(r.sr, "email")} />
-              </div>
-
-              <dl className="grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
-                <div>
-                  <dt className="text-slate-400 text-xs">User Name</dt>
-                  <dd className="text-slate-800 font-medium capitalize">{r.name}</dd>
-                </div>
-                <div>
-                  <dt className="text-slate-400 text-xs">User Role</dt>
-                  <dd className="text-slate-800 font-medium capitalize">{r.role}</dd>
-                </div>
-                <div>
-                  <dt className="text-slate-400 text-xs">Created By</dt>
-                  <dd className="text-slate-800 font-medium capitalize">{r.createdBy}</dd>
-                </div>
-                <div>
-                  <dt className="text-slate-400 text-xs">Created Date</dt>
-                  <dd className="text-slate-800 font-medium">{r.date}</dd>
-                </div>
-                <div>
-                  <dt className="text-slate-400 text-xs">Branch Code</dt>
-                  <dd className="text-slate-800 font-medium">{r.branchCode}</dd>
-                </div>
-                <div>
-                  <dt className="text-slate-400 text-xs">Branch Name</dt>
-                  <dd className="text-slate-800 font-medium capitalize">{r.branchName}</dd>
-                </div>
-              </dl>
-            </div>
-          ))}
-        </div>
       </div>
 
       <EditMobileEmailModal
         open={!!editState}
         fieldType={editState?.fieldType}
         initialValue={editingValue}
+        userId={editingRow?.code}
+        userName={editingRow?.name}
         onClose={closeFieldEdit}
         onSubmit={handleSubmitFieldEdit}
       />

@@ -75,7 +75,7 @@ function Field({
   return (
     <div className="w-full flex flex-col gap-2">
       <div className="flex items-center gap-1 -mb-1">
-        <span className="text-base font-medium text-indigo-950">
+        <span className="text-base text-[16px]  text-indigo-950">
           {label} / <span className="text-slate-500">{labelHi}</span>
         </span>
         <span className="text-sm font-medium text-red-500">*</span>

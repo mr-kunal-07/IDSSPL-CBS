@@ -1,221 +1,35 @@
-import React, { useState } from "react";
-import {
-  User,
-  IdCard,
-  Building2,
-  Phone,
-  Mail,
-  Home,
-  MapPin,
-  Flag,
-  X,
-  Check,
-  MoreVertical,
-  ChevronDown,
-  LucideIcon,
-} from "lucide-react";
+"use client";
+
+import { useState } from "react";
+import { User, IdCard, Building2, Phone, Mail, Home, Flag, Check, X, ChevronDown, MoreVertical } from "lucide-react";
+import Image from "next/image";
+import FormModal from "../shared/FormModal";
+import { FieldShell, TextInput, RadioYesNo, SectionCard } from "../shared/FormFields";
 import CustomerIdPickerModal from "../common/CustomerPickListModal";
 import BranchListPickerModal from "../common/BranchPickListModal";
-import Image from "next/image";
 import SuccessModal from "../shared/SuccessModal";
 
-/* ===================== Shared types ===================== */
-
-type YesNo = "yes" | "no";
-/* ===================== RadioToggle ===================== */
-
-interface RadioToggleProps {
-  label: string;
-  name: string;
-  checked: boolean;
-  onChange: (name: string) => void;
-}
-
-function RadioToggle({ label, name, checked, onChange }: RadioToggleProps) {
-  return (
-    <label className="flex items-center gap-2 cursor-pointer select-none">
-      <span
-        className={`relative w-5 h-5 rounded-full flex items-center justify-center border ${
-          checked ? "bg-blue-600 border-blue-600" : "bg-white border-gray-300"
-        }`}
-        onClick={() => onChange(name)}
-      >
-        {checked && <span className="w-2.5 h-2.5 rounded-full bg-white" />}
-      </span>
-      <span
-        className="text-base font-medium text-black"
-        onClick={() => onChange(name)}
-      >
-        {label}
-      </span>
-    </label>
-  );
-}
-
-/* ===================== YesNoToggle ===================== */
-
-interface YesNoToggleProps {
-  value: YesNo;
-  onChange: (value: string) => void;
-}
-
-function YesNoToggle({ value, onChange }: YesNoToggleProps) {
-  return (
-    <div className="flex items-center gap-8">
-      <RadioToggle
-        label="Yes"
-        name="yes"
-        checked={value === "yes"}
-        onChange={onChange}
-      />
-      <RadioToggle
-        label="No"
-        name="no"
-        checked={value === "no"}
-        onChange={onChange}
-      />
-    </div>
-  );
-}
-
-/* ===================== Field ===================== */
-
-interface FieldProps {
-  label: string;
-  labelHi: string;
-  icon: string | LucideIcon;
-  placeholder?: string;
-  value?: string;
-  action?: boolean;
-   onChange?: (value: string) => void;
-  readOnly?: boolean;
-  onActionClick?: () => void;
-  error?: string;
-}
-
-function Field({
-  label,
-  labelHi,
-  icon: Icon,
-  placeholder,
-  value,
-  onChange,
-  action,
-  readOnly = false,
-  onActionClick,
-  error,
-}: FieldProps) {
-  return (
-    <div className="flex-1 min-w-[220px] flex flex-col gap-2.5">
-      {/* Label */}
-      <div className="flex items-center gap-1">
-        <span className="text-base font-medium text-indigo-950">
-          {label} / <span className="text-slate-500">{labelHi}</span>
-        </span>
-        <span className="text-sm font-medium text-red-500">*</span>
-      </div>
-
-      {/* Input */}
-      <div className="flex items-center gap-2.5">
-        <div
-          className={`flex-1 flex items-center gap-2 px-3.5 py-2 rounded-md border outline-none ${
-            error
-              ? "border-red-400"
-              : readOnly
-              ? "bg-gray-100 border-gray-200"
-              : "bg-white border-gray-300"
-          }`}
-        >
-          <Icon className="w-5 h-5 text-gray-400 shrink-0" />
-
-          {readOnly ? (
-            <span
-              className={`flex-1 text-base truncate ${
-                value ? "text-gray-900" : "text-gray-400"
-              }`}
-            >
-              {value || placeholder}
-            </span>
-          ) : (
-            <input
-              type="text"
-              value={value ?? ""}
-              placeholder={placeholder}
-              onChange={(e) => onChange?.(e.target.value)}
-              className="flex-1 min-w-0 outline-none text-base text-gray-900 placeholder:text-gray-400 bg-transparent"
-            />
-          )}
-        </div>
-
-        {action && (
-          <button
-            type="button"
-            onClick={onActionClick}
-            className="w-14 self-stretch px-4 py-3 bg-indigo-50 rounded-lg flex items-center justify-center hover:bg-indigo-100 transition-colors"
-          >
-            <MoreVertical className="w-5 h-5 text-sky-700" />
-          </button>
-        )}
-      </div>
-      {error && <span className="text-sm text-red-500">{error}</span>}
-    </div>
-  );
-}
-
-/* ===================== SectionHeader ===================== */
-
-interface SectionHeaderProps {
-  icon: string ;
-  title: string;
-  titleHi: string;
-  desc: string;
-  descHi: string;
-}
-
-function SectionHeader({ icon: Icon, title, titleHi, desc, descHi }: SectionHeaderProps) {
-  return (
-    <div className="flex items-start gap-3">
-      {/* <div className="w-11 h-11 shrink-0 rounded-full bg-indigo-50 border border-blue-700 flex items-center justify-center"> */}
-        {/* <Icon className="w-6 h-6 text-blue-700" /> */}
-        <Image src={Icon} alt="User Icon" width={24} height={24} className="w-11 h-11 shrink-0 rounded-full bg-indigo-50 border border-blue-700 flex items-center justify-center"/>
-      {/* </div> */}
-      <div className="flex-1 flex flex-col gap-1">
-        <h2 className="text-lg sm:text-xl font-bold tracking-tight leading-6">
-          <span className="text-slate-900">{title} / </span>
-          <span className="text-slate-500">{titleHi}</span>
-        </h2>
-        <p className="text-sm text-slate-500 leading-5">
-          {desc} / {descHi}
-        </p>
-      </div>
-    </div>
-  );
-}
-
 /* ===================== AddUserForm ===================== */
-
-
-
 
 interface AddUserFormProps {
   onClose?: () => void;
 }
 
 function AddUserForm({ onClose }: AddUserFormProps) {
-  const [existingCustomer, setExistingCustomer] = useState<YesNo>("yes");
-  const [isTeller, setIsTeller] = useState<YesNo>("yes");
-  const [isMainCashier, setIsMainCashier] = useState<YesNo>("no");
-  const [isSupportUser, setIsSupportUser] = useState<YesNo>("no");
+  const [existingCustomer, setExistingCustomer] = useState<boolean>(true);
+  const [isTeller, setIsTeller] = useState<boolean>(true);
+  const [isMainCashier, setIsMainCashier] = useState<boolean>(false);
+  const [isSupportUser, setIsSupportUser] = useState<boolean>(false);
   const [customerId, setCustomerId] = useState<string>("010");
   const [customerPickerOpen, setCustomerPickerOpen] = useState<boolean>(false);
   const [branchCode, setBranchCode] = useState<string>("0002");
   const [branchName, setBranchName] = useState<string>("Main Branch, Bilagi");
   const [branchPickerOpen, setBranchPickerOpen] = useState<boolean>(false);
   const [zip, setZip] = useState("");
-const [city, setCity] = useState("");
-const [state, setState] = useState("");
-const [country, setCountry] = useState("India");
-const [loading, setLoading] = useState(false);
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [country, setCountry] = useState("India");
+  const [loading, setLoading] = useState(false);
 
   const [userId, setUserId] = useState("");
   const [userName, setUserName] = useState("");
@@ -230,12 +44,17 @@ const [loading, setLoading] = useState(false);
   const [isValidated, setIsValidated] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
+  const clearError = (key: string) => {
+    setErrors((prev) => ({ ...prev, [key]: "" }));
+    setIsValidated(false);
+  };
+
   const validate = (): boolean => {
     const nextErrors: Record<string, string> = {};
 
     if (!userId.trim()) nextErrors.userId = "User Id is required";
     if (!userName.trim()) nextErrors.userName = "User Name is required";
-    if (existingCustomer === "yes" && !customerId.trim()) {
+     if (!existingCustomer && !customerId.trim()) {
       nextErrors.customerId = "Customer Id is required";
     }
     if (!employeeCode.trim()) nextErrors.employeeCode = "Employee Code is required";
@@ -265,11 +84,44 @@ const [loading, setLoading] = useState(false);
     return Object.keys(nextErrors).length === 0;
   };
 
-  const handleValidate = () => {
-    if (!validate()) return;
-    setIsValidated(true);
+  const fetchPincode = async (pin: string) => {
+    if (pin.length !== 6) return;
+
+    try {
+      setLoading(true);
+
+      const response = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+      const data = await response.json();
+
+      if (data[0].Status === "Success" && data[0].PostOffice.length > 0) {
+        const office = data[0].PostOffice[0];
+
+        setCity(office.District);
+        setState(office.State);
+        setCountry(office.Country);
+        setErrors((prev) => ({ ...prev, city: "", state: "", country: "" }));
+      } else {
+        setCity("");
+        setState("");
+        setCountry("");
+        alert("Invalid Pincode");
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  const handleValidate = () => {
+  const isValid = validate();
+
+  if (isValid) {
+    setIsValidated(true);
+  } else {
+    setIsValidated(false);
+  }
+};
   const handleSave = () => {
     if (!isValidated) return;
     setShowSuccess(true);
@@ -291,347 +143,311 @@ const [loading, setLoading] = useState(false);
     );
   }
 
-const fetchPincode = async (pin: string) => {
-  if (pin.length !== 6) return;
+  const grid4 = "grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4";
 
-  try {
-    setLoading(true);
-
-    const response = await fetch(
-      `https://api.postalpincode.in/pincode/${pin}`
-    );
-
-    const data = await response.json();
-
-    if (
-      data[0].Status === "Success" &&
-      data[0].PostOffice.length > 0
-    ) {
-      const office = data[0].PostOffice[0];
-
-      setCity(office.District);
-      setState(office.State);
-      setCountry(office.Country);
-      setErrors((prev) => ({ ...prev, city: "", state: "", country: "" }));
-    } else {
-      setCity("");
-      setState("");
-      setCountry("");
-      alert("Invalid Pincode");
-    }
-  } catch (error) {
-    console.error(error);
-  } finally {
-    setLoading(false);
-  }
-};
+  const footer = (
+    <div className="mt-6 flex items-center justify-end gap-3 border-t border-slate-100 pt-4">
+      <button
+        type="button"
+        onClick={handleValidate}
+        disabled={isValidated}
+        className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        Validate <Check size={16} />
+      </button>
+      <button
+        type="button"
+        onClick={onClose}
+        className="flex items-center gap-1.5 rounded-lg border border-blue-500 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50"
+      >
+        Cancel <X size={16} />
+      </button>
+      <button
+        type="button"
+        onClick={handleSave}
+        disabled={!isValidated}
+        className="flex items-center gap-1.5 rounded-lg bg-blue-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-200 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        Save <ChevronDown size={16} />
+      </button>
+    </div>
+  );
 
   return (
-    <div className="w-full max-w-6xl mx-auto bg-white rounded-2xl sm:rounded-[36px] flex flex-col h-full sm:h-auto sm:max-h-[90vh] overflow-hidden">
-      {/* Header (fixed, does not scroll) */}
-      <div className="shrink-0 flex items-start justify-between gap-4 p-4 sm:p-6 lg:p-8 pb-4 sm:pb-6">
-        <div className="flex items-start gap-3 mb-6">
-            <Image src="/add-icn.png" alt="User Icon" width={50} height={50} />
-            <div>
-                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight leading-tight">
-                <span className="text-indigo-950">Add User</span>
-                <span className="text-slate-900"> / </span>
-                <span className="text-slate-500">वापरकर्ता तपशील</span>
-                </h1>
-            <p className="text-sm sm:text-base text-slate-500 leading-5">
-              Add some basic information related to the Employee / कर्मचाऱ्याची
-              बेसिक माहिती ॲड करा.
-            </p>
-            </div>
-        </div>
-        <button
-          type="button"
-          onClick={onClose}
-          className="w-10 h-10 sm:w-11 sm:h-11 shrink-0 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
-          aria-label="Close"
-        >
-          <X className="w-5 h-5 text-gray-500" />
-        </button>
-      </div>
-
-      {/* Scrollable body (cards only). Scrollbar is hidden across browsers. */}
-      <div
-        className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 lg:px-8 pb-6 flex flex-col gap-6 [&::-webkit-scrollbar]:hidden"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+    <>
+      <FormModal
+        onClose={() => onClose?.()}
+        titleEn="Add User"
+        titleHi="वापरकर्ता तपशील"
+        subtitleEn="Add some basic information related to the Employee"
+        subtitleHi="कर्मचाऱ्याची बेसिक माहिती ॲड करा"
+        tabs={[]}
+        activeTab=""
+        onTabChange={() => {}}
+        hideFooter
       >
         {/* User Details */}
-        <section className="p-4 sm:p-6 bg-white rounded-2xl shadow-[0px_1px_5px_0px_rgba(3,0,55,0.08)] border border-t-4 border-blue-700 flex flex-col gap-6">
-          <SectionHeader
-            icon="/User.png"
-            title="User Details"
-            titleHi="वापरकर्ता तपशील"
-            desc="Add some basic information related to the Employee"
-            descHi="कर्मचाऱ्याशी संबंधित काही मूलभूत माहिती जोडा"
-          />
-          <div className="h-px bg-gray-200" />
-
-          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-            <span className="text-base font-medium text-gray-900">
-              Are You an Existing Customer? /{" "}
-              <span className="text-gray-500">तुम्ही विद्यमान ग्राहक आहात का?</span>
-            </span>
-            <YesNoToggle
+        <SectionCard
+          titleEn="User Details"
+          titleHi="वापरकर्ता तपशील"
+          subtitleEn="Add some basic information related to the Employee"
+          subtitleHi="कर्मचाऱ्याशी संबंधित काही मूलभूत माहिती जोडा"
+          icon="/User.png"
+        >
+          <div className="mb-4">
+            <RadioYesNo
+              label="Are You an Existing Customer?"
+              labelHi="तुम्ही विद्यमान ग्राहक आहात का?"
               value={existingCustomer}
-              onChange={(v) => setExistingCustomer(v as YesNo)}
+              onChange={setExistingCustomer}
             />
           </div>
 
-          <div className="flex flex-wrap gap-4 sm:gap-6">
-            <Field
-              label="User Id"
-              labelHi="वापरकर्ता आयडी"
-              icon={User}
-              placeholder="Enter User ID"
-              value={userId}
-              onChange={(v) => {
-                setUserId(v);
-                setErrors((prev) => ({ ...prev, userId: "" }));
-                setIsValidated(false);
-              }}
-              error={errors.userId}
-            />
-            <Field
-              label="User Name"
-              labelHi="वापरकर्त्याचे नाव"
-              icon={User}
-              placeholder="Enter User Name"
-              value={userName}
-              onChange={(v) => {
-                setUserName(v);
-                setErrors((prev) => ({ ...prev, userName: "" }));
-                setIsValidated(false);
-              }}
-              error={errors.userName}
-            />
-            <Field
-              label="Customer Id"
-              labelHi="ग्राहक आयडी"
-              icon={IdCard}
-              placeholder="Enter Customer ID"
-              value={customerId}
-              action
-              onActionClick={() => setCustomerPickerOpen(true)}
-              error={errors.customerId}
-            />
-            <Field
-              label="Employee Code"
-              labelHi="कर्मचारी कोड"
-              icon={IdCard}
-              placeholder="Enter Employee Code"
-              value={employeeCode}
-              onChange={(v) => {
-                setEmployeeCode(v);
-                setErrors((prev) => ({ ...prev, employeeCode: "" }));
-                setIsValidated(false);
-              }}
-              error={errors.employeeCode}
-            />
+          <div className={grid4}>
+            <FieldShell label="User Id" labelHi="वापरकर्ता आयडी" required>
+              <TextInput
+                icon={<User size={16} />}
+                value={userId}
+                onChange={(v) => {
+                  setUserId(v);
+                  clearError("userId");
+                }}
+                placeholder="Enter User ID"
+                error={!!errors.userId}
+              />
+              {errors.userId && <p className="mt-1 text-sm text-red-500">{errors.userId}</p>}
+            </FieldShell>
+
+            <FieldShell label="User Name" labelHi="वापरकर्त्याचे नाव" required>
+              <TextInput
+                icon={<User size={16} />}
+                value={userName}
+                onChange={(v) => {
+                  setUserName(v);
+                  clearError("userName");
+                }}
+                placeholder="Enter User Name"
+                error={!!errors.userName}
+              />
+              {errors.userName && <p className="mt-1 text-sm text-red-500">{errors.userName}</p>}
+            </FieldShell>
+
+            {/* <FieldShell label="Customer Id" labelHi="ग्राहक आयडी" required>
+              <TextInput
+                icon={<IdCard size={16} />}
+                value={customerId}
+                onChange={() => {}}
+                readOnly
+                placeholder="Enter Customer ID"
+                error={!!errors.customerId}
+                trailing={
+                  <button
+                    type="button"
+                    onClick={() => setCustomerPickerOpen(true)}
+                    className="flex h-7 w-7 items-center justify-center rounded-md bg-blue-50 text-blue-600 hover:bg-blue-100"
+                  >
+                    <MoreVertical size={14} />
+                  </button>
+                }
+              />
+              {errors.customerId && <p className="mt-1 text-sm text-red-500">{errors.customerId}</p>}
+            </FieldShell> */}
+
+             <FieldShell label="Customer Id" labelHi="ग्राहक आयडी" required>
+              {existingCustomer ? (
+                <div className="flex items-center gap-2">
+                  <div className="min-w-0 flex-1">
+                    <TextInput
+                      icon={<IdCard size={16} />}
+                      value={customerId}
+                      onChange={() => {}}
+                      readOnly
+                      placeholder="Enter Customer ID"
+                      error={!!errors.customerId}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setCustomerPickerOpen(true)}
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-blue-50 text-blue-600 hover:bg-blue-100"
+                  >
+                    <MoreVertical size={14} />
+                  </button>
+                </div>
+              ) : (
+                <TextInput
+                  icon={<IdCard size={16} />}
+                  value={customerId}
+                  onChange={(v) => {
+                    setCustomerId(v);
+                    clearError("customerId");
+                  }}
+                  placeholder="Enter Customer ID"
+                  error={!!errors.customerId}
+                />
+              )}
+              {errors.customerId && <p className="mt-1 text-sm text-red-500">{errors.customerId}</p>}
+            </FieldShell>
+
+            <FieldShell label="Employee Code" labelHi="कर्मचारी कोड" required>
+              <TextInput
+                icon={<IdCard size={16} />}
+                value={employeeCode}
+                onChange={(v) => {
+                  setEmployeeCode(v);
+                  clearError("employeeCode");
+                }}
+                placeholder="Enter Employee Code"
+                error={!!errors.employeeCode}
+              />
+              {errors.employeeCode && <p className="mt-1 text-sm text-red-500">{errors.employeeCode}</p>}
+            </FieldShell>
           </div>
 
-          <div className="flex flex-wrap gap-4 sm:gap-6">
-            <Field
-              label="Branch Code"
-              labelHi="शाखा कोड"
-              icon={Building2}
-              placeholder="Enter Branch Code"
-              value={branchCode}
-              action
-              onActionClick={() => setBranchPickerOpen(true)}
-              error={errors.branchCode}
-            />
-            <Field
-              label="Branch Name"
-              labelHi="शाखेचे नाव"
-              icon={Building2}
-              placeholder="Main Branch, Bilagi"
-              value={branchName}
-              readOnly
-            />
-            <Field
-              label="Mobile Number"
-              labelHi="मोबाईल नंबर"
-              icon={Phone}
-              placeholder="Enter Mobile Number"
-              value={mobileNumber}
-              onChange={(v) => {
-                setMobileNumber(v);
-                setErrors((prev) => ({ ...prev, mobileNumber: "" }));
-                setIsValidated(false);
-              }}
-              error={errors.mobileNumber}
-            />
-            <Field
-              label="Email ID"
-              labelHi="ईमेल आयडी"
-              icon={Mail}
-              placeholder="Enter Email ID"
-              value={emailId}
-              onChange={(v) => {
-                setEmailId(v);
-                setErrors((prev) => ({ ...prev, emailId: "" }));
-                setIsValidated(false);
-              }}
-              error={errors.emailId}
-            />
+          <div className={`${grid4} mt-4`}>
+            <FieldShell label="Branch Code" labelHi="शाखा कोड" required>
+              <div className="flex items-center gap-2">
+                <div className="min-w-0 flex-1">
+                  <TextInput
+                    icon={<Building2 size={16} />}
+                    value={branchCode}
+                    onChange={() => {}}
+                    readOnly
+                    placeholder="Enter Branch Code"
+                    error={!!errors.branchCode}
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setBranchPickerOpen(true)}
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-blue-50 text-blue-600 hover:bg-blue-100"
+                >
+                  <MoreVertical size={14} />
+                </button>
+              </div>
+              {errors.branchCode && <p className="mt-1 text-sm text-red-500">{errors.branchCode}</p>}
+            </FieldShell>
+           
+
+            <FieldShell label="Branch Name" labelHi="शाखेचे नाव" required>
+              <TextInput icon={<Building2 size={16} />} value={branchName} onChange={() => {}} readOnly placeholder="Main Branch, Bilagi" />
+            </FieldShell>
+
+            <FieldShell label="Mobile Number" labelHi="मोबाईल नंबर" required>
+              <TextInput
+                icon={<Phone size={16} />}
+                value={mobileNumber}
+                onChange={(v) => {
+                  setMobileNumber(v);
+                  clearError("mobileNumber");
+                }}
+                placeholder="Enter Mobile Number"
+                error={!!errors.mobileNumber}
+              />
+              {errors.mobileNumber && <p className="mt-1 text-sm text-red-500">{errors.mobileNumber}</p>}
+            </FieldShell>
+
+            <FieldShell label="Email ID" labelHi="ईमेल आयडी" required>
+              <TextInput
+                icon={<Mail size={16} />}
+                value={emailId}
+                onChange={(v) => {
+                  setEmailId(v);
+                  clearError("emailId");
+                }}
+                placeholder="Enter Email ID"
+                error={!!errors.emailId}
+              />
+              {errors.emailId && <p className="mt-1 text-sm text-red-500">{errors.emailId}</p>}
+            </FieldShell>
           </div>
-        </section>
+        </SectionCard>
 
         {/* Address Details */}
-        <section className="p-4 sm:p-6 bg-white rounded-2xl shadow-[0px_1px_5px_0px_rgba(3,0,55,0.08)] border border-t-4 border-blue-700 flex flex-col gap-6">
-          <SectionHeader
-            icon="/Address.png"
-            title="Address Details"
-            titleHi="पत्ता तपशील"
-            desc="Add some basic information related to the Employee Address"
-            descHi="कर्मचाऱ्याच्या पत्त्याशी संबंधित काही मूलभूत माहिती जोडा."
-          />
-          <div className="h-px bg-gray-200" />
-
-          <div className="flex flex-wrap gap-4 sm:gap-6">
-            <Field
-              label="Current Address 1"
-              labelHi="सध्याचा पत्ता १"
-              icon={Home}
-              placeholder="Enter Current Address 1"
-              value={currentAddress1}
-              onChange={(v) => {
-                setCurrentAddress1(v);
-                setErrors((prev) => ({ ...prev, currentAddress1: "" }));
-                setIsValidated(false);
-              }}
-              error={errors.currentAddress1}
-            />
-            <Field
-              label="Current Address 2"
-              labelHi="सध्याचा पत्ता २"
-              icon={Home}
-              placeholder="Enter Current Address 2"
-              value={currentAddress2}
-              onChange={setCurrentAddress2}
-            />
-            <Field
-              label="Current Address 3"
-              labelHi="सध्याचा पत्ता ३"
-              icon={Home}
-              placeholder="Enter Current Address 3"
-              value={currentAddress3}
-              onChange={setCurrentAddress3}
-            />
+        <SectionCard
+          titleEn="Address Details"
+          titleHi="पत्ता तपशील"
+          subtitleEn="Add some basic information related to the Employee Address"
+          subtitleHi="कर्मचाऱ्याच्या पत्त्याशी संबंधित काही मूलभूत माहिती जोडा."
+          icon="/Address.png"
+        >
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <FieldShell label="Current Address 1" labelHi="सध्याचा पत्ता १" required>
+              <TextInput
+                icon={<Home size={16} />}
+                value={currentAddress1}
+                onChange={(v) => {
+                  setCurrentAddress1(v);
+                  clearError("currentAddress1");
+                }}
+                placeholder="Enter Current Address 1"
+                error={!!errors.currentAddress1}
+              />
+              {errors.currentAddress1 && <p className="mt-1 text-sm text-red-500">{errors.currentAddress1}</p>}
+            </FieldShell>
+            <FieldShell label="Current Address 2" labelHi="सध्याचा पत्ता २">
+              <TextInput icon={<Home size={16} />} value={currentAddress2} onChange={setCurrentAddress2} placeholder="Enter Current Address 2" />
+            </FieldShell>
+            <FieldShell label="Current Address 3" labelHi="सध्याचा पत्ता ३">
+              <TextInput icon={<Home size={16} />} value={currentAddress3} onChange={setCurrentAddress3} placeholder="Enter Current Address 3" />
+            </FieldShell>
           </div>
 
-          <div className="flex flex-wrap gap-4 sm:gap-6">
-            <Field
-              label="Zip"
-              labelHi="पिन कोड"
-              icon={Home}
-              placeholder="Enter Pin Code"
-              value={zip}
-              onChange={(value: string) => {
-                const pin = value.replace(/\D/g, "");
-                setZip(pin);
-                setErrors((prev) => ({ ...prev, zip: "" }));
-                setIsValidated(false);
-
-                if (pin.length === 6) {
-                  fetchPincode(pin);
-                }
-              }}
-              error={errors.zip}
-            />
-            <Field label="City" labelHi="शहरे" icon={Building2} placeholder="City" value={city} readOnly error={errors.city} />
-            <Field label="State" labelHi="राज्य" icon={Building2} placeholder="Select State" value={state} readOnly error={errors.state} />
-            <Field label="Country" labelHi="देश" icon={Flag} placeholder="Select Country" value={country} readOnly error={errors.country} />
+          <div className={`${grid4} mt-4`}>
+            <FieldShell label="Zip" labelHi="पिन कोड" required>
+              <TextInput
+                icon={<Home size={16} />}
+                value={zip}
+                onChange={(value: string) => {
+                  const pin = value.replace(/\D/g, "");
+                  setZip(pin);
+                  clearError("zip");
+                  if (pin.length === 6) fetchPincode(pin);
+                }}
+                placeholder="Enter Pin Code"
+                error={!!errors.zip}
+              />
+              {errors.zip && <p className="mt-1 text-sm text-red-500">{errors.zip}</p>}
+            </FieldShell>
+            <FieldShell label="City" labelHi="शहरे" required>
+              <TextInput icon={<Building2 size={16} />} value={city} onChange={() => {}} readOnly placeholder="City" error={!!errors.city} />
+              {errors.city && <p className="mt-1 text-sm text-red-500">{errors.city}</p>}
+            </FieldShell>
+            <FieldShell label="State" labelHi="राज्य" required>
+              <TextInput icon={<Building2 size={16} />} value={state} onChange={() => {}} readOnly placeholder="Select State" error={!!errors.state} />
+              {errors.state && <p className="mt-1 text-sm text-red-500">{errors.state}</p>}
+            </FieldShell>
+            <FieldShell label="Country" labelHi="देश" required>
+              <TextInput icon={<Flag size={16} />} value={country} onChange={() => {}} readOnly placeholder="Select Country" error={!!errors.country} />
+              {errors.country && <p className="mt-1 text-sm text-red-500">{errors.country}</p>}
+            </FieldShell>
           </div>
-        </section>
+        </SectionCard>
 
         {/* Roles */}
-        <section className="p-4 sm:p-6 bg-white rounded-2xl shadow-[0px_1px_5px_0px_rgba(3,0,55,0.08)] border border-t-4 border-blue-700 flex flex-col gap-6">
-          <SectionHeader
-             icon="/Address.png"
-            title="Roles"
-            titleHi="भूमिका तपशील"
-            desc="Configure employee access roles and operational responsibilities"
-            descHi="कर्मचाऱ्याच्या प्रवेश भूमिका आणि कार्यात्मक जबाबदाऱ्या कॉन्फिगर करा."
-          />
-          <div className="h-px bg-gray-200" />
-
-          <div className="flex flex-col sm:flex-row flex-wrap gap-6 sm:gap-10">
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-              <span className="text-base font-medium text-gray-900 w-full sm:w-40">
-                Is Teller / <span className="text-slate-500">टेलर आहे का</span>
-              </span>
-              <YesNoToggle value={isTeller} onChange={(v) => setIsTeller(v as YesNo)} />
-            </div>
-
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-              <span className="text-base font-medium text-gray-900 w-full sm:w-56">
-                Is Main Cashier /{" "}
-                <span className="text-slate-500">मुख्य कॅशियर आहे का</span>
-              </span>
-              <YesNoToggle value={isMainCashier} onChange={(v) => setIsMainCashier(v as YesNo)} />
-            </div>
-
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-              <span className="text-base font-medium text-gray-900 w-full sm:w-64">
-                Is Support User /{" "}
-                <span className="text-slate-500">सपोर्ट वापरकर्ता आहे का</span>
-              </span>
-              <YesNoToggle value={isSupportUser} onChange={(v) => setIsSupportUser(v as YesNo)} />
-            </div>
+        <SectionCard
+          titleEn="Roles"
+          titleHi="भूमिका तपशील"
+          subtitleEn="Configure employee access roles and operational responsibilities"
+          subtitleHi="कर्मचाऱ्याच्या प्रवेश भूमिका आणि कार्यात्मक जबाबदाऱ्या कॉन्फिगर करा."
+          icon="/Icon.png"
+        >
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <RadioYesNo label="Is Teller" labelHi="टेलर आहे का" value={isTeller} onChange={setIsTeller} />
+            <RadioYesNo label="Is Main Cashier" labelHi="मुख्य कॅशियर आहे का" value={isMainCashier} onChange={setIsMainCashier} />
+            <RadioYesNo label="Is Support User" labelHi="सपोर्ट वापरकर्ता आहे का" value={isSupportUser} onChange={setIsSupportUser} />
           </div>
-        </section>
-      </div>
+        </SectionCard>
 
-      {/* Footer actions (fixed, does not scroll) */}
-      <div className="shrink-0 flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-4 p-4 sm:p-6 lg:p-8 pt-4 sm:pt-6 border-t border-gray-100">
-        <button
-          type="button"
-          onClick={handleValidate}
-          disabled={isValidated}
-          className={`w-full sm:w-36 h-12 px-6 py-4 rounded-lg flex items-center justify-center gap-2 text-base font-medium transition-colors ${
-            isValidated
-              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-              : "bg-sky-700 text-white hover:bg-sky-800"
-          }`}
-        >
-          Validate
-          <Check className="w-4 h-4" />
-        </button>
-        <button
-          type="button"
-          onClick={onClose}
-          className="w-full sm:w-36 h-12 px-6 py-3.5 rounded-lg border border-blue-700 flex items-center justify-center gap-2 text-blue-700 text-base font-medium hover:bg-blue-50 transition-colors"
-        >
-          Cancel
-          <X className="w-4 h-4" />
-        </button>
-        <button
-          type="button"
-          onClick={handleSave}
-          disabled={!isValidated}
-          className={`w-full sm:w-36 h-12 px-6 py-3.5 rounded-lg flex items-center justify-center gap-2 text-base font-medium transition-colors ${
-            isValidated
-              ? "bg-sky-700 text-white hover:bg-sky-800"
-              : "bg-gray-100 text-gray-400 cursor-not-allowed"
-          }`}
-        >
-          Save
-          <ChevronDown className="w-4 h-4" />
-        </button>
-      </div>
+        {footer}
+      </FormModal>
 
       <CustomerIdPickerModal
         open={customerPickerOpen}
         onClose={() => setCustomerPickerOpen(false)}
         onSelect={(customer) => {
           setCustomerId(customer.id);
-          setErrors((prev) => ({ ...prev, customerId: "" }));
-          setIsValidated(false);
+          clearError("customerId");
         }}
       />
 
@@ -641,11 +457,10 @@ const fetchPincode = async (pin: string) => {
         onSelect={(branch) => {
           setBranchCode(branch.code);
           setBranchName(branch.name);
-          setErrors((prev) => ({ ...prev, branchCode: "" }));
-          setIsValidated(false);
+          clearError("branchCode");
         }}
       />
-    </div>
+    </>
   );
 }
 
@@ -659,18 +474,5 @@ export interface AddUserModalProps {
 export default function AddUserModal({ open, onClose }: AddUserModalProps) {
   if (!open) return null;
 
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/50"
-      onClick={onClose}
-    >
-      <div
-        className="w-full h-full sm:h-auto sm:max-w-6xl"
-        onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
-      >
-        <AddUserForm onClose={onClose} />
-      </div>
-    </div>
-  );
+  return <AddUserForm onClose={onClose} />;
 }
-

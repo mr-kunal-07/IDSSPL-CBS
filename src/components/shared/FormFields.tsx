@@ -25,11 +25,10 @@ export const FieldShell = ({
 }: FieldShellProps) => (
   <div className={className}>
     <label
-      className={`mb-1.5 block text-black ${
-        variant === "large"
+      className={`mb-1.5 block text-black ${variant === "large"
           ? "text-[16px] font-semibold"
           : "text-sm font-medium"
-      }`}
+        }`}
     >
       {label}
       {labelHi && (
@@ -45,7 +44,7 @@ export const FieldShell = ({
 );
 
 export interface TextInputProps {
-  icon?: ReactNode;
+  icon?: ReactNode ;
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
@@ -75,9 +74,8 @@ export const TextInput = ({
       readOnly={readOnly}
       placeholder={placeholder}
       onChange={(e) => onChange(e.target.value)}
-      className={`w-full rounded-lg border bg-white py-2.5 ${icon ? "pl-9" : "pl-3"} ${trailing ? "pr-11" : "pr-3"} text-sm text-slate-700 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${
-        readOnly ? "bg-slate-50 text-slate-500" : ""
-      } ${error ? "border-red-400" : "border-slate-600"}`}
+      className={`w-full rounded-lg border bg-white py-2.5 ${icon ? "pl-9" : "pl-3"} ${trailing ? "pr-11" : "pr-3"} text-sm text-slate-700 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${readOnly ? "bg-slate-50 text-slate-500" : ""
+        } ${error ? "border-red-400" : "border-slate-600"}`}
     />
     {trailing && <span className="absolute right-2">{trailing}</span>}
   </div>
@@ -107,9 +105,8 @@ export const SelectInput = ({
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className={`w-full appearance-none rounded-lg border bg-white py-2.5 ${icon ? "pl-9" : "pl-3"} pr-9 text-sm text-slate-700 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${
-        error ? "border-red-400" : "border-slate-600"
-      } ${!value ? "text-slate-400" : ""}`}
+      className={`w-full appearance-none rounded-lg border bg-white py-2.5 ${icon ? "pl-9" : "pl-3"} pr-9 text-sm text-slate-700 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${error ? "border-red-400" : "border-slate-600"
+        } ${!value ? "text-slate-400" : ""}`}
     >
       <option value="">{placeholder}</option>
       {options.map((opt) => (
@@ -139,9 +136,8 @@ export const DateInput = ({ value, onChange, placeholder, error }: DateInputProp
       value={value}
       placeholder={placeholder}
       onChange={(e) => onChange(e.target.value)}
-      className={`w-full rounded-lg border bg-white py-2.5 pl-9 pr-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${
-        error ? "border-red-400" : "border-slate-600"
-      }`}
+      className={`w-full rounded-lg border bg-white py-2.5 pl-9 pr-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${error ? "border-red-400" : "border-slate-600"
+        }`}
     />
   </div>
 );
@@ -151,21 +147,28 @@ export interface RadioYesNoProps {
   labelHi?: string;
   value: boolean;
   onChange: (v: boolean) => void;
+  disabled?: boolean;
 }
 
-export const RadioYesNo = ({ label, labelHi, value, onChange }: RadioYesNoProps) => (
-  <div>
-    <label className="mb-1.5 block text-xs font-medium text-[#1F2858]">
+export const RadioYesNo = ({ label, labelHi, value, onChange, disabled }: RadioYesNoProps) => (
+  <div className=" last:mb-0 flex gap-2 items-center">
+    <label className=" block text-sm large font-medium text-[#1F2858]">
+
       {label}
       {labelHi && <span className="text-slate-600"> / {labelHi}</span>}
     </label>
     <div className="flex items-center gap-4 pt-1">
       {(["Yes", "No"] as const).map((opt) => (
-        <label key={opt} className="flex cursor-pointer items-center gap-2 text-sm text-slate-700">
+        <label
+          key={opt}
+          className={`flex items-center gap-2 text-sm text-slate-700 ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"
+            }`}
+        >
           <input
             type="radio"
             checked={opt === "Yes" ? value : !value}
-            onChange={() => onChange(opt === "Yes")}
+            onChange={() => !disabled && onChange(opt === "Yes")}
+            disabled={disabled}
             className="h-4 w-4 accent-blue-600"
           />
           {opt}
@@ -180,7 +183,7 @@ export interface SectionCardProps {
   titleHi: string;
   subtitleEn?: string;
   subtitleHi?: string;
-  icon?: ReactNode;
+  icon?: string | ReactNode;
   children: ReactNode;
 }
 
@@ -195,8 +198,12 @@ export const SectionCard = ({
   <div className="bg-white rounded-[20px] border-x border-b border-t-4 border-[#0A66D8] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)] no-scrollbar">
     <div className="mb-4 flex items-start gap-2">
       {icon && (
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-          {icon}
+        <div className="flex h-10 w-10 items-center justify-center">
+          {typeof icon === "string" ? (
+  <img src={icon} alt="" className="h-8 w-8" />
+) : (
+  icon
+)}
         </div>
       )}
       <div>

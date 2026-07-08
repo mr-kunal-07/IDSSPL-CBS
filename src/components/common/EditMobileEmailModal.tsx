@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Phone, Mail, X, Upload, LucideIcon } from "lucide-react";
+import { Smartphone, Mail, X, UserCircle2, IdCard, Upload, LucideIcon } from "lucide-react";
 
 export type FieldType = "mobile" | "email";
 
@@ -21,13 +21,13 @@ interface FieldConfig {
  */
 const FIELD_CONFIG: Record<FieldType, FieldConfig> = {
   mobile: {
-    icon: Phone,
+    icon: Smartphone,
     titleEn: "Mobile Number",
     titleHi: "मोबाइल क्रमांक",
     labelEn: "Edit Mobile Number",
     labelHi: "मोबाईल नंबर एडिट करा",
     inputType: "tel",
-    placeholder: "Enter Mobile Number",
+    placeholder: "Enter mobile number",
     validate: (val: string) => {
       if (!val.trim()) return "Mobile number is required";
       if (!/^\d{10}$/.test(val.trim())) return "Enter a valid 10-digit mobile number";
@@ -41,7 +41,7 @@ const FIELD_CONFIG: Record<FieldType, FieldConfig> = {
     labelEn: "Edit Email ID",
     labelHi: "ईमेल आयडी एडिट करा",
     inputType: "email",
-    placeholder: "Enter Email ID",
+    placeholder: "Enter email ID",
     validate: (val: string) => {
       if (!val.trim()) return "Email ID is required";
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim())) return "Enter a valid email address";
@@ -54,6 +54,8 @@ export interface EditFieldModalProps {
   open: boolean;
   fieldType?: FieldType;
   initialValue?: string;
+  userId?: string;
+  userName?: string;
   onClose?: () => void;
   onSubmit?: (value: string) => void;
 }
@@ -62,6 +64,8 @@ export default function EditFieldModal({
   open,
   fieldType,
   initialValue = "",
+  userId,
+  userName,
   onClose,
   onSubmit,
 }: EditFieldModalProps) {
@@ -81,6 +85,12 @@ export default function EditFieldModal({
 
   if (!open) return null;
 
+  const handleChange = (raw: string) => {
+    const next = fieldType === "mobile" ? raw.replace(/\D/g, "").slice(0, 10) : raw;
+    setValue(next);
+    if (error) setError("");
+  };
+
   const handleSubmit = () => {
     const validationError = config.validate(value);
     if (validationError) {
@@ -91,91 +101,112 @@ export default function EditFieldModal({
     onClose?.();
   };
 
+  const submitDisabled = fieldType === "mobile" && value.length !== 10;
+
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
-      onClick={onClose}
-    >
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
       <div
-        className="relative w-full max-w-2xl bg-white rounded-3xl overflow-hidden"
+        className="relative w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-2xl"
         onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
       >
-        {/* Decorative blurred blobs */}
-        <div className="pointer-events-none absolute -left-11 top-[220px] w-44 h-44 bg-sky-100 rounded-full blur-sm" />
-        <div className="pointer-events-none absolute -right-8 -top-11 w-44 h-44 bg-sky-100 rounded-full blur-sm" />
+        {/* Decorative background circles */}
+        <div className="pointer-events-none absolute -right-10 -top-16 h-40 w-40 rounded-full bg-blue-100/70" />
+        <div className="pointer-events-none absolute -bottom-16 -left-10 h-40 w-40 rounded-full bg-blue-100/70" />
 
-        <div className="relative flex flex-col items-center gap-10 sm:gap-16 p-5 sm:p-6 lg:p-8">
+        <div className="relative px-8 py-8 sm:px-10 sm:py-10">
           {/* Header */}
-          <div className="w-full flex items-center gap-3 sm:gap-4">
-            <div className="w-14 h-14 sm:w-16 sm:h-16 shrink-0 rounded-full border-2 border-blue-700 shadow-[0px_1px_3px_0px_rgba(0,0,0,0.25)] flex items-center justify-center">
-              <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-blue-700" />
+          <div className="mb-8 flex items-start justify-between">
+            <div className="flex items-center gap-3">
+              <span className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-blue-600 bg-blue-50">
+                <Icon className="h-6 w-6 fill-blue-600 text-white" strokeWidth={2} />
+              </span>
+              <h2 className="text-2xl font-bold sm:text-3xl">
+                <span className="text-slate-900">{config.titleEn}</span>{" "}
+                <span className="text-slate-400">/ {config.titleHi}</span>
+              </h2>
             </div>
-            <h1 className="flex-1 text-2xl sm:text-3xl font-bold tracking-tight leading-tight">
-              <span className="text-indigo-950">{config.titleEn} </span>
-              <span className="text-slate-900"> / </span>
-              <span className="text-slate-500">{config.titleHi}</span>
-            </h1>
+
             <button
               type="button"
               onClick={onClose}
-              className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
               aria-label="Close"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-300 text-slate-400 transition hover:bg-slate-50"
             >
-              <X className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+              <X className="h-5 w-5" />
             </button>
           </div>
 
-          {/* Body */}
-          <div className="w-full flex flex-col items-center gap-10 sm:gap-16">
-            <div className="w-full flex flex-col gap-2.5">
-              <div className="flex items-center gap-1 flex-wrap">
-                <span className="text-lg sm:text-xl font-bold text-gray-900">
-                  {config.labelEn} /{" "}
-                  <span className="text-slate-500">{config.labelHi}</span>
-                </span>
-                <span className="text-sm font-medium text-red-500">*</span>
+          {/* Read-only info fields */}
+          <div className="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-slate-800">
+                User Id <span className="text-slate-400 font-medium">/ वापरकर्ता आयडी</span>
+                <span className="text-red-500"> *</span>
+              </label>
+              <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                <UserCircle2 className="h-5 w-5 shrink-0 text-slate-400" />
+                <span className="truncate text-slate-500">{userId}</span>
               </div>
-
-              <div
-                className={`w-full flex items-center gap-2 px-4 py-3.5 rounded-xl border outline-none ${
-                  error ? "border-red-400" : "border-blue-700"
-                } shadow-[0px_1px_0.5px_0.05px_rgba(29,41,61,0.02)]`}
-              >
-                <Icon className="w-5 h-5 text-gray-900 shrink-0" />
-                <input
-                  type={config.inputType}
-                  value={value}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setValue(e.target.value);
-                    if (error) setError("");
-                  }}
-                  placeholder={config.placeholder}
-                  className="flex-1 min-w-0 outline-none text-base text-gray-900 placeholder:text-gray-400"
-                  autoFocus
-                />
-              </div>
-              {error && <span className="text-sm text-red-500">{error}</span>}
             </div>
 
-            {/* Footer actions */}
-            <div className="w-full flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-4 sm:gap-6">
-              <button
-                type="button"
-                onClick={onClose}
-                className="w-full sm:w-36 h-12 px-6 py-3.5 rounded-lg border border-blue-700 flex items-center justify-center gap-2 text-blue-700 text-sm font-bold hover:bg-blue-50 transition-colors"
-              >
-                Cancel
-                <X className="w-4 h-4" />
-              </button>
-              <button
-                type="button"
-                onClick={handleSubmit}
-                className="w-full sm:w-36 h-12 px-6 py-4 bg-sky-700 rounded-lg flex items-center justify-center gap-2 text-white text-base font-bold hover:bg-sky-800 transition-colors"
-              >
-                Submit
-                <Upload className="w-3.5 h-3.5" />
-              </button>
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-slate-800">
+                User Name <span className="text-slate-400 font-medium">/ वापरकर्त्याचे नाव</span>
+                <span className="text-red-500"> *</span>
+              </label>
+              <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                <IdCard className="h-5 w-5 shrink-0 text-slate-400" />
+                <span className="truncate text-slate-500">{userName}</span>
+              </div>
             </div>
+          </div>
+
+          {/* Editable field */}
+          <div className="mb-10">
+            <label className="mb-2 block text-sm font-semibold text-slate-900">
+              {config.labelEn} <span className="text-slate-500 font-medium">/ {config.labelHi}</span>
+              <span className="text-red-500"> *</span>
+            </label>
+            <div
+              className={`flex items-center gap-2 rounded-xl border px-4 py-3 focus-within:ring-2 focus-within:ring-blue-100 ${
+                error ? "border-red-400" : "border-blue-600"
+              }`}
+            >
+              <Icon className="h-5 w-5 shrink-0 text-slate-500" />
+              <input
+                type={config.inputType}
+                inputMode={fieldType === "mobile" ? "numeric" : undefined}
+                value={value}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e.target.value)}
+                className="w-full bg-transparent text-slate-800 outline-none placeholder:text-slate-400"
+                placeholder={config.placeholder}
+                maxLength={fieldType === "mobile" ? 10 : undefined}
+                autoFocus
+              />
+            </div>
+            {error && <span className="mt-1 block text-sm text-red-500">{error}</span>}
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center justify-center gap-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex w-40 items-center justify-center gap-2 rounded-xl border border-blue-600 py-3 font-semibold text-blue-600 transition hover:bg-blue-50"
+            >
+              Cancel
+              <X className="h-4 w-4" strokeWidth={3} />
+            </button>
+
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={submitDisabled}
+              className="flex w-40 items-center justify-center gap-2 rounded-xl bg-blue-700 py-3 font-semibold text-white transition hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Submit
+              <Upload className="h-4 w-4" strokeWidth={2.5} />
+            </button>
           </div>
         </div>
       </div>
