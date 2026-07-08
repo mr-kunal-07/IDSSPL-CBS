@@ -25,19 +25,15 @@ export const FieldShell = ({
 }: FieldShellProps) => (
   <div className={className}>
     <label
-      className={`mb-1.5 block text-[#1F2858] ${
-        variant === "large"
-          ? "text-[16px] font-semibold"
-          : "text-xs font-medium"
+      className={`mb-1.5 block text-[16px] font-medium leading-5 text-[#1F2858] ${
+        variant === "large" ? "font-semibold" : ""
       }`}
     >
       {label}
       {labelHi && (
-        <span className={variant === "large" ? "font-medium text-gray-500" : "text-slate-600"}>
-          {" "}/ {labelHi}
-        </span>
+        <span className="font-medium text-[#64748B]"> / {labelHi}</span>
       )}
-      {required && <span className="text-red-500">{variant === "large" ? "*" : " *"}</span>}
+      {required && <span className="ml-0.5 text-rose-500">*</span>}
     </label>
     {children}
     {error && <p className="mt-1 text-xs text-red-500">This field is required</p>}
@@ -155,9 +151,9 @@ export interface RadioYesNoProps {
 
 export const RadioYesNo = ({ label, labelHi, value, onChange }: RadioYesNoProps) => (
   <div>
-    <label className="mb-1.5 block text-xs font-medium text-[#1F2858]">
+    <label className="mb-1.5 block text-[16px] font-medium leading-5 text-[#1F2858]">
       {label}
-      {labelHi && <span className="text-slate-600"> / {labelHi}</span>}
+      {labelHi && <span className="font-medium text-[#64748B]"> / {labelHi}</span>}
     </label>
     <div className="flex items-center gap-4 pt-1">
       {(["Yes", "No"] as const).map((opt) => (

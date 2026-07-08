@@ -177,10 +177,22 @@ function fromISODate(iso: string): string {
 /*  Primitive: BilingualLabel — single line, no wrap                   */
 /* ------------------------------------------------------------------ */
 
-function BilingualLabel({ en, mr, required }: { en: string; mr?: string; required?: boolean }) {
+function BilingualLabel({
+  en,
+  mr,
+  required,
+  variant = "large",
+}: {
+  en: string;
+  mr?: string;
+  required?: boolean;
+  variant?: "large" | "small";
+}) {
   return (
     <label
-      className="mb-2.5 block truncate whitespace-nowrap text-base font-medium leading-5 text-[#101828]"
+      className={`mb-1.5 block truncate whitespace-nowrap text-[#1F2858] ${
+        variant === "large" ? "text-[16px] font-semibold" : "text-xs font-medium"
+      }`}
       title={mr ? `${en} / ${mr}` : en}
     >
       {en}
@@ -200,7 +212,7 @@ function BilingualLabel({ en, mr, required }: { en: string; mr?: string; require
 /*  (not inside the input) so labels never push fields out of line     */
 /* ------------------------------------------------------------------ */
 
-const iconWrap = "flex h-9 w-9 shrink-0 items-center justify-center text-slate-400";
+const iconWrap = "flex h-9 w-9 shrink-0 items-center justify-center text-[#6B7280]";
 
 interface FieldProps {
   icon?: LucideIcon;
@@ -251,14 +263,10 @@ function Field({
     <div className="flex h-full min-w-0 flex-col">
       <BilingualLabel en={labelEn} mr={labelMr} required={required} />
       <div className="flex flex-1 items-stretch gap-2">
-        <div
-          className={`flex h-12 flex-1 min-w-0 items-center gap-2 rounded-xl border shadow-[0_1px_0.5px_0.05px_rgba(29,41,61,0.02)] transition ${
-            isEditing ? "border-blue-500 ring-1 ring-blue-500/40 bg-white" : "border-[#737373] bg-[#F3F3F3] hover:border-[#525252]"
-          }`}
-        >
+        <div className="relative flex flex-1 min-w-0 items-center">
           {Icon && (
-            <span className={iconWrap}>
-              <Icon className="h-4 w-4" strokeWidth={1.75} />
+            <span className="pointer-events-none absolute left-3 text-slate-400">
+              <Icon size={16} />
             </span>
           )}
           {isEditing ? (
@@ -273,9 +281,9 @@ function Field({
                   if (e.key === "Enter") commit();
                   if (e.key === "Escape") setIsEditing(false);
                 }}
-                className={`w-full flex-1 bg-transparent py-3 pr-3.5 text-[14px] text-[#101828] outline-none ${
-                  !Icon ? "pl-3.5" : ""
-                }`}
+                className={`w-full rounded-lg border bg-white py-2.5 ${
+                  Icon ? "pl-9" : "pl-3"
+                } pr-3 text-sm text-slate-700 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 border-blue-500 ring-1 ring-blue-500`}
               />
             ) : (
               <input
@@ -287,17 +295,19 @@ function Field({
                   if (e.key === "Enter") commit();
                   if (e.key === "Escape") setIsEditing(false);
                 }}
-                className={`w-full flex-1 bg-transparent py-3 pr-3.5 text-[14px] text-[#101828] outline-none ${
-                  !Icon ? "pl-3.5" : ""
-                }`}
+                className={`w-full rounded-lg border bg-white py-2.5 ${
+                  Icon ? "pl-9" : "pl-3"
+                } pr-3 text-sm text-slate-700 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 border-blue-500 ring-1 ring-blue-500`}
               />
             )
           ) : (
             <button
               type="button"
               onClick={startEditing}
-              className={`flex-1 truncate py-3 pr-3.5 text-left text-[14px] ${!Icon ? "pl-3.5" : ""} ${
-                value !== undefined && value !== "" ? "text-[#101828]" : "text-slate-300"
+              className={`w-full truncate rounded-lg border border-slate-300 bg-white py-2.5 text-left ${
+                Icon ? "pl-9" : "pl-3"
+              } pr-3 text-sm transition-colors hover:border-slate-400 ${
+                value !== undefined && value !== "" ? "text-slate-700" : "text-slate-400"
               }`}
             >
               {displayValue}
@@ -309,13 +319,13 @@ function Field({
             type="button"
             onClick={onMenuClick}
             aria-label={`More options for ${labelEn}`}
-            className={`flex h-12 w-[60px] shrink-0 items-center justify-center gap-3 rounded-lg transition ${
+            className={`flex h-[38px] w-[38px] shrink-0 items-center justify-center self-center rounded-lg border transition-colors ${
               menuActive
-                ? "bg-blue-50 text-blue-500 hover:bg-blue-100"
-                : "bg-[#E2E8F0] text-slate-500 hover:bg-slate-300/70"
+                ? "border-blue-200 bg-blue-100 text-blue-600"
+                : "border-slate-200 bg-blue-50 text-blue-600 hover:bg-blue-100"
             }`}
           >
-            <MoreVertical className="h-5 w-5" />
+            <MoreVertical size={16} />
           </button>
         )}
       </div>
@@ -385,20 +395,20 @@ function SelectField({
             onClick={() => setIsOpen((prev) => !prev)}
             aria-haspopup="listbox"
             aria-expanded={isOpen}
-            className={`flex h-12 w-full items-center gap-2 rounded-xl border text-left shadow-[0_1px_0.5px_0.05px_rgba(29,41,61,0.02)] transition ${
-              isOpen ? "border-blue-500 ring-1 ring-blue-500/40 bg-white" : "border-[#737373] bg-[#F3F3F3] hover:border-[#525252]"
+            className={`flex h-10 w-full items-center rounded-md border bg-white px-4 text-left transition-all duration-200 ${
+              isOpen ? "border-[#0A66D8] ring-2 ring-[#0A66D8]/10" : "border-[#B8C2D6] hover:border-[#0A66D8]"
             }`}
           >
             {Icon && (
-              <span className={iconWrap}>
+              <span className="shrink-0 text-[#6B7280]">
                 <Icon className="h-4 w-4" strokeWidth={1.75} />
               </span>
             )}
-            <span className={`flex-1 truncate py-2.5 text-[14px] ${!Icon ? "pl-3" : ""} ${value ? "text-[#101828]" : "text-slate-300"}`}>
+            <span className={`flex-1 truncate text-sm ${Icon ? "ml-3" : ""} ${value ? "text-[#4B5563]" : "text-[#7C879B]"}`}>
               {value || "\u2014"}
             </span>
             <ChevronDown
-              className={`mr-3 h-5 w-5 shrink-0 text-slate-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
+              className={`ml-2 h-5 w-5 shrink-0 text-[#6B7280] transition-transform ${isOpen ? "rotate-180" : ""}`}
               strokeWidth={1.75}
             />
           </button>
@@ -439,12 +449,12 @@ function SelectField({
     <div className="flex h-full min-w-0 flex-col">
       <BilingualLabel en={labelEn} mr={labelMr} required={required} />
       <div
-        className={`flex h-12 flex-1 min-w-0 items-center gap-2 rounded-xl border shadow-[0_1px_0.5px_0.05px_rgba(29,41,61,0.02)] transition ${
-          isEditing ? "border-blue-500 ring-1 ring-blue-500/40 bg-white" : "border-[#737373] bg-[#F3F3F3] hover:border-[#525252]"
+        className={`flex h-10 flex-1 min-w-0 items-center rounded-md border bg-white px-4 transition-all duration-200 ${
+          isEditing ? "border-[#0A66D8] ring-2 ring-[#0A66D8]/10" : "border-[#B8C2D6] hover:border-[#0A66D8]"
         }`}
       >
         {Icon && (
-          <span className={iconWrap}>
+          <span className="shrink-0 text-[#6B7280]">
             <Icon className="h-4 w-4" strokeWidth={1.75} />
           </span>
         )}
@@ -458,20 +468,20 @@ function SelectField({
               if (e.key === "Enter") commit();
               if (e.key === "Escape") setIsEditing(false);
             }}
-            className={`w-full flex-1 bg-transparent py-2.5 text-[14px] text-[#101828] outline-none ${
-              !Icon ? "pl-3" : ""
+            className={`w-full flex-1 bg-transparent text-sm text-[#4B5563] outline-none ${
+              Icon ? "ml-3" : ""
             }`}
           />
         ) : (
           <button
             type="button"
             onClick={startEditing}
-            className={`flex-1 truncate py-2.5 text-left text-[14px] text-[#101828] ${!Icon ? "pl-3" : ""}`}
+            className={`flex-1 truncate text-left text-sm text-[#4B5563] ${Icon ? "ml-3" : ""}`}
           >
             {value || "\u2014"}
           </button>
         )}
-        <ChevronDown className="mr-3 h-5 w-5 shrink-0 text-slate-300" strokeWidth={1.75} />
+        <ChevronDown className="ml-2 h-5 w-5 shrink-0 text-[#6B7280]" strokeWidth={1.75} />
       </div>
     </div>
   );
@@ -480,8 +490,8 @@ function SelectField({
 function SrNoField({ value }: { value?: string | number }) {
   return (
     <div className="flex h-full min-w-0 flex-col">
-      <span className="mb-2.5 block truncate whitespace-nowrap text-base font-medium leading-5 text-[#101828]">Sr No</span>
-      <div className="flex h-12 flex-1 items-center justify-center rounded-xl border border-[#737373] bg-[#F3F3F3] shadow-[0_1px_0.5px_0.05px_rgba(29,41,61,0.02)] text-[14px] text-[#101828]">
+      <span className="mb-1.5 block truncate whitespace-nowrap text-[16px] font-semibold text-[#1F2858]">Sr No</span>
+      <div className="flex h-10 flex-1 items-center justify-center rounded-md border border-[#B8C2D6] bg-white text-sm text-[#4B5563]">
         {value ?? "\u2014"}
       </div>
     </div>
@@ -491,7 +501,7 @@ function SrNoField({ value }: { value?: string | number }) {
 function FieldGrid({ children, cols = 4 }: { children: React.ReactNode; cols?: 3 | 4 }) {
   return (
     <div
-      className={`grid grid-cols-1 gap-x-6 gap-y-5 rounded-xl border border-t-4 border-[#0B63C1] shadow-[0_1px_5px_rgba(3,0,55,0.08)] p-5 sm:grid-cols-2 [&>*]:min-w-0 ${
+      className={`grid grid-cols-1 gap-4 rounded-[20px] border-x border-b border-t-4 border-[#0A66D8] shadow-[0_2px_10px_rgba(0,0,0,0.05)] p-5 sm:grid-cols-2 [&>*]:min-w-0 ${
         cols === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4"
       }`}
     >
@@ -516,7 +526,7 @@ function RadioGroup({
   return (
     <div className="flex h-full min-w-0 flex-col justify-center">
       <div className="flex items-center justify-between gap-4">
-        <span className="whitespace-nowrap text-base font-medium leading-5 text-[#101828]">
+        <span className="whitespace-nowrap text-[16px] font-semibold text-[#1F2858]">
           {labelEn}
           {labelMr && (
             <>
@@ -811,8 +821,8 @@ function NomineeTab({ data }: { data: NomineeDetails }) {
 
   return (
     <>
-    <div className="rounded-xl border border-t-4 border-[#0B63C1] shadow-[0_1px_5px_rgba(3,0,55,0.08)] p-5">
-      <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-[80px_1.3fr_1fr_1fr_1fr] [&>*]:min-w-0">
+    <div className="rounded-[20px] border-x border-b border-t-4 border-[#0A66D8] shadow-[0_2px_10px_rgba(0,0,0,0.05)] p-5">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[80px_1.3fr_1fr_1fr_1fr] [&>*]:min-w-0">
         <SrNoField value={formData.srNo} />
         <SelectField
           labelEn="Salutation Code"
@@ -826,14 +836,14 @@ function NomineeTab({ data }: { data: NomineeDetails }) {
         <SelectField icon={User} labelEn="Relation" value={formData.relation} onChange={update("relation")} />
       </div>
 
-      <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-4 [&>*]:min-w-0">
+      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 [&>*]:min-w-0">
         <Field icon={Home} labelEn="Address 1" labelMr="पत्ता १" value={formData.address1} onChange={update("address1")} />
         <Field icon={Home} labelEn="Address 2" labelMr="पत्ता २" value={formData.address2} onChange={update("address2")} />
         <Field icon={Home} labelEn="Address 3" labelMr="पत्ता ३" value={formData.address3} required={false} onChange={update("address3")} />
         <Field icon={Home} labelEn="Zip" labelMr="पिन कोड" value={formData.zip} onChange={update("zip")} />
       </div>
 
-      <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3 [&>*]:min-w-0">
+      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 [&>*]:min-w-0">
         <SelectField icon={Landmark} labelEn="City" labelMr="शहरे" value={formData.city} onChange={update("city")} />
         <Field icon={Landmark} labelEn="State" labelMr="राज्य" value={formData.state} onChange={update("state")} />
         <Field icon={Flag} labelEn="Country" labelMr="देश" value={formData.country} onChange={update("country")} />
@@ -873,8 +883,8 @@ function JointHolderTab({ data }: { data: JointHolderDetails }) {
 
   return (
     <>
-    <div className="rounded-xl border border-t-4 border-[#0B63C1] shadow-[0_1px_5px_rgba(3,0,55,0.08)] p-5">
-      <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-[80px_1.3fr_1fr_1fr] [&>*]:min-w-0">
+    <div className="rounded-[20px] border-x border-b border-t-4 border-[#0A66D8] shadow-[0_2px_10px_rgba(0,0,0,0.05)] p-5">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[80px_1.3fr_1fr_1fr] [&>*]:min-w-0">
         <SrNoField value={formData.srNo} />
         <SelectField
           labelEn="Salutation Code"
@@ -887,19 +897,19 @@ function JointHolderTab({ data }: { data: JointHolderDetails }) {
         <Field icon={User} labelEn="J/T Holder Name" labelMr="J/T धारकाचे नाव" value={formData.jtHolderName} onChange={update("jtHolderName")} />
       </div>
 
-      <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3 [&>*]:min-w-0">
+      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 [&>*]:min-w-0">
         <Field icon={Home} labelEn="Address 1" labelMr="पत्ता १" value={formData.address1} onChange={update("address1")} />
         <Field icon={Home} labelEn="Address 2" labelMr="पत्ता २" value={formData.address2} onChange={update("address2")} />
         <Field icon={Home} labelEn="Address 3" labelMr="पत्ता ३" value={formData.address3} required={false} onChange={update("address3")} />
       </div>
 
-      <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3 [&>*]:min-w-0">
+      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 [&>*]:min-w-0">
         <Field icon={Home} labelEn="Zip" labelMr="पिन कोड" value={formData.zip} onChange={update("zip")} />
         <SelectField icon={Home} labelEn="City" labelMr="शहरे" value={formData.city} onChange={update("city")} />
         <Field icon={Landmark} labelEn="State" labelMr="राज्य" value={formData.state} onChange={update("state")} />
       </div>
 
-      <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3 [&>*]:min-w-0">
+      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 [&>*]:min-w-0">
         <Field icon={Flag} labelEn="Country" labelMr="देश" value={formData.country} onChange={update("country")} />
       </div>
     </div>
@@ -926,8 +936,8 @@ function JointHolderTab({ data }: { data: JointHolderDetails }) {
 
 function HeaderIcon() {
   return (
-    <span className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#5B6EF5]">
-      <Image src="/person1.png" alt="" fill sizes="44px" className="object-cover" />
+    <span className="relative flex h-11 w-11 shrink-0 items-center justify-center">
+      <Image src="/person1.png" alt="" fill sizes="44px" className="object-contain" />
     </span>
   );
 }
@@ -1045,7 +1055,7 @@ export default function ViewAccountModal({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+            className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-full border border-slate-300 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
           >
             <X className="h-6 w-6" strokeWidth={1.75} />
           </button>
