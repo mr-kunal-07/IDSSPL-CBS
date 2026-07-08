@@ -1,17 +1,21 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { STATIC_LOGIN_ID, STATIC_OTP, createAuthSession } from "@/lib/auth";
 
 const OTP_LENGTH = 6;
 
-const OtpVerificationPage = () => {
+const OtpVerificationForm = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const userId = searchParams.get("userId") || STATIC_LOGIN_ID;
 
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const [timer, setTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
+  const [otpError, setOtpError] = useState("");
   const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
@@ -31,6 +35,7 @@ const OtpVerificationPage = () => {
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
+    setOtpError("");
 
     if (value && index < OTP_LENGTH - 1) {
       inputsRef.current[index + 1]?.focus();
@@ -50,14 +55,21 @@ const OtpVerificationPage = () => {
     setOtp(Array(OTP_LENGTH).fill(""));
     setTimer(30);
     setCanResend(false);
+    setOtpError("");
     inputsRef.current[0]?.focus();
   };
 
   const CheckOTPverify = () => {
     const code = otp.join("");
-    if (code.length === OTP_LENGTH) {
-      router.push("/dashboard");
+    if (code.length !== OTP_LENGTH) return;
+
+    if (code !== STATIC_OTP) {
+      setOtpError("Invalid OTP. Please try again.");
+      return;
     }
+
+    createAuthSession(userId);
+    router.push("/dashboard");
   };
 
   const isOtpFilled = otp.join("").length === OTP_LENGTH;
@@ -146,6 +158,10 @@ const OtpVerificationPage = () => {
   ))}
 </div>
 
+                {otpError && (
+                  <p className="text-xs text-red-500 text-center">{otpError}</p>
+                )}
+
                 <p
                   className="font-medium text-[16px] leading-[24px] text-center text-primary"
                   style={{ fontFamily: "Instrument Sans" }}
@@ -181,5 +197,11 @@ const OtpVerificationPage = () => {
     </div>
   );
 };
+
+const OtpVerificationPage = () => (
+  <Suspense fallback={null}>
+    <OtpVerificationForm />
+  </Suspense>
+);
 
 export default OtpVerificationPage;

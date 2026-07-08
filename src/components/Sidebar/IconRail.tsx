@@ -1,5 +1,6 @@
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { clearAuthSession } from "@/lib/auth";
 
 type RailItem = {
   id: string;
@@ -43,7 +44,10 @@ export default function IconRail({ items, active, onSelect }: IconRailProps) {
 
       <div className="mb-5 mt-auto">
         <button
-          onClick={() => route.push("/login")}
+          onClick={() => {
+            clearAuthSession();
+            route.push("/login");
+          }}
           className="flex h-12 w-12 items-center justify-center rounded-xl transition-all duration-200 hover:bg-white/10 hover:scale-105"
         >
           <LogOut

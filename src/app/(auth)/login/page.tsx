@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { User, Lock, Building2, ArrowRight, Eye, EyeOff, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { STATIC_LOGIN_ID, STATIC_PASSWORD } from "@/lib/auth";
 
 const branchOptions = [
   { value: "001", label: "001 - Main Branch" },
@@ -78,10 +79,7 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [userIdTouched, setUserIdTouched] = useState(false);
 
-  const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
-
-  const isFormValid =
-    userId && password && branchCode && passwordRegex.test(password);
+  const isFormValid = userId && password;
 
   const handleUserIdChange = (value: string) => {
     setUserId(value);
@@ -101,13 +99,7 @@ const LoginPage = () => {
 
   const handlePasswordChange = (value: string) => {
     setPassword(value);
-    if (value && !passwordRegex.test(value)) {
-      setPasswordError(
-        "Password must be at least 8 characters long and include a capital letter, number, and special character."
-      );
-    } else {
-      setPasswordError("");
-    }
+    setPasswordError("");
   };
 
   const handleSubmit = () => {
@@ -116,8 +108,15 @@ const LoginPage = () => {
       setUserIdError("User ID is required.");
       return;
     }
-    console.log("Form values:", { userId, password, branchCode });
- router.push("/otp-verification");
+    if (userId.trim().toLowerCase() !== STATIC_LOGIN_ID) {
+      setUserIdError("Invalid User ID.");
+      return;
+    }
+    if (password !== STATIC_PASSWORD) {
+      setPasswordError("Invalid Password.");
+      return;
+    }
+    router.push(`/otp-verification?userId=${encodeURIComponent(userId.trim())}`);
   };
 
   return (
@@ -232,7 +231,6 @@ const LoginPage = () => {
               <div>
                 <label className="text-[15px] font-medium text-[#312E81]">
                   Branch Code | <span className="text-[#808080]">शाखा कोड</span>
-                  <span className="text-red-500 ml-1">*</span>
                 </label>
                 <div className="mt-1 flex items-center rounded-lg border border-[#696FC7] bg-white px-3 h-[50px] focus-within:border-[#3730A3] shadow-sm">
                   <BranchDropdown value={branchCode} onChange={setBranchCode} />

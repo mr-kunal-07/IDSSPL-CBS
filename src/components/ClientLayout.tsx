@@ -1,9 +1,11 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import Header from "@/components/Header";
+import { getAuthSession, clearAuthSession } from "@/lib/auth";
 
 type ClientLayoutProps = {
   children: ReactNode;
@@ -11,6 +13,24 @@ type ClientLayoutProps = {
 
 export default function ClientLayout({ children }: ClientLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const session = getAuthSession();
+    if (!session) {
+      clearAuthSession();
+      router.replace("/login");
+      return;
+    }
+
+    const remainingMs = session.expiresAt - Date.now();
+    const timeout = setTimeout(() => {
+      clearAuthSession();
+      router.replace("/login");
+    }, remainingMs);
+
+    return () => clearTimeout(timeout);
+  }, [router]);
 
   return (
     <div className="flex h-full">
