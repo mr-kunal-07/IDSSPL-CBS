@@ -206,17 +206,12 @@ export const SectionCard = ({
   <div className="bg-white rounded-[20px] border-x border-b-2 border-t-4 border-[#0A66D8] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)] no-scrollbar">
     <div className="mb-5 flex items-center gap-3">
       {icon && (
-<<<<<<< HEAD
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#EEF4FF] text-[#0A66D8]">
-          {icon}
-=======
         <div className="flex h-10 w-10 items-center justify-center">
           {typeof icon === "string" ? (
   <img src={icon} alt="" className="h-8 w-8" />
 ) : (
   icon
 )}
->>>>>>> Development
         </div>
       )}
       <div>
