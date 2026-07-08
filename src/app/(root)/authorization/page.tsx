@@ -5,7 +5,7 @@ import AuthorizationCards from "@/components/Authorization/AuthorizationCards";
 
 const Page = () => {
   return (
-    <div className="min-h-screen bg-[#E7EAEF]">
+    <div className="min-h-screen bg-[#E7EAEF] no-scrollbar ">
       <GlobalNav
         titleEn="Authorization"
         titleHi="अधिकृतीकरण"
