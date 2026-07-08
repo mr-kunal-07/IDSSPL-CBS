@@ -8,7 +8,6 @@ import SidebarHeader from "./SidebarHeader";
 import NavGroup from "./NavGroup";
 import NavItem from "./NavItem";
 import UserFooter from "./UserFooter";
-import CollapseButton from "./CollapseButton";
 
 import { menuItems, railIcons, user } from "./sidebarData";
 
@@ -38,10 +37,6 @@ export default function Sidebar({ isOpen: _isOpen, onClose: _onClose }: SidebarP
 
   {/* Sidebar */}
   <div className="relative">
-    <CollapseButton
-      collapsed={collapsed}
-      onClick={() => setCollapsed(!collapsed)}
-    />
 
     <div
       className={`

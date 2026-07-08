@@ -154,7 +154,7 @@ const NavbarAM = ({
             {/* Filter */}
             <button
               onClick={handleFilterClick}
-              className="flex h-10 w-10 items-center justify-center rounded-md border-2 border-[#1565D8] bg-[#F4F6FC] text-[#1565D8] transition hover:bg-[#EEF4FF]"
+              className="flex h-10 w-10 items-center justify-center rounded-md border-2 border-primary bg-primary-50 text-primary transition hover:bg-primary-100"
             >
               <Filter size={24} />
             </button>
@@ -162,7 +162,7 @@ const NavbarAM = ({
             {/* Add */}
             <button
               onClick={onAdd}
-              className="flex h-10 w-[100px] overflow-hidden rounded-md border-2 border-[#1565D8] bg-[#1565D8] shadow-sm transition-all hover:bg-[#0E57C4]"
+              className="flex h-10 w-[100px] overflow-hidden rounded-md border-2 border-primary bg-primary shadow-sm transition-all hover:bg-primary-700"
             >
               {/* Left Arrow Section */}
               <div
@@ -171,7 +171,7 @@ const NavbarAM = ({
                   clipPath: "polygon(0 0, 75% 0, 100% 50%, 75% 100%, 0 100%)",
                 }}
               >
-                <Plus size={22} strokeWidth={2.8} className="text-[#1565D8]" />
+                <Plus size={22} strokeWidth={2.8} className="text-primary" />
               </div>
 
               {/* Text */}

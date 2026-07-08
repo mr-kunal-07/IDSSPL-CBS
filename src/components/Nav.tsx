@@ -41,7 +41,7 @@ export default function PageHeader({
 
           <button
             onClick={() => router.back()}
-            className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-[#1565D8] text-white hover:bg-[#135dc9]"
+            className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white hover:bg-primary-700"
           >
             <ArrowLeft size={15} strokeWidth={2.5} />
           </button>
@@ -49,7 +49,7 @@ export default function PageHeader({
           <div>
 
             <div className="flex items-center gap-2">
-              <h1 className="text-[15px] font-semibold text-[#1B4FA8]">
+              <h1 className="text-[15px] font-semibold text-primary">
                 {title}
               </h1>
 
@@ -72,7 +72,7 @@ export default function PageHeader({
                   <span
                     className={
                       item.active
-                        ? "text-[#1565D8]"
+                        ? "text-primary"
                         : "text-[#9C9C9C]"
                     }
                   >
@@ -97,20 +97,20 @@ export default function PageHeader({
 
           <button
             onClick={onFilter}
-            className="flex h-8 w-8 items-center justify-center rounded-md border border-[#1565D8] text-[#1565D8]"
+            className="flex h-8 w-8 items-center justify-center rounded-md border border-primary text-primary"
           >
             <Filter size={15} />
           </button>
 
           <Link
             href={addHref}
-            className="flex h-8 overflow-hidden rounded-md border border-[#1565D8]"
+            className="flex h-8 overflow-hidden rounded-md border border-primary"
           >
-            <div className="flex w-9 items-center justify-center bg-white text-[#1565D8]">
+            <div className="flex w-9 items-center justify-center bg-white text-primary">
               <Plus size={15} strokeWidth={2.8} />
             </div>
 
-            <div className="flex items-center bg-[#1565D8] px-3 text-[13px] font-medium text-white">
+            <div className="flex items-center bg-primary px-3 text-[13px] font-medium text-white">
               Add
             </div>
           </Link>
