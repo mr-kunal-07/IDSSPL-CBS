@@ -16,15 +16,15 @@ const page = () => {
   return (
     <div className="relative mt-10  w-full max-w-3xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
       {/* Decorative background blobs */}
-      <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#0B63C1]/10 rounded-full" />
-      <div className="absolute -bottom-16 -left-16 w-52 h-52 bg-[#0B63C1]/10 rounded-full" />
+      <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/10 rounded-full" />
+      <div className="absolute -bottom-16 -left-16 w-52 h-52 bg-primary/10 rounded-full" />
 
       <div className="relative p-8">
         {/* Header */}
         <div className="flex items-start justify-between mb-8">
           <div className="flex items-center gap-3">
-            <div className="w-14 h-14 rounded-full border-2 border-[#0B63C1] flex items-center justify-center bg-gradient-to-br from-blue-100 to-white">
-              <Settings className="w-10 h-10 text-[#0B63C1]"  />
+            <div className="w-14 h-14 rounded-full border-2 border-primary flex items-center justify-center bg-gradient-to-br from-primary-100 to-white">
+              <Settings className="w-10 h-10 text-primary"  />
             </div>
             <h2 className="text-[24px] font-bold text-black">
               Account Memo/{' '}
@@ -80,7 +80,7 @@ const page = () => {
           <label className="block text-[16px] font-medium text-black mb-2">
             Memo Details<span className="text-red-500 ml-0.5">*</span>
           </label>
-          <div className="rounded-xl border-2 border-[#0B63C1] px-4 py-3">
+          <div className="rounded-xl border-2 border-primary px-4 py-3">
             <div className="flex items-start gap-3">
               <FileText className="w-5 h-5 text-gray-500 shrink-0 mt-0.5" />
               <textarea
@@ -109,7 +109,7 @@ const page = () => {
           </button>
           <button
             type="button"
-            className="flex items-center gap-2 px-8 py-3 rounded-lg bg-[#0B63C1] text-white font-semibold hover:bg-[#0a58ac] transition-colors"
+            className="flex items-center gap-2 px-8 py-3 rounded-lg bg-primary text-white font-semibold hover:bg-[#0a58ac] transition-colors"
           >
             Submit <Upload className="w-4 h-4" />
           </button>

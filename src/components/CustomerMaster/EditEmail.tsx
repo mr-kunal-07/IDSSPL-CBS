@@ -32,15 +32,15 @@ export default function EditEmailModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
       <div className="relative w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-2xl">
         {/* Decorative background circles */}
-        <div className="pointer-events-none absolute -right-10 -top-16 h-40 w-40 rounded-full bg-blue-100/70" />
-        <div className="pointer-events-none absolute -bottom-16 -left-10 h-40 w-40 rounded-full bg-blue-100/70" />
+        <div className="pointer-events-none absolute -right-10 -top-16 h-40 w-40 rounded-full bg-primary-100/70" />
+        <div className="pointer-events-none absolute -bottom-16 -left-10 h-40 w-40 rounded-full bg-primary-100/70" />
 
         <div className="relative px-8 py-8 sm:px-10 sm:py-10">
           {/* Header */}
           <div className="mb-8 flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <span className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-blue-600 bg-blue-50">
-                <Mail className="h-6 w-6 fill-blue-600 text-white" strokeWidth={2} />
+              <span className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-primary bg-primary-50">
+                <Mail className="h-6 w-6 fill-primary text-white" strokeWidth={2} />
               </span>
               <h2 className="text-2xl font-bold sm:text-3xl">
                 <span className="text-slate-900">Email ID</span>{" "}
@@ -89,7 +89,7 @@ export default function EditEmailModal({
               Edit Email ID <span className="text-slate-500 font-medium">/ ईमेल आयडी एडिट करा</span>
               <span className="text-red-500"> *</span>
             </label>
-            <div className="flex items-center gap-2 rounded-xl border border-blue-600 px-4 py-3 focus-within:ring-2 focus-within:ring-blue-100">
+            <div className="flex items-center gap-2 rounded-xl border border-primary px-4 py-3 focus-within:ring-2 focus-within:ring-primary-100">
               <Mail className="h-5 w-5 shrink-0 text-slate-500" />
               <input
                 type="email"
@@ -106,7 +106,7 @@ export default function EditEmailModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex w-40 items-center justify-center gap-2 rounded-xl border border-blue-600 py-3 font-semibold text-blue-600 transition hover:bg-blue-50"
+              className="flex w-40 items-center justify-center gap-2 rounded-xl border border-primary py-3 font-semibold text-primary transition hover:bg-primary-50"
             >
               Cancel
               <X className="h-4 w-4" strokeWidth={3} />
@@ -115,7 +115,7 @@ export default function EditEmailModal({
             <button
               type="button"
               onClick={handleSubmit}
-              className="flex w-40 items-center justify-center gap-2 rounded-xl bg-blue-700 py-3 font-semibold text-white transition hover:bg-blue-800"
+              className="flex w-40 items-center justify-center gap-2 rounded-xl bg-primary-700 py-3 font-semibold text-white transition hover:bg-primary-800"
             >
               Submit
               <Upload className="h-4 w-4" strokeWidth={2.5} />

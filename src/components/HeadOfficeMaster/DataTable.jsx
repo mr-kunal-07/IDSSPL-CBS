@@ -112,7 +112,7 @@ const DataTable = ({ master, rows, filters, onRowsChange }) => {
           <div className="overflow-x-auto rounded-lg border border-gray-200">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-[#0B63C1] text-white">
+                <tr className="bg-primary text-white">
                   <th className="px-4 py-3 text-left font-medium whitespace-nowrap">Sr No.</th>
                   <th className="px-4 py-3 text-left font-medium whitespace-nowrap">Actions</th>
                   {config.columns.map((col) => (
@@ -140,10 +140,10 @@ const DataTable = ({ master, rows, filters, onRowsChange }) => {
                   sortedRows.map((row, idx) => (
                     <tr
                       key={row.id ?? idx}
-                      className="odd:bg-white even:bg-gray-50 border-t border-gray-100 hover:bg-blue-50/30"
+                      className="odd:bg-white even:bg-gray-50 border-t border-gray-100 hover:bg-primary-50/30"
                     >
                       <td className="px-4 py-3">
-                        <span className="inline-flex items-center justify-center min-w-[26px] px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 text-xs font-semibold">
+                        <span className="inline-flex items-center justify-center min-w-[26px] px-1.5 py-0.5 rounded bg-primary-50 text-primary-700 text-xs font-semibold">
                           {idx + 1}
                         </span>
                       </td>
@@ -161,7 +161,7 @@ const DataTable = ({ master, rows, filters, onRowsChange }) => {
                         {openMenuRow === row.id && (
                           <div
                             ref={menuRef}
-                            className="absolute left-4 top-10 z-20 w-44 rounded-xl border border-blue-200 bg-white py-2 shadow-lg"
+                            className="absolute left-4 top-10 z-20 w-44 rounded-xl border border-primary-200 bg-white py-2 shadow-lg"
                           >
                             {menuOptions.map((opt) => {
                               const Icon = opt.icon;
@@ -172,7 +172,7 @@ const DataTable = ({ master, rows, filters, onRowsChange }) => {
                                   onClick={() => handleMenuAction(opt.key, row)}
                                   className="flex w-full items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                                 >
-                                  <Icon size={16} className="text-blue-600" />
+                                  <Icon size={16} className="text-primary" />
                                   {opt.label}
                                 </button>
                               );

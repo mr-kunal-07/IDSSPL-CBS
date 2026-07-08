@@ -45,7 +45,7 @@ export default function MainRoleListModal({
   }, [roles, search]);
 
   return (
-    <div className="relative w-full min-w-[600px] overflow-hidden rounded-2xl border-2 border-[#0B63C1] bg-white p-6 shadow-xl">
+    <div className="relative w-full min-w-[600px] overflow-hidden rounded-2xl border-2 border-primary bg-white p-6 shadow-xl">
       <div className="pointer-events-none absolute -top-8 right-8 h-32 w-32 rounded-full bg-[#DCEBFC]" />
       <div className="pointer-events-none absolute -bottom-12 -left-8 h-40 w-40 rounded-full bg-[#DCEBFC]" />
 
@@ -97,7 +97,7 @@ export default function MainRoleListModal({
                 }
               >
                 <td className="px-5 py-3">
-                  <span className="inline-flex min-w-[36px] items-center justify-center rounded-lg bg-[#E8F1FD] px-3 py-1 text-sm font-semibold text-[#0B63C1]">
+                  <span className="inline-flex min-w-[36px] items-center justify-center rounded-lg bg-[#E8F1FD] px-3 py-1 text-sm font-semibold text-primary">
                     {role.id}
                   </span>
                 </td>
@@ -109,7 +109,7 @@ export default function MainRoleListModal({
                       onSelect(role);
                       onClose();
                     }}
-                    className="rounded-lg bg-[#E8F1FD] px-5 py-1.5 text-sm font-medium text-[#0B63C1] transition hover:bg-[#DCEBFC]"
+                    className="rounded-lg bg-[#E8F1FD] px-5 py-1.5 text-sm font-medium text-primary transition hover:bg-[#DCEBFC]"
                   >
                     Select
                   </button>

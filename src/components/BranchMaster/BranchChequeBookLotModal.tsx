@@ -70,7 +70,7 @@ function TextField({ labelEn, labelHi, icon: Icon, placeholder, value, onChange,
               ? "border-red-400 bg-white"
               : readOnly
                 ? "border-slate-400 bg-slate-50"
-                : "border-[#B8C2D6] bg-white focus-within:border-[#0A66D8] focus-within:ring-2 focus-within:ring-[#0A66D8]/10"
+                : "border-[#B8C2D6] bg-white focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10"
             }`}
         >
           <Icon size={18} className="shrink-0 text-[#6B7280]" />
@@ -151,7 +151,7 @@ interface SectionHeaderProps {
 function SectionHeader({ icon: Icon, titleEn, titleHi }: SectionHeaderProps) {
   return (
     <div className="mb-4 flex items-center gap-3 border-b border-slate-100 pb-3">
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#EEF4FF] text-[#0B63C1]">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#EEF4FF] text-primary">
         <Icon size={18} />
       </div>
       <h3 className="text-lg font-bold text-black">
@@ -223,7 +223,7 @@ export default function BranchChequeBookLotModal({ open, initialData = emptyCheq
           </button>
         </div>
 
-        <div className="bg-white rounded-[20px] border-x border-b border-t-4 border-[#0A66D8] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+        <div className="bg-white rounded-[20px] border-x border-b border-t-4 border-primary p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
           <SectionHeader icon={UserRound} titleEn="Branch Details" titleHi="शाखेचा तपशील" />
           <div className="grid grid-cols-1 gap-x-4 md:grid-cols-3">
             <TextField labelEn="Branch Code" labelHi="शाखा कोड" icon={Landmark} placeholder="Enter Branch Code" value={formData.branchCode} onChange={(v) => handleChange("branchCode", v)} hasError={errors.branchCode} readOnly />
@@ -240,7 +240,7 @@ export default function BranchChequeBookLotModal({ open, initialData = emptyCheq
               trailing={
                 <button
                   type="button"
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-[#B8C2D6] bg-[#EEF4FF] text-[#0B63C1] transition-colors hover:bg-[#DCE9FF]"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-[#B8C2D6] bg-[#EEF4FF] text-primary transition-colors hover:bg-[#DCE9FF]"
                 >
                   <MoreVertical size={18} />
                 </button>
@@ -249,7 +249,7 @@ export default function BranchChequeBookLotModal({ open, initialData = emptyCheq
           </div>
         </div>
 
-        <div className="mt-4 bg-white rounded-[20px] border-x border-b border-t-4 border-[#0A66D8] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+        <div className="mt-4 bg-white rounded-[20px] border-x border-b border-t-4 border-primary p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
           <SectionHeader icon={IdCard} titleEn="Cheque Details" titleHi="तपशील तपासा" />
           <div className="grid grid-cols-1 gap-x-4 md:grid-cols-3">
             <SelectField labelEn="Cheque Type" labelHi="चेक प्रकार" icon={IdCard} placeholder="Select Cheque Type" value={formData.chequeType} options={CHEQUE_TYPE_OPTIONS} onChange={(v) => handleChange("chequeType", v)} hasError={errors.chequeType} />
@@ -263,17 +263,17 @@ export default function BranchChequeBookLotModal({ open, initialData = emptyCheq
         </div>
 
         <div className="flex items-center justify-end gap-3 border-t border-slate-100 pt-4 ">
-          <button type="button" onClick={handleValidate} className="flex items-center gap-1.5 rounded-lg bg-[#0B63C1] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700">
+          <button type="button" onClick={handleValidate} className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700">
             Validate <Check size={16} />
           </button>
-          <button type="button" onClick={onClose} className="flex items-center gap-1.5 rounded-lg border border-blue-500 px-4 py-2.5 text-sm font-medium text-[#0B63C1] transition-colors hover:bg-blue-50">
+          <button type="button" onClick={onClose} className="flex items-center gap-1.5 rounded-lg border border-primary-500 px-4 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary-50">
             Cancel <X size={16} />
           </button>
           <button
             type="button"
             disabled={!validated}
             onClick={handleSave}
-            className={`flex items-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${validated ? "bg-blue-100 text-[#0B63C1] hover:bg-blue-200" : "cursor-not-allowed bg-gray-100 text-gray-400"
+            className={`flex items-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${validated ? "bg-primary-100 text-primary hover:bg-primary-200" : "cursor-not-allowed bg-gray-100 text-gray-400"
               }`}
           >
             Save <ChevronDown size={16} />

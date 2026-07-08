@@ -88,10 +88,10 @@ export default function RoleAssignmentForm({ selectedUser, onRoleAssigned }: Rol
 
   return (
     <>
-      <div className="rounded-xl border border-[#0B63C1]/30 bg-white p-5 shadow-sm">
+      <div className="rounded-xl border border-primary/30 bg-white p-5 shadow-sm">
         <div className="mb-5 flex items-center gap-2">
           <div className="relative flex h-9 w-9 items-center justify-center">
-            <UserRound size={28} className="text-[#0B63C1]" />
+            <UserRound size={28} className="text-primary" />
             <span className="absolute -bottom-0.5 -right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-emerald-500 text-[9px] font-bold text-white">
               +
             </span>
@@ -101,14 +101,14 @@ export default function RoleAssignmentForm({ selectedUser, onRoleAssigned }: Rol
           </h2>
         </div>
 
-        <div className="mb-5 rounded-xl border-2 border-[#0B63C1] p-4">
+        <div className="mb-5 rounded-xl border-2 border-primary p-4">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <div>
               <label className="mb-1.5 block text-xs text-gray-500">
                 User Id / <span className="text-gray-400">वापरकर्ता आयडी</span>
               </label>
               <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-100 px-3 py-2.5">
-                <UserRound size={16} className="text-[#0B63C1]" />
+                <UserRound size={16} className="text-primary" />
                 <span className="text-sm text-gray-700">
                   {selectedUser?.userId ?? "—"}
                 </span>
@@ -121,7 +121,7 @@ export default function RoleAssignmentForm({ selectedUser, onRoleAssigned }: Rol
                 Username / <span className="text-gray-400">आडनाव</span>
               </label>
               <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-100 px-3 py-2.5">
-                <IdCard size={16} className="text-[#0B63C1]" />
+                <IdCard size={16} className="text-primary" />
                 <span className="text-sm text-gray-700">
                   {selectedUser?.userName ?? "—"}
                 </span>
@@ -134,13 +134,13 @@ export default function RoleAssignmentForm({ selectedUser, onRoleAssigned }: Rol
               </label>
               <div className="flex items-center gap-2">
                 <div className="flex flex-1 items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2.5">
-                  <UserCheck size={16} className="shrink-0 text-[#0B63C1]" />
+                  <UserCheck size={16} className="shrink-0 text-primary" />
                   <span className="text-sm text-gray-700">{userRole}</span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setIsRoleListOpen(true)}
-                  className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-lg border border-[#0B63C1] bg-[#E8F1FD] text-[#0B63C1] transition hover:bg-[#DCEBFC]"
+                  className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-lg border border-primary bg-[#E8F1FD] text-primary transition hover:bg-[#DCEBFC]"
                 >
                   <MoreVertical size={18} />
                 </button>
@@ -178,7 +178,7 @@ export default function RoleAssignmentForm({ selectedUser, onRoleAssigned }: Rol
           <button
             type="button"
             onClick={handleSaveRole}
-            className="rounded-lg bg-[#0B63C1] px-6 py-2.5 text-sm font-medium text-white transition hover:bg-[#0A5BC0]"
+            className="rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-white transition hover:bg-[#0A5BC0]"
           >
             Save Role
           </button>

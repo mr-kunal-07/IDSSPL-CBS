@@ -41,7 +41,7 @@ const FilterModal = ({ masterKey, initialFilters = {}, onClose, onApply }) => {
       <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl">
         <div className="flex items-start justify-between border-b border-slate-100 pb-4">
           <div className="flex items-center gap-3">
-            <FilterIcon size={24} className="text-[#0B63C1]" />
+            <FilterIcon size={24} className="text-primary" />
             <div>
               <h2 className="text-xl font-bold text-slate-800">Filter</h2>
               <p className="text-sm text-slate-500">Apply filters to narrow down records</p>
@@ -67,7 +67,7 @@ const FilterModal = ({ masterKey, initialFilters = {}, onClose, onApply }) => {
                 value={filters[field.key] ?? ""}
                 placeholder={`Search by ${field.label}`}
                 onChange={(e) => handleChange(field.key, e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
               />
             </div>
           ))}
@@ -84,7 +84,7 @@ const FilterModal = ({ masterKey, initialFilters = {}, onClose, onApply }) => {
           <button
             type="button"
             onClick={handleApply}
-            className="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            className="rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700"
           >
             Apply Filter
           </button>

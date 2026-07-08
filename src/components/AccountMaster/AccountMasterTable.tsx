@@ -189,7 +189,7 @@ const sortedRows = [...filteredRows].sort((a, b) => {
       <div className="overflow-x-auto [-ms-overflow-style:none] scrollbar-none [&::-webkit-scrollbar]:hidden">
         <table className="w-full border-collapse">
           <thead>
-            <tr className="bg-[#0B63C1] rounded-t-xl">
+            <tr className="bg-primary rounded-t-xl">
               {columns.map((col) => (
                 <th
                   key={col.key}
@@ -213,7 +213,7 @@ const sortedRows = [...filteredRows].sort((a, b) => {
                 className={`${idx !== sortedRows.length - 1 ? "border-b border-gray-100" : ""} hover:bg-gray-50`}
               >
                 <td className="px-6 py-3">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-blue-50 text-[#0B63C1] text-sm font-semibold">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary-50 text-primary text-sm font-semibold">
                     {row.srNo}
                   </span>
                 </td>
@@ -229,7 +229,7 @@ const sortedRows = [...filteredRows].sort((a, b) => {
                   {openMenuRow === row.srNo && (
                     <div
                       ref={menuRef}
-                      className={`z-50 rounded-xl border border-blue-200 bg-white py-2 shadow-lg`}
+                      className={`z-50 rounded-xl border border-primary-200 bg-white py-2 shadow-lg`}
                       style={menuStyle ?? { minWidth: 220, maxHeight: '50vh', overflowY: 'auto' }}
                     >
                       {menuOptions.map((opt) => {
@@ -240,7 +240,7 @@ const sortedRows = [...filteredRows].sort((a, b) => {
                             onClick={() => setOpenMenuRow(null)}
                             className="flex w-full text-black items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50"
                           >
-                            <Icon size={16} className="text-blue-600" />
+                            <Icon size={16} className="text-primary" />
                             {opt.label}
                           </button>
                         );

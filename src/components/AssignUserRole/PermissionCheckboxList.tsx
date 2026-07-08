@@ -28,13 +28,13 @@ export default function PermissionCheckboxList({
   };
 
   return (
-    <div className="bg-white rounded-[20px] border-x border-b border-t-4 border-[#0A66D8] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)] h-full">
+    <div className="bg-white rounded-[20px] border-x border-b border-t-4 border-primary p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)] h-full">
       <label className="mb-3 flex cursor-pointer items-center gap-2.5 border-b border-gray-100 pb-3">
         <input
           type="checkbox"
           checked={selectAll}
           onChange={(e) => handleSelectAll(e.target.checked)}
-          className="h-4 w-4 rounded border-gray-300 text-[#0B63C1] focus:ring-[#0B63C1]"
+          className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
         />
         <span className="text-sm font-semibold text-gray-800">Select All</span>
       </label>
@@ -49,7 +49,7 @@ export default function PermissionCheckboxList({
               type="checkbox"
               checked={selectedPermissions.includes(permission)}
               onChange={(e) => handleToggle(permission, e.target.checked)}
-              className="h-4 w-4 rounded border-gray-300 text-[#0B63C1] focus:ring-[#0B63C1]"
+              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
             />
             <span className="text-sm text-gray-700">{permission}</span>
           </label>

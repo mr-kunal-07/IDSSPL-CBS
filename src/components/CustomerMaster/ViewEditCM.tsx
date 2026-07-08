@@ -110,7 +110,7 @@ const CustomerBanner = ({
     {/* Left: Photo + Info */}
     <div className="flex items-center gap-4">
       <div className="relative">
-        <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border border-slate-200 bg-blue-50">
+        <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border border-slate-200 bg-primary-50">
           <Image
             src="/profile.png"
             alt="Customer Profile"
@@ -122,7 +122,7 @@ const CustomerBanner = ({
         {mode === "edit" && (
           <button
             type="button"
-            className="absolute -bottom-2 left-0 flex items-center gap-1 rounded-lg bg-blue-600 px-2.5 py-1 text-xs font-semibold text-white shadow-sm hover:bg-blue-700"
+            className="absolute -bottom-2 left-0 flex items-center gap-1 rounded-lg bg-primary px-2.5 py-1 text-xs font-semibold text-white shadow-sm hover:bg-primary-700"
           >
             <Pencil size={11} />
             Edit
@@ -130,7 +130,7 @@ const CustomerBanner = ({
         )}
       </div>
       <div>
-        <h3 className="text-lg font-bold text-blue-700">
+        <h3 className="text-lg font-bold text-primary-700">
           {customerData.name.toUpperCase()}
         </h3>
         <p className="text-sm text-slate-600">
@@ -156,7 +156,7 @@ const CustomerBanner = ({
       {mode === "edit" && (
         <button
           type="button"
-          className="absolute -bottom-2 left-1/2 flex -translate-x-1/2 items-center gap-1 rounded-lg bg-blue-600 px-2.5 py-1 text-xs font-semibold text-white shadow-sm hover:bg-blue-700"
+          className="absolute -bottom-2 left-1/2 flex -translate-x-1/2 items-center gap-1 rounded-lg bg-primary px-2.5 py-1 text-xs font-semibold text-white shadow-sm hover:bg-primary-700"
         >
           <Pencil size={11} />
           Edit
@@ -310,7 +310,7 @@ const ViewEditCM = ({ mode, customerData, onClose }: ViewEditCMProps) => {
       <button
         type="button"
         onClick={onClose}
-        className="flex items-center gap-1.5 rounded-lg border border-blue-500 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50"
+        className="flex items-center gap-1.5 rounded-lg border border-primary-500 px-4 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary-50"
       >
         Cancel <span className="text-lg">×</span>
       </button>
@@ -318,7 +318,7 @@ const ViewEditCM = ({ mode, customerData, onClose }: ViewEditCMProps) => {
         <button
           type="button"
           onClick={onClose}
-          className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+          className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700"
         >
           OK, Got it <span>✓</span>
         </button>
@@ -326,7 +326,7 @@ const ViewEditCM = ({ mode, customerData, onClose }: ViewEditCMProps) => {
         <button
           type="button"
           onClick={handleNext}
-          className="flex items-center gap-1.5 rounded-lg bg-blue-100 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-200"
+          className="flex items-center gap-1.5 rounded-lg bg-primary-100 px-4 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary-200"
         >
           Next <span>›</span>
         </button>
@@ -358,7 +358,7 @@ const ViewEditCM = ({ mode, customerData, onClose }: ViewEditCMProps) => {
       isLastTab={isLastTab}
       hideFooter={isView}
       headerIcon={
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-100">
           <Image
             src={isView ? "/person%20icon.png" : "/person%20edit%20icon.png"}
             alt={isView ? "View Customer" : "Edit Customer"}

@@ -184,14 +184,14 @@ export default function UserDetailsModal({
         type="button"
         onClick={handleValidate}
         disabled={isValidated}
-        className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-50"
       >
         Validate <Check size={16} />
       </button>
       <button
         type="button"
         onClick={onClose}
-        className="flex items-center gap-1.5 rounded-lg border border-blue-500 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50"
+        className="flex items-center gap-1.5 rounded-lg border border-primary-500 px-4 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary-50"
       >
         Cancel <X size={16} />
       </button>
@@ -199,7 +199,7 @@ export default function UserDetailsModal({
         type="button"
         onClick={handleSave}
         disabled={!isValidated}
-        className="flex items-center gap-1.5 rounded-lg bg-blue-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-200 disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex items-center gap-1.5 rounded-lg bg-primary-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-200 disabled:cursor-not-allowed disabled:opacity-50"
       >
         Save <ChevronDown size={16} />
       </button>
@@ -211,14 +211,14 @@ export default function UserDetailsModal({
       <button
         type="button"
         onClick={onClose}
-        className="flex items-center gap-1.5 rounded-lg border border-blue-500 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50"
+        className="flex items-center gap-1.5 rounded-lg border border-primary-500 px-4 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary-50"
       >
         Cancel <span className="text-lg">×</span>
       </button>
       <button
         type="button"
         onClick={onClose}
-        className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+        className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700"
       >
         OK, Got it <span>✓</span>
       </button>
@@ -294,7 +294,7 @@ export default function UserDetailsModal({
                   <button
                     type="button"
                     onClick={() => setCustomerPickerOpen(true)}
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-blue-50 text-blue-600 hover:bg-blue-100"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary-50 text-primary hover:bg-primary-100"
                   >
                     <MoreVertical size={14} />
                   </button>
@@ -333,7 +333,7 @@ export default function UserDetailsModal({
                   <button
                     type="button"
                     onClick={() => setBranchPickerOpen(true)}
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-blue-50 text-blue-600 hover:bg-blue-100"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary-50 text-primary hover:bg-primary-100"
                   >
                     <MoreVertical size={14} />
                   </button>

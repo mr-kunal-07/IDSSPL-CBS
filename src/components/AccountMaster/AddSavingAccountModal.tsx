@@ -172,7 +172,7 @@ const TextInput: React.FC<TextInputProps> = ({ icon, value, onChange, placeholde
       readOnly={readOnly}
       placeholder={placeholder}
       onChange={(e) => onChange(e.target.value)}
-      className={`w-full rounded-lg border bg-white py-2.5 pl-9 ${trailing ? "pr-11" : "pr-3"} text-sm text-slate-700 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${
+      className={`w-full rounded-lg border bg-white py-2.5 pl-9 ${trailing ? "pr-11" : "pr-3"} text-sm text-slate-700 outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500 ${
         readOnly ? "bg-slate-50 text-slate-500" : ""
       } ${error ? "border-red-400" : "border-slate-400"}`}
     />
@@ -194,7 +194,7 @@ const SelectInput: React.FC<SelectInputProps> = ({ icon, value, onChange, option
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className={`w-full appearance-none rounded-lg border bg-white py-2.5 pl-9 pr-9 text-sm text-slate-700 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${
+      className={`w-full appearance-none rounded-lg border bg-white py-2.5 pl-9 pr-9 text-sm text-slate-700 outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500 ${
         error ? "border-red-400" : "border-slate-200"
       }`}
     >
@@ -231,7 +231,7 @@ const LookupButton: React.FC<LookupButtonProps> = ({ items, onPick }) => {
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex h-[38px] w-[38px] items-center justify-center rounded-lg border border-slate-200 bg-blue-50 text-blue-600 transition-colors hover:bg-blue-100"
+        className="flex h-[38px] w-[38px] items-center justify-center rounded-lg border border-slate-200 bg-primary-50 text-primary transition-colors hover:bg-primary-100"
       >
         <MoreVertical size={16} />
       </button>
@@ -245,7 +245,7 @@ const LookupButton: React.FC<LookupButtonProps> = ({ items, onPick }) => {
                 onPick(item);
                 setOpen(false);
               }}
-              className="block w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-blue-50"
+              className="block w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-primary-50"
             >
               {item}
             </button>
@@ -423,11 +423,11 @@ const AddSavingAccountModal: React.FC<AddSavingAccountModalProps> = ({ onClose, 
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`relative pb-3 text-sm font-medium transition-colors ${
-                  activeTab === tab ? "text-blue-600" : "text-slate-500 hover:text-slate-700"
+                  activeTab === tab ? "text-primary" : "text-slate-500 hover:text-slate-700"
                 }`}
               >
                 {tab}
-                {activeTab === tab && <span className="absolute -bottom-px left-0 right-0 h-[2px] rounded-full bg-blue-600" />}
+                {activeTab === tab && <span className="absolute -bottom-px left-0 right-0 h-[2px] rounded-full bg-primary" />}
               </button>
             ))}
           </div>
@@ -438,7 +438,7 @@ const AddSavingAccountModal: React.FC<AddSavingAccountModalProps> = ({ onClose, 
                   ? setNominees((prev) => [...prev, emptyNominee(prev.length + 1)])
                   : setJointHolders((prev) => [...prev, emptyJointHolder(prev.length + 1)])
               }
-              className="mb-2 flex items-center gap-1.5 rounded-lg bg-blue-600 px-3.5 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+              className="mb-2 flex items-center gap-1.5 rounded-lg bg-primary px-3.5 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700"
             >
               <Plus size={16} /> Add
             </button>
@@ -448,7 +448,7 @@ const AddSavingAccountModal: React.FC<AddSavingAccountModalProps> = ({ onClose, 
         {/* Content */}
         <div className="mt-3 max-h-[60vh] space-y-3 overflow-y-auto pr-1">
           {activeTab === "Application" && (
-            <div className="rounded-xl border border-blue-500 p-5">
+            <div className="rounded-xl border border-primary-500 p-5">
               <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
                 <FieldShell label="Customer ID" labelHi="ग्राहक आयडी" required error={errors.customerId}>
                   <TextInput
@@ -495,7 +495,7 @@ const AddSavingAccountModal: React.FC<AddSavingAccountModalProps> = ({ onClose, 
                       type="date"
                       value={application.dateOfApplication}
                       onChange={(e) => setApplication((prev) => ({ ...prev, dateOfApplication: e.target.value }))}
-                      className={`w-full rounded-lg border bg-white py-2.5 pl-9 pr-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${
+                      className={`w-full rounded-lg border bg-white py-2.5 pl-9 pr-3 text-sm text-slate-700 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 ${
                         errors.dateOfApplication ? "border-red-400" : "border-slate-400"
                       }`}
                     />
@@ -525,7 +525,7 @@ const AddSavingAccountModal: React.FC<AddSavingAccountModalProps> = ({ onClose, 
 
           {activeTab === "Nominee" &&
             nominees.map((row, index) => (
-              <div key={row.srNo} className="rounded-xl border border-blue-500 p-5">
+              <div key={row.srNo} className="rounded-xl border border-primary-500 p-5">
                 <div className="grid grid-cols-1 gap-5 md:grid-cols-4">
                   <div>
                     <label className="mb-1.5 block text-sm font-medium text-slate-700">Sr No</label>
@@ -589,7 +589,7 @@ const AddSavingAccountModal: React.FC<AddSavingAccountModalProps> = ({ onClose, 
 
           {activeTab === "Joint Holder" &&
             jointHolders.map((row, index) => (
-              <div key={row.srNo} className="rounded-xl border border-blue-500 p-5">
+              <div key={row.srNo} className="rounded-xl border border-primary-500 p-5">
                 <div className="grid grid-cols-1 gap-5 md:grid-cols-4">
                   <div>
                     <label className="mb-1.5 block text-sm font-medium text-slate-700">Sr No</label>
@@ -647,7 +647,7 @@ const AddSavingAccountModal: React.FC<AddSavingAccountModalProps> = ({ onClose, 
         <div className="mt-6 flex items-center justify-end gap-3 border-t border-slate-100 pt-4">
           <button
             onClick={handleValidate}
-            className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700"
           >
             Validate <Check size={16} />
           </button>
@@ -661,7 +661,7 @@ const AddSavingAccountModal: React.FC<AddSavingAccountModalProps> = ({ onClose, 
           {!isLastTab ? (
             <button
               onClick={handleNext}
-              className="flex items-center gap-1.5 rounded-lg bg-blue-100 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-200"
+              className="flex items-center gap-1.5 rounded-lg bg-primary-100 px-4 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary-200"
             >
               Next <ChevronRight size={16} />
             </button>
@@ -669,13 +669,13 @@ const AddSavingAccountModal: React.FC<AddSavingAccountModalProps> = ({ onClose, 
             <div className="relative">
               <button
                 onClick={() => setSaveMenuOpen((o) => !o)}
-                className="flex items-center gap-1.5 rounded-lg bg-blue-100 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-200"
+                className="flex items-center gap-1.5 rounded-lg bg-primary-100 px-4 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary-200"
               >
                 Save <ChevronDown size={16} />
               </button>
               {saveMenuOpen && (
                 <div className="absolute bottom-12 right-0 w-40 rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
-                  <button onClick={handleSave} className="block w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-blue-50">
+                  <button onClick={handleSave} className="block w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-primary-50">
                     Save
                   </button>
                   <button
@@ -684,7 +684,7 @@ const AddSavingAccountModal: React.FC<AddSavingAccountModalProps> = ({ onClose, 
                       setApplication((prev) => ({ ...prev, customerId: "", customerName: "" }));
                       setActiveTab("Application");
                     }}
-                    className="block w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-blue-50"
+                    className="block w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-primary-50"
                   >
                     Save & New
                   </button>

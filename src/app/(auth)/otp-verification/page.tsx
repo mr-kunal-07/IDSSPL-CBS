@@ -147,7 +147,7 @@ const OtpVerificationPage = () => {
 </div>
 
                 <p
-                  className="font-medium text-[16px] leading-[24px] text-center text-[#0B63C1]"
+                  className="font-medium text-[16px] leading-[24px] text-center text-primary"
                   style={{ fontFamily: "Instrument Sans" }}
                 >
                   00:{timer.toString().padStart(2, "0")}
@@ -159,7 +159,7 @@ const OtpVerificationPage = () => {
                 >
                   Didn't receive the OTP?{" "}
                   <span
-                    className="font-medium text-[#0B63C1] cursor-pointer"
+                    className="font-medium text-primary cursor-pointer"
                     onClick={handleResendOTP}
                   >
                     Resend
@@ -170,7 +170,7 @@ const OtpVerificationPage = () => {
               <button
                 disabled={!isOtpFilled}
                 onClick={CheckOTPverify}
-                className="flex flex-row justify-center items-center px-6 py-4 gap-1.5 w-[356px] h-14 bg-[#0B63C1] shadow-[0px_1px_0.5px_0.05px_rgba(29,41,61,0.02)] rounded-[18px] text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex flex-row justify-center items-center px-6 py-4 gap-1.5 w-[356px] h-14 bg-primary shadow-[0px_1px_0.5px_0.05px_rgba(29,41,61,0.02)] rounded-[18px] text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Verify →
               </button>

@@ -244,7 +244,7 @@ const LoginPage = () => {
                 type="button"
                 disabled={!isFormValid}
                 onClick={handleSubmit}
-                className="mt-4 h-[54px] w-full rounded-xl bg-[#0B63C1] text-white font-medium text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#0b7384] transition"
+                className="mt-4 h-[54px] w-full rounded-xl bg-primary text-white font-medium text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#0b7384] transition"
               >
                 Proceed to OTP Verification
                 <ArrowRight size={18} />

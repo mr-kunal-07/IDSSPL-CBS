@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, Clock3 } from "lucide-react";
 import Image from "next/image";
+import ThemeSwitcher from "@/components/theme/ThemeSwitcher";
 
 type HeaderProps = {
   onMenuClick?: () => void;
@@ -70,6 +71,8 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
       {/* Right */}
       <div className="flex items-center gap-4">
+        <ThemeSwitcher />
+
         <button
           type="button"
           onClick={onMenuClick}
@@ -80,7 +83,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
         </button>
 
         <div
-          className="flex h-8 items-center gap-1 rounded-[10px] bg-[#0B63C1] px-3 text-xs text-white"
+          className="flex h-8 items-center gap-1 rounded-[10px] bg-primary px-3 text-xs text-white"
         >
           <Clock3 size={12} />
           <span>Session Time {sessionTime}</span>

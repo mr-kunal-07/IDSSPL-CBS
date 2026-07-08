@@ -82,7 +82,7 @@ export const TextInput = ({
       readOnly={readOnly}
       placeholder={placeholder}
       onChange={(e) => onChange(e.target.value)}
-      className={`w-full rounded-lg border bg-white py-2.5 ${icon ? "pl-9" : "pl-3"} ${trailing ? "pr-11" : "pr-3"} text-sm text-slate-700 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${readOnly ? "bg-slate-50 text-slate-500" : ""
+      className={`w-full rounded-lg border bg-white py-2.5 ${icon ? "pl-9" : "pl-3"} ${trailing ? "pr-11" : "pr-3"} text-sm text-slate-700 outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500 ${readOnly ? "bg-slate-50 text-slate-500" : ""
         } ${error ? "border-red-400" : "border-slate-600"}`}
     />
     {trailing && <div className="shrink-0">{trailing}</div>}
@@ -113,7 +113,7 @@ export const SelectInput = ({
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className={`w-full appearance-none rounded-lg border bg-white py-2.5 ${icon ? "pl-9" : "pl-3"} pr-9 text-sm text-slate-700 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${error ? "border-red-400" : "border-slate-600"
+      className={`w-full appearance-none rounded-lg border bg-white py-2.5 ${icon ? "pl-9" : "pl-3"} pr-9 text-sm text-slate-700 outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500 ${error ? "border-red-400" : "border-slate-600"
         } ${!value ? "text-slate-400" : ""}`}
     >
       <option value="">{placeholder}</option>
@@ -144,7 +144,7 @@ export const DateInput = ({ value, onChange, placeholder, error }: DateInputProp
       value={value}
       placeholder={placeholder}
       onChange={(e) => onChange(e.target.value)}
-      className={`w-full rounded-lg border bg-white py-2.5 pl-9 pr-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${error ? "border-red-400" : "border-slate-600"
+      className={`w-full rounded-lg border bg-white py-2.5 pl-9 pr-3 text-sm text-slate-700 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 ${error ? "border-red-400" : "border-slate-600"
         }`}
     />
   </div>
@@ -177,7 +177,7 @@ export const RadioYesNo = ({ label, labelHi, value, onChange, disabled }: RadioY
             checked={opt === "Yes" ? value : !value}
             onChange={() => !disabled && onChange(opt === "Yes")}
             disabled={disabled}
-            className="h-4 w-4 accent-blue-600"
+            className="h-4 w-4 accent-primary"
           />
           {opt}
         </label>
@@ -203,8 +203,8 @@ export const SectionCard = ({
   icon,
   children,
 }: SectionCardProps) => (
-  <div className="bg-white rounded-[20px] border-x border-b-2 border-t-4 border-[#0A66D8] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)] no-scrollbar">
-    <div className="mb-3 flex items-center gap-3 border-b border-blue-100 pb-3">
+  <div className="bg-white rounded-[20px] border-x border-b-2 border-t-4 border-primary p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)] no-scrollbar">
+    <div className="mb-3 flex items-center gap-3 border-b border-primary-100 pb-3">
       {icon && (
         <div className="flex h-10 w-10 items-center justify-center">
           {typeof icon === "string" ? (
@@ -256,7 +256,7 @@ export const DocumentRow = ({
       type="checkbox"
       checked={checked}
       onChange={(e) => onCheck(e.target.checked)}
-      className="h-4 w-4 shrink-0 accent-blue-600"
+      className="h-4 w-4 shrink-0 accent-primary"
     />
     <span className="min-w-[140px] flex-1 text-sm text-slate-700">{label}</span>
     <div className="relative w-44">
@@ -319,7 +319,7 @@ export const LookupButton = ({ items, onPick }: LookupButtonProps) => {
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex h-11 w-11 items-center justify-center rounded-lg border border-slate-300 bg-[#EEF4FF] text-[#0A66D8] transition hover:bg-[#DDEAFF]"
+        className="flex h-11 w-11 items-center justify-center rounded-lg border border-slate-300 bg-[#EEF4FF] text-primary transition hover:bg-[#DDEAFF]"
       >
         <MoreVertical size={18} strokeWidth={2.4} />
       </button>
@@ -333,7 +333,7 @@ export const LookupButton = ({ items, onPick }: LookupButtonProps) => {
                 onPick(item);
                 setOpen(false);
               }}
-              className="block w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-blue-50"
+              className="block w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-primary-50"
             >
               {item}
             </button>
@@ -369,7 +369,7 @@ export const PickerField = ({
       <button
         type="button"
         onClick={onPickerClick}
-        className="group flex h-10 w-full cursor-pointer items-center rounded-md border border-[#B8C2D6] bg-white px-4 transition-all duration-200 hover:border-[#0A66D8] focus-within:border-[#0A66D8] focus-within:ring-2 focus-within:ring-[#0A66D8]/10"
+        className="group flex h-10 w-full cursor-pointer items-center rounded-md border border-[#B8C2D6] bg-white px-4 transition-all duration-200 hover:border-primary focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10"
       >
         <span className="shrink-0 text-[#6B7280]">{icon}</span>
         <input
@@ -383,7 +383,7 @@ export const PickerField = ({
       <button
         type="button"
         onClick={onPickerClick}
-        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#EEF4FF] text-[#0A66D8] transition-all duration-200 hover:bg-[#DDEAFF] active:scale-95"
+        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#EEF4FF] text-primary transition-all duration-200 hover:bg-[#DDEAFF] active:scale-95"
       >
         <MoreVertical size={18} strokeWidth={2.5} />
       </button>
@@ -414,7 +414,7 @@ export const FormTextField = ({
   readOnly,
 }: FormTextFieldProps) => (
   <FieldShell label={label} labelHi={labelHi} required={required} variant="large" className="mb-3 last:mb-0">
-    <div className="flex h-10 items-center rounded-md border border-[#B8C2D6] bg-white px-4 transition-all duration-200 focus-within:border-[#0A66D8] focus-within:ring-2 focus-within:ring-[#0A66D8]/10">
+    <div className="flex h-10 items-center rounded-md border border-[#B8C2D6] bg-white px-4 transition-all duration-200 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10">
       <span className="shrink-0 text-[#6B7280]">{icon}</span>
       <input
         type="text"
@@ -446,7 +446,7 @@ export const UploadZone = ({ titleEn, titleHi, subtitleEn, subtitleHi }: UploadZ
           <button
             key={label}
             type="button"
-            className="flex flex-col items-center gap-1 text-xs text-slate-600 hover:text-blue-600"
+            className="flex flex-col items-center gap-1 text-xs text-slate-600 hover:text-primary"
           >
             <span className="text-2xl">{icon}</span>
             {label}
@@ -476,7 +476,7 @@ export const ActionButtons = ({
     <button
       type="button"
       onClick={onCancel}
-      className="flex items-center gap-2 rounded-lg border-2 border-[#0A66D8] bg-white px-6 py-2.5 text-sm font-medium text-[#0A66D8] transition-colors hover:bg-blue-50"
+      className="flex items-center gap-2 rounded-lg border-2 border-primary bg-white px-6 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary-50"
     >
       <X size={16} />
       {cancelText}
@@ -484,7 +484,7 @@ export const ActionButtons = ({
     <button
       type="button"
       onClick={onSubmit}
-      className="flex items-center gap-2 rounded-lg bg-[#0A66D8] px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+      className="flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700"
     >
       {submitText}
       <Upload size={16} />

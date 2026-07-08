@@ -41,9 +41,9 @@ const GlobalNav = ({
       <div className="flex items-center gap-1">
         {!isFirst && <ChevronRight size={14} className="text-gray-400" />}
         {onClick ? (
-          <button type="button" onClick={onClick} className={`flex items-center gap-1 text-sm ${isLast ? "text-[#0B63C1]" : "text-[#99A1AF] hover:text-blue-600"}`}>{content}</button>
+          <button type="button" onClick={onClick} className={`flex items-center gap-1 text-sm ${isLast ? "text-primary" : "text-[#99A1AF] hover:text-primary"}`}>{content}</button>
         ) : (
-          <a href={href || "#"} className={`flex items-center gap-1 text-sm ${isLast ? "text-[#0B63C1]" : "text-[#99A1AF] hover:text-blue-600"}`}>{content}</a>
+          <a href={href || "#"} className={`flex items-center gap-1 text-sm ${isLast ? "text-primary" : "text-[#99A1AF] hover:text-primary"}`}>{content}</a>
         )}
       </div>
     );
@@ -54,7 +54,7 @@ const GlobalNav = ({
       <div className="px-4 py-2">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
-            <button type="button" onClick={onBack} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-600 text-white transition hover:bg-blue-700">
+            <button type="button" onClick={onBack} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-white transition hover:bg-primary-700">
               <ArrowLeft size={18} />
             </button>
             <div className="min-w-0">
@@ -86,7 +86,7 @@ const GlobalNav = ({
               </button>
 
               {activeFilterCount > 0 && (
-                <button type="button" onClick={onFilter} className="hidden sm:flex items-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-medium text-blue-700">
+                <button type="button" onClick={onFilter} className="hidden sm:flex items-center gap-1.5 rounded-md border border-primary-200 bg-primary-50 px-3 py-2 text-xs font-medium text-primary-700">
                   <Filter size={14} />
                   {filterSummary || `${activeFilterCount} filter(s)`}
                 </button>

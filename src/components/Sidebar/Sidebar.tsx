@@ -48,7 +48,7 @@ export default function Sidebar({ isOpen: _isOpen, onClose: _onClose }: SidebarP
         overflow-hidden
         rounded-r-2xl
         border-r
-        border-[#0B63C1]
+        border-primary
         bg-[#0C0B1E]
         transition-all
         duration-300

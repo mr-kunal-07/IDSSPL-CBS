@@ -215,7 +215,7 @@ function ActionMenuButton({ row, onView, onBranchNonCbsParameter, onBranchCheque
               left: position.left,
               width: MENU_WIDTH,
             }}
-            className="z-50 bg-white rounded-lg shadow-lg border border-[#0B63C1] overflow-hidden"
+            className="z-50 bg-white rounded-lg shadow-lg border border-primary overflow-hidden"
           >
             {items.map(({ label, icon: Icon, onClick }) => (
               <button
@@ -228,7 +228,7 @@ function ActionMenuButton({ row, onView, onBranchNonCbsParameter, onBranchCheque
                 }}
                 className="w-full flex items-center gap-2.5 px-3 py-1 text-sm font-medium text-left text-slate-700 hover:bg-slate-50 transition-colors"
               >
-                <Icon className="w-4 h-4 shrink-0 text-[#0B63C1]" />
+                <Icon className="w-4 h-4 shrink-0 text-primary" />
                 {label}
               </button>
             ))}
@@ -279,7 +279,7 @@ export default function BranchMasterTable({
       <div className="overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <table className="w-full border-collapse">
           <thead>
-            <tr className="bg-[#0B63C1]">
+            <tr className="bg-primary">
               <th className="text-left text-[15px] font-medium text-white px-4 py-3 whitespace-nowrap">Sr No.</th>
               <th className="text-left text-[15px] font-medium text-white px-4 py-3 whitespace-nowrap">Actions</th>
               {columns.map((col) => (
@@ -308,7 +308,7 @@ export default function BranchMasterTable({
               sortedRows.map((r) => (
                 <tr key={r.sr} className="bg-white hover:bg-slate-50 transition-colors">
                   <td className="px-4 py-3 align-middle">
-                    <span className="inline-flex items-center justify-center px-3 py-1.5 bg-indigo-50 rounded-md text-blue-700 text-sm font-medium">
+                    <span className="inline-flex items-center justify-center px-3 py-1.5 bg-indigo-50 rounded-md text-primary-700 text-sm font-medium">
                       {r.sr}
                     </span>
                   </td>

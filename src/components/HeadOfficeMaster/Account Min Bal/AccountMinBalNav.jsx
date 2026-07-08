@@ -7,7 +7,7 @@ const AccountMinBalNav = ({ titleEn, titleHi, breadcrumbs = [], onBack }) => {
       <a
         href={href || "#"}
         className={`flex items-center gap-1 text-sm ${
-          isLast ? "text-[#0B63C1] font-[400]" : "text-[#99A1AF] hover:text-blue-600"
+          isLast ? "text-primary font-[400]" : "text-[#99A1AF] hover:text-primary"
         }`}
       >
         {isFirst && <Home size={14} />}
@@ -22,7 +22,7 @@ const AccountMinBalNav = ({ titleEn, titleHi, breadcrumbs = [], onBack }) => {
     <div className="flex items-center gap-3">
       <button
         onClick={onBack}
-        className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-white transition hover:bg-blue-700 shrink-0"
+        className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-white transition hover:bg-primary-700 shrink-0"
       >
         <ArrowLeft size={18} />
       </button>

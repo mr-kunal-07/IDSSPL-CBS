@@ -53,7 +53,7 @@ function Field({ label, labelHi, icon: Icon, value, readOnly, error, highlighted
           error
             ? "border-red-400"
             : highlighted
-            ? "bg-white border-blue-700"
+            ? "bg-white border-primary-700"
             : readOnly
             ? "bg-gray-100 border-gray-200"
             : "bg-white border-gray-300"
@@ -63,10 +63,10 @@ function Field({ label, labelHi, icon: Icon, value, readOnly, error, highlighted
           <button
             type="button"
             onClick={onRegenerate}
-            className="shrink-0 p-0.5 rounded hover:bg-blue-50"
+            className="shrink-0 p-0.5 rounded hover:bg-primary-50"
             aria-label="Regenerate OTP"
           >
-            <Icon className="w-5 h-5 text-blue-700" />
+            <Icon className="w-5 h-5 text-primary-700" />
           </button>
         ) : (
           <Icon className="w-5 h-5 text-gray-400 shrink-0" />
@@ -167,7 +167,7 @@ export default function SetOtpModal({ open, userId = "", userName = "", onClose,
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {/* Form card */}
-          <section className="p-4 sm:p-6 bg-white rounded-2xl border-x border-b border-t-4 border-blue-700 flex flex-col gap-6">
+          <section className="p-4 sm:p-6 bg-white rounded-2xl border-x border-b border-t-4 border-primary-700 flex flex-col gap-6">
             <Field label="User Id" labelHi="वापरकर्ता आयडी" icon={User} value={userId} readOnly />
             <Field label="User Name" labelHi="वापरकर्त्याचे नाव" icon={IdCard} value={userName} readOnly />
             <Field
@@ -191,7 +191,7 @@ export default function SetOtpModal({ open, userId = "", userName = "", onClose,
             className={`w-full sm:w-36 h-12 px-6 py-4 rounded-lg flex items-center justify-center gap-2 text-base font-medium transition-colors ${
               isValidated
                 ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                : "bg-[#0A66D8] text-white hover:[#0A66D8]/50 cursor-pointer"
+                : "bg-primary text-white hover:[var(--primary)]/50 cursor-pointer"
             }`}
           >
             Validate
@@ -200,7 +200,7 @@ export default function SetOtpModal({ open, userId = "", userName = "", onClose,
           <button
             type="button"
             onClick={onClose}
-            className="w-full sm:w-36 h-12 px-6 py-3.5 rounded-lg border border-blue-700 flex items-center justify-center gap-2 text-blue-700 text-base font-medium hover:bg-blue-50 transition-colors"
+            className="w-full sm:w-36 h-12 px-6 py-3.5 rounded-lg border border-primary-700 flex items-center justify-center gap-2 text-primary-700 text-base font-medium hover:bg-primary-50 transition-colors"
           >
             Cancel
             <X className="w-4 h-4" />

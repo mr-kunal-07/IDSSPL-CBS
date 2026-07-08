@@ -136,10 +136,10 @@ function FormField({
             px-4
             transition-all
             duration-200
-            hover:border-[#0A66D8]
-            focus-within:border-[#0A66D8]
+            hover:border-primary
+            focus-within:border-primary
             focus-within:ring-2
-            focus-within:ring-[#0A66D8]/10
+            focus-within:ring-primary/10
             ${
               isMenuField
                 ? "cursor-pointer"
@@ -189,7 +189,7 @@ function FormField({
               justify-center
               rounded-xl
               bg-[#EEF4FF]
-              text-[#0A66D8]
+              text-primary
               transition-all
               duration-200
               hover:bg-[#DDEAFF]
@@ -320,7 +320,7 @@ export default function AddAccountFlow({ onClose = () => { } }: AddAccountFlowPr
               </p>
             </div>
           </div>
-          <div className="bg-white rounded-[20px] border-x border-b border-t-4 border-[#0B63C1] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+          <div className="bg-white rounded-[20px] border-x border-b border-t-4 border-primary p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
             {fields.map((field) => (
               <FormField
                 key={field.key}
@@ -335,7 +335,7 @@ export default function AddAccountFlow({ onClose = () => { } }: AddAccountFlowPr
             <button
               type="button"
               onClick={onClose}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-blue-500 text-blue-600 font-medium text-sm hover:bg-blue-50 transition"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-primary-500 text-primary font-medium text-sm hover:bg-primary-50 transition"
             >
               Cancel <X size={16} />
             </button>
@@ -344,7 +344,7 @@ export default function AddAccountFlow({ onClose = () => { } }: AddAccountFlowPr
               disabled={!isFormValid}
               onClick={() => setStep("savingAccount")}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm transition ${isFormValid
-                  ? "bg-blue-600 text-white hover:bg-blue-700"
+                  ? "bg-primary text-white hover:bg-primary-700"
                   : "bg-gray-200 text-gray-400 cursor-not-allowed"
                 }`}
             >

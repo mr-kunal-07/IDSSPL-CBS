@@ -121,7 +121,7 @@ const DataTable = ({ master, rows, filters, searchQuery, onRowsChange }) => {
           <div className="overflow-x-auto rounded-lg border border-gray-200">
             <table className="w-full text-sm min-w-[600px]">
               <thead>
-                <tr className="bg-[#0B63C1] text-white">
+                <tr className="bg-primary text-white">
                   <th className="px-4 py-3 text-left font-medium whitespace-nowrap">Sr No.</th>
                   <th className="px-4 py-3 text-left font-medium whitespace-nowrap">Actions</th>
                   {config.columns.map((col) => (
@@ -146,9 +146,9 @@ const DataTable = ({ master, rows, filters, searchQuery, onRowsChange }) => {
                   </tr>
                 ) : (
                   paginatedRows.map((row, idx) => (
-                    <tr key={row.id ?? idx} className="odd:bg-white even:bg-gray-50 border-t border-gray-100 hover:bg-blue-50/30">
+                    <tr key={row.id ?? idx} className="odd:bg-white even:bg-gray-50 border-t border-gray-100 hover:bg-primary-50/30">
                       <td className="px-4 py-3">
-                        <span className="inline-flex items-center justify-center min-w-[26px] px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 text-xs font-semibold">
+                        <span className="inline-flex items-center justify-center min-w-[26px] px-1.5 py-0.5 rounded bg-primary-50 text-primary-700 text-xs font-semibold">
                           {(page - 1) * PAGE_SIZE + idx + 1}
                         </span>
                       </td>
@@ -157,12 +157,12 @@ const DataTable = ({ master, rows, filters, searchQuery, onRowsChange }) => {
                           <MoreVertical size={16} />
                         </button>
                         {openMenuRow === row.id && (
-                          <div ref={menuRef} className="absolute left-4 top-10 z-20 w-44 rounded-xl border border-blue-200 bg-white py-2 shadow-lg">
+                          <div ref={menuRef} className="absolute left-4 top-10 z-20 w-44 rounded-xl border border-primary-200 bg-white py-2 shadow-lg">
                             {menuOptions.map((opt) => {
                               const Icon = opt.icon;
                               return (
                                 <button key={opt.key} type="button" onClick={() => handleMenuAction(opt.key, row)} className="flex w-full items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                                  <Icon size={16} className="text-blue-600" />{opt.label}
+                                  <Icon size={16} className="text-primary" />{opt.label}
                                 </button>
                               );
                             })}
@@ -191,7 +191,7 @@ const DataTable = ({ master, rows, filters, searchQuery, onRowsChange }) => {
                   <ChevronLeft size={16} />
                 </button>
                 {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
-                  <button key={p} type="button" onClick={() => setPage(p)} className={`flex h-8 min-w-[32px] items-center justify-center rounded px-2 ${page === p ? "bg-[#0B63C1] text-white" : "border border-gray-200 hover:bg-gray-50"}`}>
+                  <button key={p} type="button" onClick={() => setPage(p)} className={`flex h-8 min-w-[32px] items-center justify-center rounded px-2 ${page === p ? "bg-primary text-white" : "border border-gray-200 hover:bg-gray-50"}`}>
                     {p}
                   </button>
                 ))}

@@ -120,7 +120,7 @@ const TableCM = ({
 
   const riskColor = (risk: string) => {
     if (risk === "High") return "text-red-600";
-    if (risk === "Medium") return "text-[#0B63C1]";
+    if (risk === "Medium") return "text-primary";
     return "text-amber-700";
   };
 
@@ -129,7 +129,7 @@ const TableCM = ({
       <div className="overflow-x-auto [-ms-overflow-style:none] scrollbar-none [&::-webkit-scrollbar]:hidden">
         <table className="w-full border-collapse">
           <thead>
-            <tr className="bg-[#0B63C1] rounded-t-xl">
+            <tr className="bg-primary rounded-t-xl">
               {columns.map((col) => (
                 <th
                   key={col.key}
@@ -157,7 +157,7 @@ const TableCM = ({
                 className={`${idx !== sortedRows.length - 1 ? "border-b border-gray-100" : ""} hover:bg-gray-50`}
               >
                 <td className="px-6 py-3">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-blue-50 text-[#0B63C1] text-sm font-semibold">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary-50 text-primary text-sm font-semibold">
                     {row.srNo}
                   </span>
                 </td>
@@ -175,7 +175,7 @@ const TableCM = ({
                   {openMenuRow === row.srNo && (
                     <div
                       ref={menuRef}
-                      className="absolute left-6 top-10 z-10 w-64 rounded-xl border border-blue-200 bg-white py-2 shadow-lg"
+                      className="absolute left-6 top-10 z-10 w-64 rounded-xl border border-primary-200 bg-white py-2 shadow-lg"
                     >
                       {menuOptions.map((opt) => {
                         const Icon = opt.icon;
@@ -190,7 +190,7 @@ const TableCM = ({
                             }}
                             className="flex w-full items-center gap-3 px-4 py-2 text-sm text-black hover:bg-gray-50"
                           >
-                            <Icon size={16} className="text-[#0B63C1]" />
+                            <Icon size={16} className="text-primary" />
                             {opt.label}
                           </button>
                         );
@@ -199,27 +199,27 @@ const TableCM = ({
                   )}
                 </td>
 
-                <td className="px-6 py-3 text-[16px] text-[#0B63C1]">
+                <td className="px-6 py-3 text-[16px] text-primary">
                   <div className="flex flex-col gap-1">
                     <span className="font-medium text-black">
                       {row.customerId}
                     </span>
-                    <span className="inline-flex items-center gap-1.5 text-sm text-[#0B63C1]">
+                    <span className="inline-flex items-center gap-1.5 text-sm text-primary">
                       <Phone size={14} className="text-black" />
                       {row.phone}
                       <button
                         onClick={() => onEditPhone?.(row)}
-                        className="text-[#0B63C1] hover:text-blue-700"
+                        className="text-primary hover:text-primary-700"
                       >
                         <SquarePenIcon size={16} />
                       </button>
                     </span>
-                    <span className="inline-flex items-center gap-1.5 text-sm text-[#0B63C1]">
+                    <span className="inline-flex items-center gap-1.5 text-sm text-primary">
                       <Mail size={14} className="text-black" />
                       {row.email}
                       <button
                         onClick={() => onEditEmail?.(row)}
-                        className="text-[#0B63C1] hover:text-blue-700"
+                        className="text-primary hover:text-primary-700"
                       >
                         <SquarePenIcon size={16} />
                       </button>
@@ -243,7 +243,7 @@ const TableCM = ({
                   <span
                     className={`inline-flex h-10 w-10 items-center justify-center rounded-md text-sm font-semibold ${
                       row.gender === "M"
-                        ? "bg-blue-50 text-[#0B63C1] border border-blue-200"
+                        ? "bg-primary-50 text-primary border border-primary-200"
                         : "bg-pink-50 text-pink-600 border border-pink-200"
                     }`}
                   >

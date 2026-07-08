@@ -88,13 +88,13 @@ const FormModal = ({
                 type="button"
                 onClick={() => onTabChange(tab)}
                 className={`relative shrink-0 pb-2 pt-2 text-sm font-medium transition-colors ${activeTab === tab
-                    ? "text-blue-600"
+                    ? "text-primary"
                     : "text-slate-500 hover:text-slate-700"
                   }`}
               >
                 {tab}
                 {activeTab === tab && (
-                  <span className="absolute -bottom-px left-0 right-0 h-[2px] rounded-full bg-blue-600" />
+                  <span className="absolute -bottom-px left-0 right-0 h-[2px] rounded-full bg-primary" />
                 )}
               </button>
             ))}
@@ -113,14 +113,14 @@ const FormModal = ({
             <button
               type="button"
               onClick={onValidate}
-              className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+              className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700"
             >
               Validate <Check size={16} />
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="flex items-center gap-1.5 rounded-lg border border-blue-500 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50"
+              className="flex items-center gap-1.5 rounded-lg border border-primary-500 px-4 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary-50"
             >
               Cancel <X size={16} />
             </button>
@@ -129,7 +129,7 @@ const FormModal = ({
               <button
                 type="button"
                 onClick={onNext}
-                className="flex items-center gap-1.5 rounded-lg bg-blue-100 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-200"
+                className="flex items-center gap-1.5 rounded-lg bg-primary-100 px-4 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary-200"
               >
                 Next <ChevronRight size={16} />
               </button>
@@ -138,7 +138,7 @@ const FormModal = ({
                 <button
                   type="button"
                   onClick={() => setSaveMenuOpen((o) => !o)}
-                  className="flex items-center gap-1.5 rounded-lg bg-blue-100 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-200"
+                  className="flex items-center gap-1.5 rounded-lg bg-primary-100 px-4 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary-200"
                 >
                   Save <ChevronDown size={16} />
                 </button>
@@ -150,7 +150,7 @@ const FormModal = ({
                         setSaveMenuOpen(false);
                         onSave?.();
                       }}
-                      className="block w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-blue-50"
+                      className="block w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-primary-50"
                     >
                       Save
                     </button>
@@ -160,7 +160,7 @@ const FormModal = ({
                         setSaveMenuOpen(false);
                         onSave?.();
                       }}
-                      className="block w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-blue-50"
+                      className="block w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-primary-50"
                     >
                       Save & New
                     </button>

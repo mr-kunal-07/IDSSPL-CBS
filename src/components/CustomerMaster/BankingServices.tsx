@@ -100,7 +100,7 @@ function ToggleSwitch({
       aria-checked={checked}
       onClick={onChange}
       className={`relative h-7 w-12 shrink-0 rounded-full transition-colors focus:outline-none ${
-        checked ? "bg-blue-600" : "bg-slate-200"
+        checked ? "bg-primary" : "bg-slate-200"
       }`}
     >
       <span
@@ -132,13 +132,13 @@ export default function BankingServices({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
       <div className="relative w-full max-w-3xl overflow-hidden rounded-3xl bg-white shadow-2xl">
-        <div className="absolute inset-x-0 top-0 h-1.5 bg-blue-600" />
+        <div className="absolute inset-x-0 top-0 h-1.5 bg-primary" />
 
         <div className="relative px-8 py-8 sm:px-10 sm:py-10">
           {/* Header */}
           <div className="mb-5 flex items-start justify-between gap-4">
             <div className="flex items-start gap-4">
-              <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-blue-500 bg-blue-50">
+              <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-primary-500 bg-primary-50">
                 <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="#3b82f6" strokeWidth="1.6">
                   <path d="M3 21h13" />
                   <path d="M5 21v-7" />
@@ -184,7 +184,7 @@ export default function BankingServices({
                   key={option.key}
                   className={`flex items-center justify-between rounded-md border px-4 py-2 transition-colors ${
                     isActive
-                      ? "border-blue-600 bg-[#EEF1FF]"
+                      ? "border-primary bg-[#EEF1FF]"
                       : "border-slate-300 bg-slate-50"
                   }`}
                 >
@@ -206,7 +206,7 @@ export default function BankingServices({
             <button
               type="button"
               onClick={onClose}
-              className="flex w-40 items-center justify-center gap-2 rounded-md border border-blue-600 py-3 font-semibold text-blue-600 transition hover:bg-blue-50"
+              className="flex w-40 items-center justify-center gap-2 rounded-md border border-primary py-3 font-semibold text-primary transition hover:bg-primary-50"
             >
               Cancel
               <X className="h-4 w-4" strokeWidth={3} />
@@ -215,7 +215,7 @@ export default function BankingServices({
             <button
               type="button"
               onClick={handleSubmit}
-              className="flex w-40 items-center justify-center gap-2 rounded-md bg-[#0B63C1] py-3 font-semibold text-white transition hover:bg-blue-800"
+              className="flex w-40 items-center justify-center gap-2 rounded-md bg-primary py-3 font-semibold text-white transition hover:bg-primary-800"
             >
               Submit
               <Upload className="h-4 w-4" strokeWidth={2.5} />

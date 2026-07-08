@@ -35,7 +35,7 @@ function SearchInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Search"
-        className="h-9 w-64 rounded-md border border-gray-300 bg-white pl-9 pr-3 text-sm outline-none transition focus:border-blue-500 placeholder:text-gray-600"
+        className="h-9 w-64 rounded-md border border-gray-300 bg-white pl-9 pr-3 text-sm outline-none transition focus:border-primary-500 placeholder:text-gray-600"
       />
     </div>
   );

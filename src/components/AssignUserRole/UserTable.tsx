@@ -139,11 +139,11 @@ export default function UserTable({
 
   const tabClass = (tab: TabType) =>
     activeTab === tab
-      ? "rounded-md bg-[#0B63C1] px-4 py-2 text-sm font-semibold text-white"
-      : "px-2 py-2 text-sm font-medium text-gray-800 hover:text-[#0B63C1]";
+      ? "rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white"
+      : "px-2 py-2 text-sm font-medium text-gray-800 hover:text-primary";
 
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-xl border border-[#0B63C1]/30 bg-white shadow-sm">
+    <div className="flex h-full flex-col overflow-hidden rounded-xl border border-primary/30 bg-white shadow-sm">
       <div className="flex items-center justify-between gap-4 border-b border-gray-100 px-4 py-3">
         <div className="flex items-center gap-4">
           <button
@@ -168,7 +168,7 @@ export default function UserTable({
       <div className="flex-1 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <table className="w-full border-collapse">
           <thead>
-            <tr className="bg-[#0B63C1]">
+            <tr className="bg-primary">
               <th className="px-4 py-3 text-left text-sm font-semibold text-white">
                 Sr No.
               </th>
@@ -210,7 +210,7 @@ export default function UserTable({
                 } ${idx !== filteredUsers.length - 1 ? "border-b border-gray-100" : ""}`}
               >
                 <td className="px-4 py-3">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-blue-50 text-sm font-semibold text-[#0B63C1]">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary-50 text-sm font-semibold text-primary">
                     {user.srNo}
                   </span>
                 </td>
@@ -221,11 +221,11 @@ export default function UserTable({
                     </span>
                     <span className="inline-flex items-center gap-1 text-xs text-[#black]">
                       <Phone size={11} className="text-[#black]" />
-                      <span className="text-[#0b63c1]">{user.phone}</span>
+                      <span className="text-primary">{user.phone}</span>
                     </span>
                     <span className="inline-flex items-center gap-1 text-xs text-[#black]">
                       <Mail size={11} className="text-[#black]" />
-                      <span className="text-[#0b63c1]">{user.email}</span>
+                      <span className="text-primary">{user.email}</span>
                     </span>
                   </div>
                 </td>
@@ -290,7 +290,7 @@ export default function UserTable({
               onClick={() => setCurrentPage(item)}
               className={`flex h-8 min-w-8 items-center justify-center rounded-md px-2 text-sm font-medium ${
                 currentPage === item
-                  ? "bg-[#0B63C1] text-white"
+                  ? "bg-primary text-white"
                   : "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
               }`}
             >

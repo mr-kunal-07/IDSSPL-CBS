@@ -31,7 +31,7 @@ export default function NavbarAUR({
       <a
         href={href || "#"}
         className={`flex items-center gap-1 text-sm ${
-          isLast ? "font-[400] text-[#0B63C1]" : "text-[#99A1AF] hover:text-blue-600"
+          isLast ? "font-[400] text-primary" : "text-[#99A1AF] hover:text-primary"
         }`}
       >
         {isFirst && <Home size={14} />}
@@ -48,7 +48,7 @@ export default function NavbarAUR({
             <button
               type="button"
               onClick={onBack}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-600 text-white transition hover:bg-blue-700"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-white transition hover:bg-primary-700"
             >
               <ArrowLeft size={18} />
             </button>

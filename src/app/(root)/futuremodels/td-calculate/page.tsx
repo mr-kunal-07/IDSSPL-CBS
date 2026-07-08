@@ -112,7 +112,7 @@ function InputShell({
   return (
     <div
       className={`flex h-11 items-center gap-3 rounded-xl border border-[#B8C2D6] px-4 ${
-        readOnly ? 'bg-[#F3F4F6]' : 'bg-white focus-within:border-[#0A66D8]'
+        readOnly ? 'bg-[#F3F4F6]' : 'bg-white focus-within:border-primary'
       }`}
     >
       <Icon size={18} className="shrink-0 text-[#6A7282]" />
@@ -141,7 +141,7 @@ function SelectShell({
   options: string[]
 }) {
   return (
-    <div className="relative flex h-11 items-center gap-3 rounded-xl border border-[#B8C2D6] bg-white px-4 focus-within:border-[#0A66D8]">
+    <div className="relative flex h-11 items-center gap-3 rounded-xl border border-[#B8C2D6] bg-white px-4 focus-within:border-primary">
       <Icon size={18} className="shrink-0 text-[#6A7282]" />
       <select
         value={value}
@@ -233,7 +233,7 @@ const page = () => {
       </div>
 
       {/* Form Card */}
-      <div className="rounded-2xl border-2 border-[#0A66D8] p-6">
+      <div className="rounded-2xl border-2 border-primary p-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6">
           <Field label="Account Type" labelHi="खात्याचा प्रकार">
             <InputShell icon={User} value="TD" readOnly />
@@ -247,7 +247,7 @@ const page = () => {
               <button
                 type="button"
                 onClick={() => setShowSubProductList(true)}
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#EEF4FF] text-[#0A66D8] transition-all duration-200 hover:bg-[#DDEAFF] active:scale-95"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#EEF4FF] text-primary transition-all duration-200 hover:bg-[#DDEAFF] active:scale-95"
               >
                 <MoreVertical size={18} strokeWidth={2.5} />
               </button>
@@ -268,7 +268,7 @@ const page = () => {
           </Field>
 
           <Field label="Opening Date" labelHi="उद्घाटनाची तारीख">
-            <div className="relative flex h-11 items-center gap-3 rounded-xl border border-[#B8C2D6] bg-white px-4 focus-within:border-[#0A66D8]">
+            <div className="relative flex h-11 items-center gap-3 rounded-xl border border-[#B8C2D6] bg-white px-4 focus-within:border-primary">
               <Calendar size={18} className="shrink-0 text-[#6A7282]" />
               <input
                 type="date"
@@ -288,7 +288,7 @@ const page = () => {
                     type="radio"
                     checked={unitOfPeriod === opt}
                     onChange={() => setUnitOfPeriod(opt)}
-                    className="h-4 w-4 accent-[#0A66D8]"
+                    className="h-4 w-4 accent-primary"
                   />
                   {opt}
                 </label>
@@ -326,7 +326,7 @@ const page = () => {
       <div className="flex justify-end mt-6">
         <button
           type="button"
-          className="flex items-center gap-2 px-6 py-2.5 rounded-lg border border-[#0A66D8] text-[#0A66D8] font-semibold hover:bg-blue-50 transition-colors"
+          className="flex items-center gap-2 px-6 py-2.5 rounded-lg border border-primary text-primary font-semibold hover:bg-primary-50 transition-colors"
         >
           Cancel <X size={16} />
         </button>

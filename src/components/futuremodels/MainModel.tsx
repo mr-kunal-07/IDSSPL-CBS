@@ -27,8 +27,8 @@ const MainModel = () => {
         const Icon = mod.icon
         return (
           <Link key={mod.route} href={mod.route}>
-            <div className="flex flex-col items-center justify-center gap-2 p-6 rounded-lg border border-gray-200 bg-white shadow-sm cursor-pointer transition-all duration-200 hover:shadow-md hover:border-[#0B63C1] hover:bg-[#0B63C1]/5">
-              {Icon && <Icon className="w-6 h-6 text-[#0B63C1]" />}
+            <div className="flex flex-col items-center justify-center gap-2 p-6 rounded-lg border border-gray-200 bg-white shadow-sm cursor-pointer transition-all duration-200 hover:shadow-md hover:border-primary hover:bg-primary/5">
+              {Icon && <Icon className="w-6 h-6 text-primary" />}
               <span className="text-sm font-medium text-gray-700 text-center">
                 {mod.name}
               </span>

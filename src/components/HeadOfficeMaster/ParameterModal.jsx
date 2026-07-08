@@ -91,7 +91,7 @@ const ParameterModal = ({
             {meta.useImage ? (
               <Image src={meta.icon} alt="" width={50} height={50} />
             ) : (
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#EEF4FF] text-[#0B63C1]">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#EEF4FF] text-primary">
                 <HeaderIcon size={24} />
               </div>
             )}
@@ -115,7 +115,7 @@ const ParameterModal = ({
         </div>
 
         {/* Form */}
-        <div className="bg-white rounded-[20px] border-x border-b border-t-4 border-[#0A66D8] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+        <div className="bg-white rounded-[20px] border-x border-b border-t-4 border-primary p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
           {config.fields.map((field) => {
             const Icon = getFieldIcon(field.icon);
             const isReadOnly =
@@ -135,7 +135,7 @@ const ParameterModal = ({
                       ? "border-red-400"
                       : isReadOnly
                         ? "border-slate-200 bg-slate-50"
-                        : "border-[#B8C2D6] focus-within:border-[#0A66D8] focus-within:ring-2 focus-within:ring-[#0A66D8]/10"
+                        : "border-[#B8C2D6] focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10"
                   }`}
                 >
                   <Icon size={18} className="shrink-0 text-[#6B7280]" />
@@ -165,14 +165,14 @@ const ParameterModal = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="flex items-center gap-1.5 rounded-lg border border-blue-500 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50"
+                className="flex items-center gap-1.5 rounded-lg border border-primary-500 px-4 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary-50"
               >
                 Cancel <X size={16} />
               </button>
               <button
                 type="button"
                 onClick={onClose}
-                className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+                className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700"
               >
                 Ok, Got It <ThumbsUp size={16} />
               </button>
@@ -182,14 +182,14 @@ const ParameterModal = ({
               <button
                 type="button"
                 onClick={handleValidate}
-                className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+                className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700"
               >
                 Validate <Check size={16} />
               </button>
               <button
                 type="button"
                 onClick={onClose}
-                className="flex items-center gap-1.5 rounded-lg border border-blue-500 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50"
+                className="flex items-center gap-1.5 rounded-lg border border-primary-500 px-4 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary-50"
               >
                 Cancel <X size={16} />
               </button>
@@ -200,7 +200,7 @@ const ParameterModal = ({
                   onClick={() => validated && setSaveMenuOpen((o) => !o)}
                   className={`flex items-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${
                     validated
-                      ? "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                      ? "bg-primary-100 text-primary hover:bg-primary-200"
                       : "cursor-not-allowed bg-gray-100 text-gray-400"
                   }`}
                 >
@@ -211,14 +211,14 @@ const ParameterModal = ({
                     <button
                       type="button"
                       onClick={handleSave}
-                      className="block w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-blue-50"
+                      className="block w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-primary-50"
                     >
                       Save
                     </button>
                     <button
                       type="button"
                       onClick={handleSave}
-                      className="block w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-blue-50"
+                      className="block w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-primary-50"
                     >
                       Save & New
                     </button>

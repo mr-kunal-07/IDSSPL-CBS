@@ -20,7 +20,7 @@ const page = () => {
       {/* Header */}
       <div className="flex items-start justify-between mb-8">
         <div className="flex items-center gap-3">
-          <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-blue-500 flex items-center justify-center">
+          <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-primary-500 flex items-center justify-center">
             <UserPlus className="w-6 h-6 text-white" />
           </div>
           <h2 className="text-2xl font-bold text-[#0B1B3D]">
@@ -39,10 +39,10 @@ const page = () => {
       </div>
 
       {/* Account Details Card */}
-      <div className="rounded-2xl border-2 border-[#0B63C1] p-6 mb-6">
+      <div className="rounded-2xl border-2 border-primary p-6 mb-6">
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-9 h-9 rounded-full border border-[#0B63C1]/40 bg-blue-50 flex items-center justify-center">
-            <User className="w-5 h-5 text-[#0B63C1]" />
+          <div className="w-9 h-9 rounded-full border border-primary/40 bg-primary-50 flex items-center justify-center">
+            <User className="w-5 h-5 text-primary" />
           </div>
           <h3 className="text-lg font-bold text-[#0B1B3D]">
             Account Details /{' '}
@@ -87,10 +87,10 @@ const page = () => {
       </div>
 
       {/* Lien Details Card */}
-      <div className="rounded-2xl border-2 border-[#0B63C1] p-6 mb-8">
+      <div className="rounded-2xl border-2 border-primary p-6 mb-8">
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-9 h-9 rounded-full border border-[#0B63C1]/40 bg-blue-50 flex items-center justify-center">
-            <User className="w-5 h-5 text-[#0B63C1]" />
+          <div className="w-9 h-9 rounded-full border border-primary/40 bg-primary-50 flex items-center justify-center">
+            <User className="w-5 h-5 text-primary" />
           </div>
           <h3 className="text-lg font-bold text-[#0B1B3D]">
             Lien Details /{' '}
@@ -193,13 +193,13 @@ const page = () => {
       <div className="flex justify-center gap-4">
         <button
           type="button"
-          className="flex items-center gap-2 px-8 py-3 rounded-lg bg-[#0B63C1] text-white font-semibold hover:bg-[#0a58ac] transition-colors"
+          className="flex items-center gap-2 px-8 py-3 rounded-lg bg-primary text-white font-semibold hover:bg-[#0a58ac] transition-colors"
         >
           Validate <Check className="w-4 h-4" />
         </button>
         <button
           type="button"
-          className="flex items-center gap-2 px-8 py-3 rounded-lg border border-[#0B63C1] text-[#0B63C1] font-semibold hover:bg-blue-50 transition-colors"
+          className="flex items-center gap-2 px-8 py-3 rounded-lg border border-primary text-primary font-semibold hover:bg-primary-50 transition-colors"
         >
           Cancel <X className="w-4 h-4" />
         </button>

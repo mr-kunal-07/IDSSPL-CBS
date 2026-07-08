@@ -98,7 +98,7 @@ const AuthorizationCard = ({ item, onOpen }: AuthorizationCardProps) => {
   return (
     <div
       className="
-        flex flex-col gap-2 rounded-2xl border border-l-5 sm:border-l-6 border-[#0B63C1]
+        flex flex-col gap-2 rounded-2xl border border-l-5 sm:border-l-6 border-primary
         bg-white p-2
         transition-all duration-200 hover:border-[#1565D8] hover:shadow-md
         sm:flex-row sm:items-center sm:justify-between

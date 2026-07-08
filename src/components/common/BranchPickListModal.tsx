@@ -91,7 +91,7 @@ export default function BranchListPickerModal({
           </div>
 
           {/* Table header (fixed, does not scroll) */}
-          <div className="shrink-0 px-4 sm:px-10 py-3 bg-blue-200/60 rounded-xl flex items-center gap-3 mt-1">
+          <div className="shrink-0 px-4 sm:px-10 py-3 bg-primary-200/60 rounded-xl flex items-center gap-3 mt-1">
             <div className="w-24 sm:w-32 shrink-0 text-black text-sm sm:text-base font-medium tracking-tight">
               Branch Code
             </div>

@@ -97,7 +97,7 @@ function TextField({ labelEn, labelHi, icon: Icon, placeholder, value, onChange,
             ? "border-red-400 bg-white"
             : readOnly
               ? "border-slate-200 bg-slate-50"
-              : "border-[#B8C2D6] bg-white focus-within:border-[#0A66D8] focus-within:ring-2 focus-within:ring-[#0A66D8]/10"
+              : "border-[#B8C2D6] bg-white focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10"
           }`}
       >
         <Icon size={18} className="shrink-0 text-[#6B7280]" />
@@ -185,7 +185,7 @@ function YesNoField({ value, onChange, readOnly = false }: YesNoFieldProps) {
               checked={value === opt}
               disabled={readOnly}
               onChange={() => onChange(opt)}
-              className="h-4 w-4 accent-[#0B63C1]"
+              className="h-4 w-4 accent-primary"
             />
             {opt}
           </label>
@@ -251,7 +251,7 @@ export default function AddBranchModal({ open, mode = "add", initialData = empty
             {meta.useImage ? (
               <Image src="/add-icn.png" alt="" width={50} height={50} />
             ) : (
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#EEF4FF] text-[#0B63C1]">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#EEF4FF] text-primary">
                 <UserRound size={24} />
               </div>
             )}
@@ -269,7 +269,7 @@ export default function AddBranchModal({ open, mode = "add", initialData = empty
           </button>
         </div>
 
-        <div className="mt-3 bg-white rounded-[20px] border-x border-b border-t-4 border-[#0A66D8] p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+        <div className="mt-3 bg-white rounded-[20px] border-x border-b border-t-4 border-primary p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
           <div className="grid grid-cols-1 gap-x-4 md:grid-cols-3">
             <TextField labelEn="Branch Code" labelHi="शाखा कोड" icon={Landmark} placeholder="Enter Branch Code" value={formData.branchCode} onChange={(v) => handleChange("branchCode", v)} hasError={errors.branchCode} readOnly={isView} />
             <TextField labelEn="Branch Name" labelHi="शाखेचे नाव" icon={Landmark} placeholder="Enter Branch Name" value={formData.branchName} onChange={(v) => handleChange("branchName", v)} hasError={errors.branchName} readOnly={isView} />
@@ -296,26 +296,26 @@ export default function AddBranchModal({ open, mode = "add", initialData = empty
         <div className=" flex items-center justify-end gap-3 border-t border-slate-100 pt-4">
           {isView ? (
             <>
-              <button type="button" onClick={onClose} className="flex items-center gap-1.5 rounded-lg border border-blue-500 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50">
+              <button type="button" onClick={onClose} className="flex items-center gap-1.5 rounded-lg border border-primary-500 px-4 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary-50">
                 Cancel <X size={16} />
               </button>
-              <button type="button" onClick={onClose} className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700">
+              <button type="button" onClick={onClose} className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700">
                 Ok, Got It <ThumbsUp size={16} />
               </button>
             </>
           ) : (
             <>
-              <button type="button" onClick={handleValidate} className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700">
+              <button type="button" onClick={handleValidate} className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700">
                 Validate <Check size={16} />
               </button>
-              <button type="button" onClick={onClose} className="flex items-center gap-1.5 rounded-lg border border-blue-500 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50">
+              <button type="button" onClick={onClose} className="flex items-center gap-1.5 rounded-lg border border-primary-500 px-4 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary-50">
                 Cancel <X size={16} />
               </button>
               <button
                 type="button"
                 disabled={!validated}
                 onClick={handleSave}
-                className={`flex items-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${validated ? "bg-blue-100 text-blue-600 hover:bg-blue-200" : "cursor-not-allowed bg-gray-100 text-gray-400"
+                className={`flex items-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${validated ? "bg-primary-100 text-primary hover:bg-primary-200" : "cursor-not-allowed bg-gray-100 text-gray-400"
                   }`}
               >
                 Save <ChevronDown size={16} />

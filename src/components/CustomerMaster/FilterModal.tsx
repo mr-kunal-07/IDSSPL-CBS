@@ -9,13 +9,13 @@ const filterOptions = [
     id: "customerName",
     label: "Customer Name",
     icon: (
-      <span className="flex h-5 w-5 items-center justify-center rounded border border-[#0B63C1] text-[10px] font-bold text-[#0B63C1]">
+      <span className="flex h-5 w-5 items-center justify-center rounded border border-primary text-[10px] font-bold text-primary">
         A
       </span>
     ),
     placeholder: "Customer Name",
     inputIcon: (
-      <span className="flex h-5 w-5 items-center justify-center rounded border border-[#0B63C1] text-[10px] font-bold text-[#0B63C1]">
+      <span className="flex h-5 w-5 items-center justify-center rounded border border-primary text-[10px] font-bold text-primary">
         A
       </span>
     ),
@@ -23,16 +23,16 @@ const filterOptions = [
   {
     id: "customerId",
     label: "Customer ID",
-    icon: <Hash size={18} className="text-[#0B63C1]" />,
+    icon: <Hash size={18} className="text-primary" />,
     placeholder: "Customer ID",
-    inputIcon: <Hash size={18} className="text-[#0B63C1]" />,
+    inputIcon: <Hash size={18} className="text-primary" />,
   },
   {
     id: "status",
     label: "Status",
-    icon: <ShieldCheck size={18} className="text-[#0B63C1]" />,
+    icon: <ShieldCheck size={18} className="text-primary" />,
     placeholder: "Status",
-    inputIcon: <ShieldCheck size={18} className="text-[#0B63C1]" />,
+    inputIcon: <ShieldCheck size={18} className="text-primary" />,
   },
 ] as const;
 
@@ -78,7 +78,7 @@ export default function FilterModal({
   };
 
   return (
-    <div className="relative w-full max-w-4xl overflow-hidden rounded-3xl border-2 border-[#0B63C1] bg-white p-8">
+    <div className="relative w-full max-w-4xl overflow-hidden rounded-3xl border-2 border-primary bg-white p-8">
       <div className="pointer-events-none absolute -top-10 right-10 h-40 w-40 rounded-full bg-[#DCEBFC]" />
       <div className="pointer-events-none absolute -bottom-16 -left-10 h-48 w-48 rounded-full bg-[#DCEBFC]" />
 
@@ -92,8 +92,8 @@ export default function FilterModal({
       </button>
 
       <div className="relative z-10 flex items-center gap-4">
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-[#0B63C1]">
-          <FilterIcon size={24} className="text-[#0B63C1]" />
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-primary">
+          <FilterIcon size={24} className="text-primary" />
         </div>
         <div>
           <h2 className="text-2xl font-semibold text-gray-900">Filter</h2>
@@ -114,8 +114,8 @@ export default function FilterModal({
                   onClick={() => setActiveFilter(option.id)}
                   className={`flex w-full items-center gap-3 rounded-2xl border px-5 py-4 text-left transition-colors ${
                     isActive
-                      ? "border-[#0B63C1] bg-[#E8F1FD]"
-                      : "border-[#0B63C1] bg-white"
+                      ? "border-primary bg-[#E8F1FD]"
+                      : "border-primary bg-white"
                   }`}
                 >
                   {option.icon}
@@ -144,7 +144,7 @@ export default function FilterModal({
                 <input
                   type="radio"
                   name="status"
-                  className="h-5 w-5 border-gray-300 text-[#0B63C1] focus:ring-[#0B63C1]"
+                  className="h-5 w-5 border-gray-300 text-primary focus:ring-primary"
                   checked={values.status === "Active"}
                   onChange={() => setValues((prev) => ({ ...prev, status: "Active" }))}
                 />
@@ -154,7 +154,7 @@ export default function FilterModal({
                 <input
                   type="radio"
                   name="status"
-                  className="h-5 w-5 border-gray-300 text-[#0B63C1] focus:ring-[#0B63C1]"
+                  className="h-5 w-5 border-gray-300 text-primary focus:ring-primary"
                   checked={values.status === "Inactive"}
                   onChange={() => setValues((prev) => ({ ...prev, status: "Inactive" }))}
                 />
@@ -164,14 +164,14 @@ export default function FilterModal({
                 <button
                   type="button"
                   onClick={() => setValues((prev) => ({ ...prev, status: "" }))}
-                  className="text-sm font-medium text-[#0B63C1] underline hover:text-[#0a56aa]"
+                  className="text-sm font-medium text-primary underline hover:text-[#0a56aa]"
                 >
                   Clear
                 </button>
               )}
             </div>
           ) : (
-            <div className="flex items-center gap-3 rounded-xl border border-[#0B63C1] bg-white px-4 py-3">
+            <div className="flex items-center gap-3 rounded-xl border border-primary bg-white px-4 py-3">
               {active?.inputIcon}
               <input
                 type="text"
@@ -189,14 +189,14 @@ export default function FilterModal({
         <button
           type="button"
           onClick={handleClearAll}
-          className="rounded-full border border-[#0B63C1] px-8 py-3 font-semibold text-[#0B63C1] hover:bg-[#F2F8FE]"
+          className="rounded-full border border-primary px-8 py-3 font-semibold text-primary hover:bg-[#F2F8FE]"
         >
           Clear All
         </button>
         <button
           type="button"
           onClick={handleApply}
-          className="rounded-full bg-[#0B63C1] px-10 py-3 font-semibold text-white hover:bg-[#0a56aa]"
+          className="rounded-full bg-primary px-10 py-3 font-semibold text-white hover:bg-[#0a56aa]"
         >
           Apply
         </button>

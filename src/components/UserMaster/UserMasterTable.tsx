@@ -141,10 +141,10 @@ interface ContactLineProps {
 
 function ContactLine({ icon: Icon, value, onEdit }: ContactLineProps) {
   return (
-    <span className="inline-flex items-center gap-1.5 text-sm text-[#0B63C1]">
+    <span className="inline-flex items-center gap-1.5 text-sm text-primary">
       <Icon size={14} className="text-black shrink-0" />
       <span className="truncate">{value}</span>
-      <button type="button" onClick={onEdit} className="text-[#0B63C1] hover:text-blue-700" aria-label="Edit">
+      <button type="button" onClick={onEdit} className="text-primary hover:text-primary-700" aria-label="Edit">
         <SquarePenIcon size={16} />
       </button>
     </span>
@@ -217,7 +217,7 @@ function ActionMenuButton({
       </button>
 
       {open && (
-        <div role="menu" className="absolute left-6 top-10 z-20 w-64 rounded-xl border border-blue-200 bg-white py-2 shadow-lg">
+        <div role="menu" className="absolute left-6 top-10 z-20 w-64 rounded-xl border border-primary-200 bg-white py-2 shadow-lg">
           {items.map(({ label, icon: Icon, onClick }) => (
             <button
               key={label}
@@ -229,7 +229,7 @@ function ActionMenuButton({
               }}
               className="flex w-full items-center gap-3 px-4 py-2 text-sm text-black hover:bg-gray-50"
             >
-              <Icon size={16} className="text-[#0B63C1]" />
+              <Icon size={16} className="text-primary" />
               {label}
             </button>
           ))}
@@ -378,7 +378,7 @@ export default function UserMasterTable({
       <div className="overflow-x-auto [-ms-overflow-style:none] scrollbar-none [&::-webkit-scrollbar]:hidden">
         <table className="w-full border-collapse">
           <thead>
-            <tr className="bg-[#0B63C1] rounded-t-xl">
+            <tr className="bg-primary rounded-t-xl">
               {columns.map((col) => (
                 <th
                   key={col.key}
@@ -402,7 +402,7 @@ export default function UserMasterTable({
                 className={`${idx !== sortedRows.length - 1 ? "border-b border-gray-100" : ""} hover:bg-gray-50`}
               >
                 <td className="px-6 py-3">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-blue-50 text-[#0B63C1] text-sm font-semibold">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary-50 text-primary text-sm font-semibold">
                     {r.sr}
                   </span>
                 </td>
@@ -416,7 +416,7 @@ export default function UserMasterTable({
                     onToggleStatus={handleToggleStatus}
                   />
                 </td>
-                <td className="px-6 py-3 text-[16px] text-[#0B63C1]">
+                <td className="px-6 py-3 text-[16px] text-primary">
                   <div className="flex flex-col gap-1">
                     <span className="font-medium text-black">{r.code}</span>
                     <ContactLine icon={Phone} value={r.phone} onEdit={() => openFieldEdit(r.sr, "mobile")} />

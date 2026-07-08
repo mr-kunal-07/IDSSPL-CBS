@@ -242,8 +242,8 @@ export default function SetUserPasswordModal({
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {/* Hint Message */}
-          <div className="p-4 sm:p-5 bg-indigo-50 border border-blue-100 rounded-xl flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-blue-700 shrink-0 mt-0.5" />
+          <div className="p-4 sm:p-5 bg-indigo-50 border border-primary-100 rounded-xl flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-primary-700 shrink-0 mt-0.5" />
             <div className="flex flex-col gap-1">
               <span className="text-base font-bold text-slate-900">Hint Message</span>
               <p className="text-sm text-slate-500 leading-5">
@@ -255,7 +255,7 @@ export default function SetUserPasswordModal({
           </div>
 
           {/* Form card */}
-          <section className="p-4 sm:p-6 bg-white rounded-2xl border-x border-b border-t-4 border-[#0A66D8]  flex flex-col gap-4">
+          <section className="p-4 sm:p-6 bg-white rounded-2xl border-x border-b border-t-4 border-primary  flex flex-col gap-4">
             <Field label="User Id" labelHi="वापरकर्ता आयडी" icon={User} value={userId} readOnly />
             <Field label="User Name" labelHi="वापरकर्त्याचे नाव" icon={IdCard} value={userName} readOnly />
             <Field
@@ -324,7 +324,7 @@ export default function SetUserPasswordModal({
           <button
             type="button"
             onClick={onClose}
-            className="w-full sm:w-36 h-12 px-6 py-3.5 rounded-lg border border-blue-700 flex items-center justify-center gap-2 text-blue-700 text-base font-medium hover:bg-blue-50 transition-colors"
+            className="w-full sm:w-36 h-12 px-6 py-3.5 rounded-lg border border-primary-700 flex items-center justify-center gap-2 text-primary-700 text-base font-medium hover:bg-primary-50 transition-colors"
           >
             Cancel
             <X className="w-4 h-4" />

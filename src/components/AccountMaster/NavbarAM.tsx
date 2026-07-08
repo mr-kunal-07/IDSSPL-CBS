@@ -44,7 +44,7 @@ const NavbarAM = ({
       <a
         href={href || "#"}
         className={`flex items-center gap-1 text-sm ${
-          isLast ? "text-[#0B63C1] font-[400]" : "text-[#99A1AF] hover:text-blue-600"
+          isLast ? "text-primary font-[400]" : "text-[#99A1AF] hover:text-primary"
         }`}
       >
         {isFirst && <Home size={14} />}
@@ -71,7 +71,7 @@ const NavbarAM = ({
           <div className="flex items-center gap-3 min-w-0">
             <button
               onClick={onBack}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-white transition hover:bg-blue-700 shrink-0"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-white transition hover:bg-primary-700 shrink-0"
             >
               <ArrowLeft size={18} />
             </button>
@@ -103,9 +103,9 @@ const NavbarAM = ({
                 <button
                   type="button"
                   onClick={onOpenFilter}
-                  className="flex w-[200px] items-center gap-2.5 rounded-lg border border-[#0B63C1] bg-white px-3 py-2 text-left hover:bg-[#F8FBFF] sm:w-[240px] h-10 transition shrink-0 animate-fade-in"
+                  className="flex w-[200px] items-center gap-2.5 rounded-lg border border-primary bg-white px-3 py-2 text-left hover:bg-[#F8FBFF] sm:w-[240px] h-10 transition shrink-0 animate-fade-in"
                 >
-                  <Search size={16} className="shrink-0 text-[#0B63C1]" />
+                  <Search size={16} className="shrink-0 text-primary" />
                   <span className="text-sm text-gray-400">Search/ Filter</span>
                 </button>
 
@@ -114,7 +114,7 @@ const NavbarAM = ({
                     <button
                       type="button"
                       onClick={onResetFilters}
-                      className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#0B63C1] text-white hover:bg-[#0a56aa] transition shrink-0"
+                      className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-white hover:bg-[#0a56aa] transition shrink-0"
                     >
                       <RefreshCw size={18} />
                     </button>
@@ -122,9 +122,9 @@ const NavbarAM = ({
                     <button
                       type="button"
                       onClick={onOpenFilter}
-                      className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-[#0B63C1] hover:bg-gray-50 h-10 transition shrink-0"
+                      className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-primary hover:bg-gray-50 h-10 transition shrink-0"
                     >
-                      <Filter size={16} className="text-[#0B63C1]" />
+                      <Filter size={16} className="text-primary" />
                       <span>
                         {(() => {
                           const active: { label: string; value: string }[] = [];
