@@ -81,6 +81,11 @@ export const menuItems = [
         title: "Branch Master",
         href: "/branchmaster",
       },
+      {
+        id: "futuremodels",
+        title: "Future Models",
+        href: "/futuremodels",
+      },
     ],
   },
 ];
