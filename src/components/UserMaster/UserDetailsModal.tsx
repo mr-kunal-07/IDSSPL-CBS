@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from "react";
 import {
   User,
-  UserCog,
-  Eye,
   IdCard,
   Building2,
   Phone,
   Mail,
   Home,
-  MapPin,
   Flag,
   X,
   Check,
   MoreVertical,
   ChevronDown,
+  ThumbsUp,
   LucideIcon,
 } from "lucide-react";
+import Image from "next/image";
 import CustomerIdPickerModal,{
   type Customer,
 } from "../common/CustomerPickListModal";
@@ -139,7 +138,7 @@ function Field({
       </div>
       <div className="flex items-center gap-2.5">
         <div
-          className={`flex-1 flex items-center gap-2 px-3.5 py-3 rounded-xl border outline-none ${
+          className={`flex-1 flex items-center gap-2 px-3.5 py-2 rounded-md border outline-none ${
             readOnly ? "bg-gray-100 border-gray-200" : "bg-white border-gray-300"
           }`}
         >
@@ -175,19 +174,23 @@ function Field({
 /* ===================== SectionHeader ===================== */
 
 interface SectionHeaderProps {
-  icon: LucideIcon;
+  icon: string;
   title: string;
   titleHi: string;
   desc: string;
   descHi: string;
 }
 
-function SectionHeader({ icon: Icon, title, titleHi, desc, descHi }: SectionHeaderProps) {
+function SectionHeader({ icon, title, titleHi, desc, descHi }: SectionHeaderProps) {
   return (
     <div className="flex items-start gap-3">
-      <div className="w-11 h-11 shrink-0 rounded-full bg-indigo-50 border border-blue-700 flex items-center justify-center">
-        <Icon className="w-6 h-6 text-blue-700" />
-      </div>
+      <Image
+        src={icon}
+        alt={title}
+        width={44}
+        height={44}
+        className="w-11 h-11 shrink-0 rounded-full bg-indigo-50 border border-blue-700"
+      />
       <div className="flex-1 flex flex-col gap-1">
         <h2 className="text-lg sm:text-xl font-bold tracking-tight leading-6">
           <span className="text-slate-900">{title} / </span>
@@ -204,7 +207,7 @@ function SectionHeader({ icon: Icon, title, titleHi, desc, descHi }: SectionHead
 /* ===================== Mode config ===================== */
 
 interface ModeConfig {
-  icon: LucideIcon;
+  icon: string;
   titleEn: string;
   titleHi: string;
   descEn: string;
@@ -213,17 +216,17 @@ interface ModeConfig {
 
 const MODE_CONFIG: Record<Mode, ModeConfig> = {
   edit: {
-    icon: UserCog,
+    icon: "/User.png",
     titleEn: "Edit User Details",
     titleHi: "वापरकर्त्याचे तपशील संपादित",
     descEn: "Edit some basic information related to the Employee",
     descHi: "कर्मचाऱ्याची बेसिक माहिती एडिट करा.",
   },
   view: {
-    icon: Eye,
+    icon: "/User.png",
     titleEn: "View User Details",
     titleHi: "वापरकर्त्याचे तपशील पहा",
-    descEn: "View basic information related to the Employee",
+    descEn: "Only can view some basic information related to the Employee",
     descHi: "कर्मचाऱ्याची मूलभूत माहिती पहा.",
   },
 };
@@ -279,7 +282,6 @@ export default function UserDetailsModal({
 
   const isView = mode === "view";
   const config = MODE_CONFIG[mode] || MODE_CONFIG.edit;
-  const HeaderIcon = config.icon;
 
   const set =
     <K extends keyof UserFormData>(key: K) =>
@@ -302,20 +304,24 @@ export default function UserDetailsModal({
       >
         {/* Header (fixed, does not scroll) */}
         <div className="shrink-0 flex items-start justify-between gap-4 p-4 sm:p-6 lg:p-8 pb-4 sm:pb-6">
-          <div className="flex items-start gap-3 sm:gap-4">
-            <div className="w-14 h-14 sm:w-16 sm:h-16 shrink-0 rounded-2xl bg-gradient-to-br from-indigo-400 to-indigo-600 flex items-center justify-center">
-              <HeaderIcon className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
-            </div>
-            <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1 min-w-0">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <Image
+                src={config.icon}
+                alt={config.titleEn}
+                width={64}
+                height={64}
+                className="w-14 h-14 sm:w-16 sm:h-16 shrink-0"
+              />
               <h1 className="text-2xl sm:text-3xl font-bold tracking-tight leading-tight">
                 <span className="text-indigo-950">{config.titleEn}</span>
                 <span className="text-slate-900"> / </span>
                 <span className="text-slate-500">{config.titleHi}</span>
               </h1>
-              <p className="text-sm sm:text-base text-slate-500 leading-5">
-                {config.descEn} / {config.descHi}
-              </p>
             </div>
+            <p className="text-sm sm:text-base text-slate-500 leading-5">
+              {config.descEn} / {config.descHi}
+            </p>
           </div>
           <button
             type="button"
@@ -335,7 +341,7 @@ export default function UserDetailsModal({
           {/* User Details */}
           <section className="p-4 sm:p-6 bg-white rounded-2xl shadow-[0px_1px_5px_0px_rgba(3,0,55,0.08)] border border-t-4 border-blue-700 flex flex-col gap-6">
             <SectionHeader
-              icon={User}
+              icon="/User.png"
               title="User Details"
               titleHi="वापरकर्ता तपशील"
               desc="Add some basic information related to the Employee"
@@ -411,7 +417,7 @@ export default function UserDetailsModal({
           {/* Address Details */}
           <section className="p-4 sm:p-6 bg-white rounded-2xl shadow-[0px_1px_5px_0px_rgba(3,0,55,0.08)] border border-t-4 border-blue-700 flex flex-col gap-6">
             <SectionHeader
-              icon={MapPin}
+              icon="/Address.png"
               title="Address Details"
               titleHi="पत्ता तपशील"
               desc="Add some basic information related to the Employee Address"
@@ -492,7 +498,7 @@ export default function UserDetailsModal({
           {/* Roles */}
           <section className="p-4 sm:p-6 bg-white rounded-2xl shadow-[0px_1px_5px_0px_rgba(3,0,55,0.08)] border border-t-4 border-blue-700 flex flex-col gap-6">
             <SectionHeader
-              icon={IdCard}
+              icon="/Icon.png"
               title="Roles"
               titleHi="भूमिका तपशील"
               desc="Configure employee access roles and operational responsibilities"
@@ -528,14 +534,24 @@ export default function UserDetailsModal({
         {/* Footer actions (fixed, does not scroll) */}
         <div className="shrink-0 flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-4 p-4 sm:p-6 lg:p-8 pt-4 sm:pt-6 border-t border-gray-100">
           {isView ? (
-            <button
-              type="button"
-              onClick={onClose}
-              className="w-full sm:w-36 h-12 px-6 py-3.5 rounded-lg border border-blue-700 flex items-center justify-center gap-2 text-blue-700 text-base font-medium hover:bg-blue-50 transition-colors"
-            >
-              Close
-              <X className="w-4 h-4" />
-            </button>
+            <>
+              <button
+                type="button"
+                onClick={onClose}
+                className="w-full sm:w-36 h-12 px-6 py-3.5 rounded-lg border border-blue-700 flex items-center justify-center gap-2 text-blue-700 text-base font-medium hover:bg-blue-50 transition-colors"
+              >
+                Cancel
+                <X className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="w-full sm:w-36 h-12 px-6 py-3.5 bg-sky-700 rounded-lg flex items-center justify-center gap-2 text-white text-base font-medium hover:bg-sky-800 transition-colors"
+              >
+                Ok, Got It
+                <ThumbsUp className="w-4 h-4" />
+              </button>
+            </>
           ) : (
             <>
               <button

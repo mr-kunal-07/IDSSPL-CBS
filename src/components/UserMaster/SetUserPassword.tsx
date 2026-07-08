@@ -11,6 +11,7 @@ import {
   ChevronDown,
   LucideIcon,
 } from "lucide-react";
+import SuccessModal from "../shared/SuccessModal";
 
 /* ===================== Types ===================== */
 
@@ -124,12 +125,14 @@ export default function SetUserPasswordModal({
   const [data, setData] = useState<SetUserPasswordData>(DEFAULT_DATA);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isValidated, setIsValidated] = useState<boolean>(false);
+  const [showSuccess, setShowSuccess] = useState<boolean>(false);
 
   useEffect(() => {
     if (open) {
       setData(DEFAULT_DATA);
       setErrors({});
       setIsValidated(false);
+      setShowSuccess(false);
     }
   }, [open]);
 
@@ -171,8 +174,24 @@ export default function SetUserPasswordModal({
   const handleSave = () => {
     if (!isValidated) return;
     onSubmit?.(data);
+    setShowSuccess(true);
+  };
+
+  const handleSuccessDone = () => {
+    setShowSuccess(false);
     onClose?.();
   };
+
+  if (showSuccess) {
+    return (
+      <SuccessModal
+        title="Password Changed Successfully"
+        subtitle=""
+        onClose={handleSuccessDone}
+        onDone={handleSuccessDone}
+      />
+    );
+  }
 
   return (
     <div
