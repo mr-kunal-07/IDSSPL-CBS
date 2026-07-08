@@ -5,10 +5,16 @@ type SuccessModalProps = {
   onClose: () => void;
   onDone: () => void;
   data?: unknown;
-  heading?: ReactNode;
+  title?: string;
+  subtitle?: string;
 };
 
-export default function SuccessModal({ onClose, onDone, heading }: SuccessModalProps) {
+export default function SuccessModal({
+  onClose,
+  onDone,
+  title = "Account Added Successfully",
+  subtitle = "Please Authorize",
+}: SuccessModalProps) {
   return (
     <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/40 backdrop-blur-[1px] p-4">
       <div className="relative w-full max-w-[500px] overflow-hidden rounded-[30px] bg-white shadow-[0_25px_60px_rgba(0,0,0,0.18)]">
@@ -32,11 +38,19 @@ export default function SuccessModal({ onClose, onDone, heading }: SuccessModalP
 
           {/* Heading */}
           <h2 className="mt-10 text-center text-[28px] font-[700] leading-[34px] text-black">
+<<<<<<< HEAD
             {heading ?? (
               <>
                 Account Added Successfully
                 <br />
                 Please Authorize
+=======
+            {title}
+            {subtitle && (
+              <>
+                <br />
+                {subtitle}
+>>>>>>> Development
               </>
             )}
           </h2>
