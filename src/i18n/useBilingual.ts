@@ -11,32 +11,57 @@ export type Translate = (key: string, options?: Record<string, unknown>) => stri
 /**
  * Helper for the app's bilingual UI.
  *
- *  - `en`  -> always-English (left / primary side of a label).
- *  - `t`   -> the currently selected secondary language (right side),
- *             controlled by the LanguageSwitcher.
- *  - `i18n`-> the i18next instance (e.g. to read the active language).
+ *  - `en`   -> always-English (left / primary side of a label).
+ *  - `t`    -> the selected secondary language (right side). Returns an EMPTY
+ *              string when the selected language is English, so the duplicated
+ *              right-hand label collapses and only the English text shows.
+ *  - `tRaw` -> the selected language including English (use for standalone text
+ *              like placeholders, where an empty string would be wrong).
+ *  - `isEnglish` -> true when the selected language is English.
  *
- * When the dev-only "show key IDs" toggle is on, both `en` and `t` return the
- * key itself (e.g. "accountMaster.title") instead of the translated text, so
- * you can see exactly which string maps to which key.
+ * When the dev-only "show key IDs" toggle is on, the helpers return the key
+ * itself (e.g. "accountMaster.title") so you can see the mapping.
  *
  * Example:
  *   const { en, t } = useBilingual();
- *   <span>{en("fields.accountCode")}</span> / <span>{t("fields.accountCode")}</span>
+ *   {en("fields.accountCode")}
+ *   {t("fields.accountCode") && <span> / {t("fields.accountCode")}</span>}
  */
 export function useBilingual() {
-  const { t: tRaw, i18n } = useTranslation();
+  const { t: tRawI18n, i18n } = useTranslation();
   const { showKeys } = useI18nDebug();
 
   const enRaw = useMemo(() => i18n.getFixedT(PRIMARY_LANGUAGE), [i18n]);
 
-  const wrap = (fn: (key: string, options?: Record<string, unknown>) => unknown): Translate =>
-    showKeys ? (key) => key : (key, options) => String(fn(key, options));
+  const active = (i18n.language || "").split("-")[0];
+  const isEnglish = active === PRIMARY_LANGUAGE;
 
-  const t = useMemo<Translate>(() => wrap(tRaw), [tRaw, showKeys]);
-  const en = useMemo<Translate>(() => wrap(enRaw), [enRaw, showKeys]);
+  // Always-English (left side).
+  const en = useMemo<Translate>(
+    () =>
+      showKeys
+        ? (key) => key
+        : (key, options) => String(enRaw(key, options)),
+    [enRaw, showKeys]
+  );
 
-  // `secondaryLanguage` exposes the active language so consumers re-render when
-  // the secondary language changes.
-  return { t, en, i18n, secondaryLanguage: i18n.language };
+  // Selected language including English — for standalone (non-paired) text.
+  const tRaw = useMemo<Translate>(
+    () =>
+      showKeys
+        ? (key) => key
+        : (key, options) => String(tRawI18n(key, options)),
+    [tRawI18n, showKeys]
+  );
+
+  // Secondary (right side) — empty when English so the label collapses.
+  const t = useMemo<Translate>(
+    () =>
+      showKeys
+        ? (key) => key
+        : (key, options) => (isEnglish ? "" : String(tRawI18n(key, options))),
+    [tRawI18n, showKeys, isEnglish]
+  );
+
+  return { t, tRaw, en, i18n, isEnglish, secondaryLanguage: i18n.language };
 }

@@ -90,7 +90,7 @@ function Field({
   return (
     <div>
       <label className="mb-2 block text-[15px] font-semibold text-black">
-        {label} <span className="text-gray-500 font-semibold">/ {labelHi}</span>
+        {label} {labelHi ? <span className="text-gray-500 font-semibold">/ {labelHi}</span> : null}
       </label>
       {children}
     </div>
@@ -218,11 +218,11 @@ const page = () => {
           />
           <div>
             <h2 className="text-2xl font-bold text-slate-900">
-              {en('tdCalculate.title')} <span className="font-bold text-[#64748B]">/ {t('tdCalculate.title')}</span>
+              {en('tdCalculate.title')} {t('tdCalculate.title') ? <span className="font-bold text-[#64748B]">/ {t('tdCalculate.title')}</span> : null}
             </h2>
             <p className="text-sm text-gray-600">
-              {en('tdCalculate.subtitle')} /{' '}
-              <span>{t('tdCalculate.subtitle')}</span>
+              {en('tdCalculate.subtitle')}
+              {t('tdCalculate.subtitle') ? <span> / {t('tdCalculate.subtitle')}</span> : null}
             </p>
           </div>
         </div>
@@ -283,7 +283,7 @@ const page = () => {
 
           <div>
             <label className="mb-2 block text-[15px] font-semibold text-black">
-              {en('tdCalculate.unitOfPeriod')} <span className="text-gray-500 font-semibold">/ {t('tdCalculate.unitOfPeriod')}</span>
+              {en('tdCalculate.unitOfPeriod')} {t('tdCalculate.unitOfPeriod') ? <span className="text-gray-500 font-semibold">/ {t('tdCalculate.unitOfPeriod')}</span> : null}
             </label>
             <div className="flex h-11 items-center gap-6">
               {(['Day', 'Month'] as const).map((opt) => (

@@ -20,17 +20,26 @@ export default function MyComponent() {
 
   return (
     <h1>
-      {en("accountMaster.title")}                     {/* left  = always English */}
-      <span> / {t("accountMaster.title")}</span>      {/* right = selected language */}
+      {en("accountMaster.title")}                                   {/* left  = always English */}
+      {t("accountMaster.title") ? (                                 {/* right = selected language */}
+        <span> / {t("accountMaster.title")}</span>                  {/* ...hidden when English */}
+      ) : null}
     </h1>
   );
 }
 ```
 
 - **`en(key)`** → the English text (the fixed, left-hand side).
-- **`t(key)`** → the text in the language the user picked (the right-hand side).
+- **`t(key)`** → the text in the selected language (the right-hand side).
+  **When English is the selected language, `t()` returns `""`** so the
+  duplicate collapses and you see only the English label.
 
-Both take the same key. That's the whole idea: one key, two renderings.
+Both take the same key. That's the whole idea: one key, two renderings — and
+the right side automatically disappears when it would just repeat the English.
+
+> **Always guard the secondary side** with `{t("key") ? <span> / {t("key")}</span> : null}`
+> (or `{t("key") && ...}`). If you render `{t("key")}` bare next to a literal
+> `/`, you'll get a dangling ` / ` when English is selected.
 
 > The component **must** be a Client Component (`"use client"` at the top),
 > because the hooks run in the browser.
@@ -39,18 +48,41 @@ Both take the same key. That's the whole idea: one key, two renderings.
 
 ## The mental model
 
-| Side  | Helper  | Language                                  |
-| ----- | ------- | ----------------------------------------- |
-| Left  | `en()`  | Always English (never changes)            |
-| Right | `t()`   | The language chosen in the header dropdown |
+| Side  | Helper  | Language                                                        |
+| ----- | ------- | -------------------------------------------------------------- |
+| Left  | `en()`  | Always English (never changes)                                 |
+| Right | `t()`   | The language chosen in the header dropdown — **`""` if English** |
 
 - Elements that were **English-only** in the design (breadcrumbs, buttons,
   filter labels) use **only `en()`** — no right-hand side.
 - Elements that show a **pair** (titles, field labels) use **both** `en()` and
-  `t()` with the same key.
+  `t()` with the same key, and **guard** the right side so it collapses.
+
+**What the user sees for `User Master`:**
+
+| Selected language | Rendered |
+| ----------------- | -------- |
+| English           | `User Master`                |
+| Marathi           | `User Master | युजर मास्टर`   |
+| Hindi             | `User Master | यूज़र मास्टर`  |
+
+Because `t()` returns `""` for English, the right side (and its `/` or `|`
+separator) is skipped — no `User Master | User Master` duplication.
 
 The default right-hand language is **Marathi** (`mr`), matching the original
 app. See `DEFAULT_SECONDARY_LANGUAGE` in `config.ts`.
+
+### The full helper set
+
+`useBilingual()` returns:
+
+| Field            | Use it for                                                        |
+| ---------------- | ----------------------------------------------------------------- |
+| `en(key)`        | Left / English text. Always English.                              |
+| `t(key)`         | Right / secondary text. **`""` when English is selected.**        |
+| `tRaw(key)`      | Selected language **including English** — for standalone text (e.g. an `<input placeholder>`), where an empty string would be wrong. |
+| `isEnglish`      | `true` when English is selected. Handy for hiding data-driven secondary text that doesn't come from a key. |
+| `i18n`           | The i18next instance (rarely needed).                             |
 
 ---
 
@@ -176,7 +208,7 @@ en("memo.charactersOnly", { count: maxChars })   // "200 Characters Only"
 ```tsx
 <NavbarAM
   titleEn={en("accountMaster.title")}   // left, English
-  titleHi={t("accountMaster.title")}    // right, selected language
+  titleHi={t("accountMaster.title")}    // right; "" when English → nav hides it
   breadcrumbs={[
     { label: en("common.home"), href: "/" },        // breadcrumbs stay English
     { label: en("common.misActivity"), href: "/" },
@@ -184,12 +216,28 @@ en("memo.charactersOnly", { count: maxChars })   // "200 Characters Only"
   ]}
 />
 ```
+> The nav components (`NavbarAM`, `NavbarCM`, `GlobalNav`, `Nav`) already skip
+> the `|` separator and the secondary `<span>` when `titleHi` is empty, so just
+> passing `t(...)` is enough — it collapses automatically in English.
 
-**Bilingual field label:**
+**Bilingual field label (guard the secondary):**
 ```tsx
 <label>
-  {en("fields.accountCode")} / <span>{t("fields.accountCode")}</span>
+  {en("fields.accountCode")}
+  {t("fields.accountCode") ? (
+    <span className="text-gray-500"> / {t("fields.accountCode")}</span>
+  ) : null}
 </label>
+```
+
+**Standalone value (not a pair) — use `tRaw`:**
+```tsx
+<input placeholder={tRaw("memo.detailsPlaceholder")} />
+```
+
+**Data-driven secondary (not from a key) — gate with `isEnglish`:**
+```tsx
+titleHi={isEnglish ? undefined : row.titleHi}
 ```
 
 **English-only button:**
@@ -252,7 +300,10 @@ The switcher and everything else pick it up automatically.
 - ✅ Every new key goes into **all three** locale files.
 - ✅ Component using `en()`/`t()` must be `"use client"`.
 - ✅ Left side = `en()`, right side = `t()`, same key.
+- ✅ **Always guard the secondary side**: `{t("key") ? <span> / {t("key")}</span> : null}`.
+- ✅ Use `tRaw()` for standalone text (placeholders, `title` attrs) that must never be empty.
 - ✅ Reuse `common.*` / `fields.*` before inventing a new namespace.
+- ❌ Don't render `{t("key")}` bare next to a literal `/` or `|` — English leaves a dangling separator.
 - ❌ Don't hardcode display strings in JSX — route them through a key.
 - ❌ Don't hand-edit the JSON for keys that live in the script's `CATALOG`.
 
@@ -260,6 +311,9 @@ The switcher and everything else pick it up automatically.
 
 | Symptom | Cause / Fix |
 | --- | --- |
+| Duplicate label like `User Master | User Master` | Secondary isn't guarded / is using an old build. `t()` returns `""` in English; guard the `<span>` with `t("key") ? … : null`. |
+| Dangling ` / ` or ` | ` when English is selected | A literal separator sits outside the guard. Move the `/` **inside** the guarded `<span>`. |
+| Placeholder / tooltip goes blank in English | It's using `t()`. Switch to `tRaw()`. |
 | Label shows the raw key (e.g. `accountMaster.title`) unexpectedly | Key missing in the active locale, or the dev 🔑 toggle is on. |
 | Right side doesn't change with the dropdown | Text is using `en()` (English-only) instead of `t()`. |
 | `Cannot find module './locales/xx.json'` | New locale file not created or not imported in `config.ts`. |

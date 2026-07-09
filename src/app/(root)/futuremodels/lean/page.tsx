@@ -33,8 +33,8 @@ const page = () => {
               priority
             />
           <h2 className="text-[24px] font-bold text-black">
-            {en('lienMark.title')} / {' '}
-            <span className="text-gray-500 font-semibold"> {t('lienMark.title')}</span>
+            {en('lienMark.title')}
+            {t('lienMark.title') ? <span className="text-gray-500 font-semibold"> / {t('lienMark.title')}</span> : null}
           </h2>
         </div>
         <button
@@ -52,8 +52,8 @@ const page = () => {
             <User className="w-5 h-5 text-primary" />
           </div>
           <h3 className="text-lg font-bold text-[#0B1B3D]">
-            {en('common.accountDetails')} /{' '}
-            <span className="text-gray-500 font-semibold">{t('common.accountDetails')}</span>
+            {en('common.accountDetails')}
+            {t('common.accountDetails') ? <span className="text-gray-500 font-semibold"> / {t('common.accountDetails')}</span> : null}
           </h3>
         </div>
         <div className="border-t border-gray-200 mb-6" />
@@ -61,7 +61,8 @@ const page = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-800 mb-2">
-              {en('fields.accountCode')} / <span className="text-gray-500">{t('fields.accountCode')}</span>
+              {en('fields.accountCode')}
+              {t('fields.accountCode') ? <span className="text-gray-500"> / {t('fields.accountCode')}</span> : null}
               <span className="text-red-500 ml-0.5">*</span>
             </label>
             <div className="flex items-center gap-3 rounded-lg border border-gray-300 bg-gray-100 px-4 py-3">
@@ -77,7 +78,8 @@ const page = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-800 mb-2">
-              {en('fields.accountName')} / <span className="text-gray-500">{t('fields.accountName')}</span>
+              {en('fields.accountName')}
+              {t('fields.accountName') ? <span className="text-gray-500"> / {t('fields.accountName')}</span> : null}
               <span className="text-red-500 ml-0.5">*</span>
             </label>
             <div className="flex items-center gap-3 rounded-lg border border-gray-300 bg-gray-100 px-4 py-3">
@@ -93,7 +95,8 @@ const page = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-800 mb-2">
-              {en('fields.ledgerBalance')} / <span className="text-gray-500">{t('fields.ledgerBalance')}</span>
+              {en('fields.ledgerBalance')}
+              {t('fields.ledgerBalance') ? <span className="text-gray-500"> / {t('fields.ledgerBalance')}</span> : null}
               <span className="text-red-500 ml-0.5">*</span>
             </label>
             <div className="flex items-center gap-3 rounded-lg border border-gray-300 bg-gray-100 px-4 py-3">
@@ -109,8 +112,8 @@ const page = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-800 mb-2">
-              {en('fields.availableBalance')} /{' '}
-              <span className="text-gray-500">{t('fields.availableBalance')}</span>
+              {en('fields.availableBalance')}
+              {t('fields.availableBalance') ? <span className="text-gray-500"> / {t('fields.availableBalance')}</span> : null}
               <span className="text-red-500 ml-0.5">*</span>
             </label>
             <div className="flex items-center gap-3 rounded-lg border border-gray-300 bg-gray-100 px-4 py-3">
@@ -133,8 +136,8 @@ const page = () => {
             <User className="w-5 h-5 text-primary" />
           </div>
           <h3 className="text-lg font-bold text-[#0B1B3D]">
-            {en('common.lienDetails')} /{' '}
-            <span className="text-gray-500 font-semibold">{t('common.lienDetails')}</span>
+            {en('common.lienDetails')}
+            {t('common.lienDetails') ? <span className="text-gray-500 font-semibold"> / {t('common.lienDetails')}</span> : null}
           </h3>
         </div>
         <div className="border-t border-gray-200 mb-6" />
@@ -142,8 +145,8 @@ const page = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-800 mb-2">
-              {en('fields.loanAccountCode')} /{' '}
-              <span className="text-gray-500">{t('fields.loanAccountCode')}</span>
+              {en('fields.loanAccountCode')}
+              {t('fields.loanAccountCode') ? <span className="text-gray-500"> / {t('fields.loanAccountCode')}</span> : null}
               <span className="text-red-500 ml-0.5">*</span>
             </label>
             <div className="flex items-center gap-3 rounded-lg border border-gray-300 px-4 py-3">
@@ -158,8 +161,8 @@ const page = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-800 mb-2">
-              {en('fields.loanAccountName')} /{' '}
-              <span className="text-gray-500">{t('fields.loanAccountName')}</span>
+              {en('fields.loanAccountName')}
+              {t('fields.loanAccountName') ? <span className="text-gray-500"> / {t('fields.loanAccountName')}</span> : null}
               <span className="text-red-500 ml-0.5">*</span>
             </label>
             <div className="flex items-center gap-3 rounded-lg border border-gray-300 px-4 py-3">
@@ -173,7 +176,8 @@ const page = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-800 mb-2">
-              {en('fields.lienAmount')} / <span className="text-gray-500">{t('fields.lienAmount')}</span>
+              {en('fields.lienAmount')}
+              {t('fields.lienAmount') ? <span className="text-gray-500"> / {t('fields.lienAmount')}</span> : null}
               <span className="text-red-500 ml-0.5">*</span>
             </label>
             <div className="flex items-center gap-3 rounded-lg border border-gray-300 px-4 py-3">
@@ -188,7 +192,8 @@ const page = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-800 mb-2">
-              {en('fields.remark')} / <span className="text-gray-500">{t('fields.remark')}</span>
+              {en('fields.remark')}
+              {t('fields.remark') ? <span className="text-gray-500"> / {t('fields.remark')}</span> : null}
               <span className="text-red-500 ml-0.5">*</span>
             </label>
             <div className="flex items-center gap-3 rounded-lg border border-gray-300 px-4 py-3">

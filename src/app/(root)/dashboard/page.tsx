@@ -7,7 +7,7 @@ const page = () => {
   const { t, en } = useBilingual()
   return (
     <div>
-      {en('dashboard.title')} <span className="text-gray-500">/ {t('dashboard.title')}</span>
+      {en('dashboard.title')} {t('dashboard.title') ? <span className="text-gray-500">/ {t('dashboard.title')}</span> : null}
     </div>
   )
 }

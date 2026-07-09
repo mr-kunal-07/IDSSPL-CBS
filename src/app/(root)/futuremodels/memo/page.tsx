@@ -5,7 +5,7 @@ import { X, CreditCard, User, FileText, Upload, Settings } from 'lucide-react'
 import { useBilingual } from '@/i18n/useBilingual'
 
 const page = () => {
-  const { t, en } = useBilingual()
+  const { t, en, tRaw } = useBilingual()
   const [memo, setMemo] = useState('')
   const maxChars = 200
 
@@ -29,8 +29,8 @@ const page = () => {
               <Settings className="w-10 h-10 text-primary"  />
             </div>
             <h2 className="text-[24px] font-bold text-black">
-              {en('memo.title')}/{' '}
-              <span className="text-gray-500 font-semibold"> {t('memo.title')}</span>
+              {en('memo.title')}
+              {t('memo.title') ? <span className="text-gray-500 font-semibold">/ {t('memo.title')}</span> : null}
             </h2>
           </div>
           <button
@@ -45,8 +45,8 @@ const page = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
           <div>
             <label className="block text-[16px] font-medium text-black mb-2">
-              {en('memo.accountCode')} /{' '}
-              <span className="text-gray-500">{t('memo.accountCode')}</span>
+              {en('memo.accountCode')}
+              {t('memo.accountCode') ? <span className="text-gray-500"> / {t('memo.accountCode')}</span> : null}
               <span className="text-red-500 ml-0.5">*</span>
             </label>
             <div className="flex items-center gap-3 rounded-lg border border-gray-300 bg-gray-100 px-4 py-3">
@@ -62,7 +62,8 @@ const page = () => {
 
           <div>
             <label className="block text-[16px] font-medium text-black mb-2">
-              {en('memo.name')} / <span className="text-gray-500">{t('memo.name')}</span>
+              {en('memo.name')}
+              {t('memo.name') ? <span className="text-gray-500"> / {t('memo.name')}</span> : null}
               <span className="text-red-500 ml-0.5">*</span>
             </label>
             <div className="flex items-center gap-3 rounded-lg border border-gray-300 bg-gray-100 px-4 py-3">
@@ -80,7 +81,8 @@ const page = () => {
         {/* Memo Details */}
         <div className="mb-2">
           <label className="block text-[16px] font-medium text-black mb-2">
-            {en('memo.memoDetails')} / <span className="text-gray-500">{t('memo.memoDetails')}</span>
+            {en('memo.memoDetails')}
+            {t('memo.memoDetails') ? <span className="text-gray-500"> / {t('memo.memoDetails')}</span> : null}
             <span className="text-red-500 ml-0.5">*</span>
           </label>
           <div className="rounded-xl border-2 border-primary px-4 py-3">
@@ -89,7 +91,7 @@ const page = () => {
               <textarea
                 value={memo}
                 onChange={handleMemoChange}
-                placeholder={t('memo.detailsPlaceholder')}
+                placeholder={tRaw('memo.detailsPlaceholder')}
                 rows={10}
                 className="w-full resize-none bg-transparent outline-none text-gray-700 placeholder-gray-400"
               />

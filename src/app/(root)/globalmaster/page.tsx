@@ -23,7 +23,7 @@ interface MasterItem {
 }
 
 const Page: React.FC = () => {
-  const { t, en } = useBilingual();
+  const { t, en, isEnglish } = useBilingual();
   const [openMaster, setOpenMaster] = useState<MasterItem | null>(null);
   const [tableRows, setTableRows] = useState<Record<string, unknown>[]>([]);
   const [filters, setFilters] = useState<Record<string, string>>({});
@@ -101,7 +101,7 @@ const Page: React.FC = () => {
     <div className="bg-[#E7EAEF] min-h-screen">
       <GlobalNav
         titleEn={openMaster ? openMaster.titleEn : en("globalMaster.title")}
-        titleHi={openMaster ? openMaster.titleHi : t("globalMaster.title")}
+        titleHi={openMaster ? (isEnglish ? undefined : openMaster.titleHi) : t("globalMaster.title")}
         breadcrumbs={breadcrumbs}
         onBack={() => (openMaster ? handleCloseMaster() : window.history.back())}
         showActions={!!openMaster}
