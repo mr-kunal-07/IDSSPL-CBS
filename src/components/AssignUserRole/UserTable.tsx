@@ -206,7 +206,7 @@ export default function UserTable({
                 key={user.srNo}
                 onClick={() => handleRowClick(user)}
                 className={`cursor-pointer transition-colors ${
-                  selectedRow === user.srNo ? "bg-[#E8F1FD]" : "hover:bg-gray-50"
+                  selectedRow === user.srNo ? "bg-primary-50" : "hover:bg-gray-50"
                 } ${idx !== filteredUsers.length - 1 ? "border-b border-gray-100" : ""}`}
               >
                 <td className="px-4 py-3">

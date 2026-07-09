@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import {
   X,
@@ -26,10 +26,9 @@ import {
   Check,
   Wrench,
   ArrowLeftRight,
+  Search,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import FormModal from "@/components/shared/FormModal";
-import ListModal from "./ListModal";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -114,8 +113,6 @@ export interface JointHolderDetails {
 type TabKey = "Details" | "Deposit" | "Nominee" | "Joint Holder";
 const TABS: TabKey[] = ["Details", "Deposit", "Nominee", "Joint Holder"];
 
-const EditModeContext = createContext(false);
-
 // Salutation options shown in the Salutation Code dropdown
 const SALUTATION_OPTIONS = ["MR", "MS", "MRS"];
 
@@ -196,7 +193,7 @@ function BilingualLabel({
   return (
     <label
       className={`mb-1.5 block truncate whitespace-nowrap text-[#1F2858] ${
-        variant === "large" ? "text-sm font-medium" : "text-xs font-medium"
+        variant === "large" ? "text-[16px] font-semibold" : "text-xs font-medium"
       }`}
       title={mr ? `${en} / ${mr}` : en}
     >
@@ -228,7 +225,6 @@ interface FieldProps {
   type?: "text" | "date" | "currency";
   menu?: boolean;
   menuActive?: boolean;
-  editable?: boolean;
   onChange?: (value: string) => void;
   onMenuClick?: () => void;
 }
@@ -242,12 +238,9 @@ function Field({
   type = "text",
   menu = false,
   menuActive = false,
-  editable = true,
   onChange,
   onMenuClick,
 }: FieldProps) {
-  const editMode = useContext(EditModeContext);
-  const isEditable = editable && editMode;
   const isCurrency = type === "currency";
   const isDate = type === "date";
   const [isEditing, setIsEditing] = useState(false);
@@ -259,14 +252,13 @@ function Field({
       : value || "\u2014";
 
   const startEditing = () => {
-    if (!isEditable) return;
     setDraft(value !== undefined ? String(value) : "");
     setIsEditing(true);
   };
 
   const commit = () => {
     setIsEditing(false);
-    if (isEditable) onChange?.(draft);
+    onChange?.(draft);
   };
 
   return (
@@ -291,9 +283,9 @@ function Field({
                   if (e.key === "Enter") commit();
                   if (e.key === "Escape") setIsEditing(false);
                 }}
-                className={`w-full min-h-[42px] rounded-lg border border-slate-600 bg-white px-3 py-2.5 ${
-                  Icon ? "pl-10" : "pl-3"
-                } pr-3 text-sm font-normal text-slate-700 outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary`}
+                className={`w-full rounded-lg border bg-white py-2.5 ${
+                  Icon ? "pl-9" : "pl-3"
+                } pr-3 text-sm text-slate-700 outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary border-primary ring-1 ring-primary`}
               />
             ) : (
               <input
@@ -305,39 +297,31 @@ function Field({
                   if (e.key === "Enter") commit();
                   if (e.key === "Escape") setIsEditing(false);
                 }}
-                className={`w-full min-h-[42px] rounded-lg border border-slate-600 bg-white px-3 py-2.5 ${
-                  Icon ? "pl-10" : "pl-3"
-                } pr-3 text-sm font-normal text-slate-700 outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary`}
+                className={`w-full rounded-lg border bg-white py-2.5 ${
+                  Icon ? "pl-9" : "pl-3"
+                } pr-3 text-sm text-slate-700 outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary border-primary ring-1 ring-primary`}
               />
             )
-          ) : isEditable ? (
+          ) : (
             <button
               type="button"
               onClick={startEditing}
-              className={`w-full min-h-[42px] truncate rounded-lg border border-slate-600 bg-white px-3 py-2.5 text-left ${
-                Icon ? "pl-10" : "pl-3"
-              } pr-3 text-sm font-normal transition-colors hover:border-slate-400 ${
+              className={`w-full truncate rounded-lg border border-slate-300 bg-white py-2.5 text-left ${
+                Icon ? "pl-9" : "pl-3"
+              } pr-3 text-sm transition-colors hover:border-slate-400 ${
                 value !== undefined && value !== "" ? "text-slate-700" : "text-slate-400"
               }`}
             >
               {displayValue}
             </button>
-          ) : (
-            <div
-              className={`w-full min-h-[42px] truncate rounded-lg border border-slate-600 bg-slate-50 px-3 py-2.5 text-left ${
-                Icon ? "pl-10" : "pl-3"
-              } pr-3 text-sm font-normal text-slate-600`}
-            >
-              {displayValue}
-            </div>
           )}
         </div>
-        {menu && isEditable && (
+        {menu && (
           <button
             type="button"
             onClick={onMenuClick}
             aria-label={`More options for ${labelEn}`}
-            className={`flex h-[42px] w-[42px] shrink-0 items-center justify-center self-center rounded-lg border transition-colors ${
+            className={`flex h-[38px] w-[38px] shrink-0 items-center justify-center self-center rounded-lg border transition-colors ${
               menuActive
                 ? "border-primary-200 bg-primary-100 text-primary"
                 : "border-slate-200 bg-primary-50 text-primary hover:bg-primary-100"
@@ -366,7 +350,6 @@ function SelectField({
   value,
   required = true,
   options,
-  editable = true,
   onChange,
 }: {
   icon?: LucideIcon;
@@ -374,39 +357,26 @@ function SelectField({
   labelMr?: string;
   value?: string;
   required?: boolean;
-  editable?: boolean;
   options?: string[];
   onChange?: (value: string) => void;
 }) {
-  const editMode = useContext(EditModeContext);
-  const isEditable = editable && editMode;
-
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(value ?? "");
   const [isOpen, setIsOpen] = useState(false);
-
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isOpen) return;
-
     const handleClickOutside = (e: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setIsOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isOpen]);
 
   const startEditing = () => {
-    if (!isEditable) return;
     setDraft(value ?? "");
     setIsEditing(true);
   };
@@ -416,123 +386,80 @@ function SelectField({
     onChange?.(draft);
   };
 
-  // ---------------- Dropdown ----------------
-
+  // Dropdown mode (real select-like behavior with a fixed options list)
   if (options && options.length > 0) {
     return (
-      <div
-        ref={containerRef}
-        className="flex h-full min-w-0 flex-col"
-      >
-        <BilingualLabel
-          en={labelEn}
-          mr={labelMr}
-          required={required}
-        />
-
+      <div className="flex h-full min-w-0 flex-col" ref={containerRef}>
+        <BilingualLabel en={labelEn} mr={labelMr} required={required} />
         <div className="relative flex-1">
           <button
             type="button"
-            disabled={!isEditable}
             onClick={() => setIsOpen((prev) => !prev)}
-            className={`
-              flex
-              h-[42px]
-              w-full
-              items-center
-              rounded-lg
-              border
-              bg-white
-              px-3
-              text-left
-              transition-all
-              ${
-                isOpen
-                  ? "border-primary ring-2 ring-primary/10"
-                  : "border-slate-600 hover:border-primary"
-              }
-              ${
-                !isEditable
-                  ? "cursor-default bg-slate-50"
-                  : ""
-              }
-            `}
+            aria-haspopup="listbox"
+            aria-expanded={isOpen}
+            className={`flex h-10 w-full items-center rounded-md border bg-white px-4 text-left transition-all duration-200 ${
+              isOpen ? "border-primary ring-2 ring-primary/10" : "border-[#B8C2D6] hover:border-primary"
+            }`}
           >
             {Icon && (
-              <Icon
-                className="h-4 w-4 shrink-0 text-slate-400"
-                strokeWidth={1.8}
-              />
+              <span className="shrink-0 text-[#6B7280]">
+                <Icon className="h-4 w-4" strokeWidth={1.75} />
+              </span>
             )}
-
-            <span
-              className={`flex-1 truncate text-sm ${
-                Icon ? "ml-3" : ""
-              } ${
-                value
-                  ? "text-slate-600"
-                  : "text-slate-400"
-              }`}
-            >
-              {value || "Select"}
+            <span className={`flex-1 truncate text-sm ${Icon ? "ml-3" : ""} ${value ? "text-[#4B5563]" : "text-[#7C879B]"}`}>
+              {value || "\u2014"}
             </span>
-
             <ChevronDown
-              className={`h-5 w-5 text-slate-400 transition-transform ${
-                isOpen ? "rotate-180" : ""
-              }`}
+              className={`ml-2 h-5 w-5 shrink-0 text-[#6B7280] transition-transform ${isOpen ? "rotate-180" : ""}`}
+              strokeWidth={1.75}
             />
           </button>
 
-          {isOpen && isEditable && (
-            <div className="absolute left-0 right-0 top-full z-50 mt-1 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg">
-              {options.map((option) => (
-                <button
-                  key={option}
-                  type="button"
-                  onClick={() => {
-                    onChange?.(option);
-                    setIsOpen(false);
-                  }}
-                  className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm transition
-                    ${
-                      option === value
-                        ? "bg-primary-50 text-primary"
-                        : "hover:bg-slate-50"
+          {isOpen && (
+            <ul
+              role="listbox"
+              className="absolute left-0 right-0 top-[calc(100%+4px)] z-20 max-h-52 overflow-auto rounded-lg border border-slate-200 bg-white py-1 shadow-lg"
+            >
+              {options.map((opt) => (
+                <li key={opt}>
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected={opt === value}
+                    onClick={() => {
+                      onChange?.(opt);
+                      setIsOpen(false);
+                    }}
+                    className={`flex w-full items-center justify-between px-3 py-2 text-left text-[14px] transition ${
+                      opt === value ? "bg-primary-50 text-primary" : "text-slate-700 hover:bg-slate-50"
                     }`}
-                >
-                  {option}
-
-                  {option === value && (
-                    <Check className="h-4 w-4" />
-                  )}
-                </button>
+                  >
+                    {opt}
+                    {opt === value && <Check className="h-4 w-4" strokeWidth={1.75} />}
+                  </button>
+                </li>
               ))}
-            </div>
+            </ul>
           )}
         </div>
       </div>
     );
   }
 
-  // ---------------- Editable Text ----------------
-
+  // Fallback: inline-editable text (unchanged legacy behavior)
   return (
     <div className="flex h-full min-w-0 flex-col">
-      <BilingualLabel
-        en={labelEn}
-        mr={labelMr}
-        required={required}
-      />
-
-      <div className="flex h-[42px] items-center rounded-lg border border-slate-600 bg-white px-3">
+      <BilingualLabel en={labelEn} mr={labelMr} required={required} />
+      <div
+        className={`flex h-10 flex-1 min-w-0 items-center rounded-md border bg-white px-4 transition-all duration-200 ${
+          isEditing ? "border-primary ring-2 ring-primary/10" : "border-[#B8C2D6] hover:border-primary"
+        }`}
+      >
         {Icon && (
-          <Icon
-            className="h-4 w-4 shrink-0 text-slate-400"
-            strokeWidth={1.8}
-          />
+          <span className="shrink-0 text-[#6B7280]">
+            <Icon className="h-4 w-4" strokeWidth={1.75} />
+          </span>
         )}
-
         {isEditing ? (
           <input
             autoFocus
@@ -543,7 +470,7 @@ function SelectField({
               if (e.key === "Enter") commit();
               if (e.key === "Escape") setIsEditing(false);
             }}
-            className={`flex-1 bg-transparent text-sm outline-none ${
+            className={`w-full flex-1 bg-transparent text-sm text-[#4B5563] outline-none ${
               Icon ? "ml-3" : ""
             }`}
           />
@@ -551,15 +478,12 @@ function SelectField({
           <button
             type="button"
             onClick={startEditing}
-            className={`flex-1 truncate text-left text-sm text-slate-600 ${
-              Icon ? "ml-3" : ""
-            }`}
+            className={`flex-1 truncate text-left text-sm text-[#4B5563] ${Icon ? "ml-3" : ""}`}
           >
-            {value || "—"}
+            {value || "\u2014"}
           </button>
         )}
-
-        <ChevronDown className="h-5 w-5 text-slate-400" />
+        <ChevronDown className="ml-2 h-5 w-5 shrink-0 text-[#6B7280]" strokeWidth={1.75} />
       </div>
     </div>
   );
@@ -568,8 +492,8 @@ function SelectField({
 function SrNoField({ value }: { value?: string | number }) {
   return (
     <div className="flex h-full min-w-0 flex-col">
-      <span className="mb-1.5 block truncate whitespace-nowrap text-sm font-medium text-[#1F2858]">Sr No</span>
-      <div className="flex h-[42px] flex-1 items-center justify-center rounded-lg border border-slate-600 bg-slate-50 text-sm font-normal text-[#4B5563]">
+      <span className="mb-1.5 block truncate whitespace-nowrap text-[16px] font-semibold text-[#1F2858]">Sr No</span>
+      <div className="flex h-10 flex-1 items-center justify-center rounded-md border border-[#B8C2D6] bg-white text-sm text-[#4B5563]">
         {value ?? "\u2014"}
       </div>
     </div>
@@ -579,7 +503,7 @@ function SrNoField({ value }: { value?: string | number }) {
 function FieldGrid({ children, cols = 4 }: { children: React.ReactNode; cols?: 3 | 4 }) {
   return (
     <div
-      className={`grid grid-cols-1 gap-4 rounded-[20px] border-x border-b-2 border-t-4 border-primary bg-white p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)] sm:grid-cols-2 lg:gap-4 [&>*]:min-w-0 ${
+      className={`grid grid-cols-1 gap-4 rounded-[20px] border-x border-b border-t-4 border-primary shadow-[0_2px_10px_rgba(0,0,0,0.05)] p-5 sm:grid-cols-2 [&>*]:min-w-0 ${
         cols === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4"
       }`}
     >
@@ -588,11 +512,8 @@ function FieldGrid({ children, cols = 4 }: { children: React.ReactNode; cols?: 3
   );
 }
 
-/* Plain inline row — label followed by the Day/Month radios on the SAME
-   line, no border/box. Matches the reference UI where "Unit Of Period",
-   "Interest Paid in Cash", and "Rate Discounted" sit as flat text + radios,
-   not boxed fields. Height/alignment kept in sync with neighboring boxed
-   fields via h-full + items-center. */
+/* Single line, vertically centered in the full cell height so it sits
+   dead-center next to its neighbors instead of clinging to the top. */
 function RadioGroup({
   labelEn,
   labelMr,
@@ -604,19 +525,10 @@ function RadioGroup({
   value?: "Day" | "Month";
   onChange?: (value: "Day" | "Month") => void;
 }) {
-  const editMode = useContext(EditModeContext);
-  const isInteractive = editMode;
-
   return (
-    <div className="flex h-full min-w-0 flex-col">
-      {/* Invisible spacer matching BilingualLabel's height, so the visible
-          row below lands at the same y-offset as every other field's input
-          box — not vertically centered in the whole (taller) grid row. */}
-      <span aria-hidden className="invisible mb-1.5 block text-sm font-medium leading-none">
-        spacer
-      </span>
-      <div className="flex flex-1 flex-wrap items-center gap-x-4 gap-y-2">
-        <span className="whitespace-nowrap text-sm font-medium text-[#1F2858]">
+    <div className="flex h-full min-w-0 flex-col justify-center">
+      <div className="flex items-center justify-between gap-4">
+        <span className="whitespace-nowrap text-[16px] font-semibold text-[#1F2858]">
           {labelEn}
           {labelMr && (
             <>
@@ -625,14 +537,9 @@ function RadioGroup({
             </>
           )}
         </span>
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-6">
           {(["Day", "Month"] as const).map((opt) => (
-            <label
-              key={opt}
-              className={`flex items-center gap-2 whitespace-nowrap text-sm font-normal text-slate-600 ${
-                isInteractive ? "cursor-pointer" : "cursor-not-allowed opacity-70"
-              }`}
-            >
+            <label key={opt} className="flex cursor-pointer items-center gap-2 whitespace-nowrap text-[14px] text-slate-600">
               <span
                 className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 ${
                   value === opt ? "border-primary" : "border-slate-300"
@@ -644,8 +551,7 @@ function RadioGroup({
                 type="radio"
                 className="hidden"
                 checked={value === opt}
-                onChange={() => isInteractive && onChange?.(opt)}
-                disabled={!isInteractive}
+                onChange={() => onChange?.(opt)}
               />
               {opt}
             </label>
@@ -658,7 +564,7 @@ function RadioGroup({
 
 function Tabs({ tabs, active, onChange }: { tabs: TabKey[]; active: TabKey; onChange: (t: TabKey) => void }) {
   return (
-    <div className="flex gap-8 border-b border-slate-200 bg-white">
+    <div className="flex gap-[28.82px] border-b border-slate-200 bg-white px-6">
       {tabs.map((tab) => {
         const isActive = tab === active;
         return (
@@ -666,15 +572,117 @@ function Tabs({ tabs, active, onChange }: { tabs: TabKey[]; active: TabKey; onCh
             key={tab}
             type="button"
             onClick={() => onChange(tab)}
-            className={`relative -mb-px pb-3 pt-2 text-[14px] font-medium transition ${
+            className={`relative -mb-px py-3 text-[14px] font-medium transition ${
               isActive ? "text-primary" : "text-slate-500 hover:text-slate-700"
             }`}
           >
             {tab}
-            {isActive && <span className="absolute inset-x-0 -bottom-px h-[2px] rounded-full bg-primary" />}
+            {isActive && <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-primary" />}
           </button>
         );
       })}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  ListModal — shared popup for "Customer Type List" and "Branch List" */
+/*  Styled per the Figma spec: 36px corner radius, soft blurred corner   */
+/*  ellipses, F9FAFB search field, EEF2FF "Select" pill.                 */
+/* ------------------------------------------------------------------ */
+
+interface ListModalProps<T> {
+  title: string;
+  idLabel: string;
+  nameLabel: string;
+  items: T[];
+  getId: (item: T) => string;
+  getName: (item: T) => string;
+  onSelect: (item: T) => void;
+  onClose: () => void;
+}
+
+function ListModal<T>({ title, idLabel, nameLabel, items, getId, getName, onSelect, onClose }: ListModalProps<T>) {
+  const [search, setSearch] = useState("");
+
+  const filtered = items.filter((item) => {
+    const q = search.trim().toLowerCase();
+    if (!q) return true;
+    return getId(item).toLowerCase().includes(q) || getName(item).toLowerCase().includes(q);
+  });
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4">
+      <div className="relative flex max-h-[85vh] w-full max-w-[841px] flex-col overflow-hidden rounded-[36px] bg-white shadow-2xl">
+        <div className="pointer-events-none absolute -right-16 -top-32 h-64 w-64 rounded-full bg-primary-50 blur-2xl" aria-hidden />
+        <div className="pointer-events-none absolute -left-24 bottom-0 h-64 w-64 rounded-full bg-primary-50 blur-2xl" aria-hidden />
+
+        {/* Header */}
+        <div className="relative z-10 flex items-center justify-between gap-4 px-8 pt-7 pb-5">
+          <h3 className="text-[19px] font-semibold text-slate-800">{title}</h3>
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-[300px] items-center gap-2 rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] px-2.5 py-2 shadow-[0_1px_0.5px_0.05px_rgba(29,41,61,0.02)]">
+              <Search className="h-4 w-4 shrink-0 text-slate-400" strokeWidth={1.75} />
+              <input
+                autoFocus
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search"
+                className="w-full bg-transparent text-[14px] text-slate-700 outline-none placeholder:text-slate-400"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close"
+              className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+            >
+              <X className="h-5 w-5" strokeWidth={1.75} />
+            </button>
+          </div>
+        </div>
+
+        {/* Table */}
+        <div className="scrollbar-hide relative z-10 flex-1 overflow-y-auto overflow-x-hidden px-8 pb-8">
+          <table className="w-full border-separate border-spacing-0">
+            <thead className="sticky top-0">
+              <tr className="bg-primary-50">
+                <th className="rounded-l-lg px-4 py-2.5 text-left text-[13px] font-semibold text-slate-700">{idLabel}</th>
+                <th className="px-4 py-2.5 text-left text-[13px] font-semibold text-slate-700">{nameLabel}</th>
+                <th className="rounded-r-lg px-4 py-2.5 text-left text-[13px] font-semibold text-slate-700">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((item, idx) => (
+                <tr key={`${getId(item)}-${idx}`} className="border-b border-slate-100 last:border-none">
+                  <td className="px-4 py-3">
+                    <span className="inline-block rounded-md bg-primary-50 px-3 py-1 text-[13px] font-medium text-primary">
+                      {getId(item)}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-[15px] font-medium text-slate-800">{getName(item)}</td>
+                  <td className="px-4 py-3">
+                    <button
+                      type="button"
+                      onClick={() => onSelect(item)}
+                      className="flex h-10 w-[120px] items-center justify-center rounded-lg bg-primary-50 px-4 text-[13px] font-semibold text-primary transition hover:bg-primary-100"
+                    >
+                      Select
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {filtered.length === 0 && (
+                <tr>
+                  <td colSpan={3} className="px-4 py-6 text-center text-[14px] text-slate-400">
+                    No results found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }
@@ -729,11 +737,11 @@ function DetailsTab({ data }: { data: AccountDetails }) {
     {isCustomerListOpen && (
       <ListModal
         title="Customer Type List"
-        columns={[
-          { key: "id", label: "Customer ID" },
-          { key: "name", label: "Customer Name" },
-        ]}
-        rows={CUSTOMER_LIST}
+        idLabel="Customer ID"
+        nameLabel="Customer Name"
+        items={CUSTOMER_LIST}
+        getId={(item) => item.id}
+        getName={(item) => item.name}
         onSelect={(item) => {
           update("customerId")(item.id);
           update("customerName")(item.name);
@@ -746,11 +754,11 @@ function DetailsTab({ data }: { data: AccountDetails }) {
     {isBranchListOpen && (
       <ListModal
         title="Branch List"
-        columns={[
-          { key: "code", label: "Branch Code" },
-          { key: "name", label: "Branch Name" },
-        ]}
-        rows={BRANCH_LIST}
+        idLabel="Branch Code"
+        nameLabel="Branch Name"
+        items={BRANCH_LIST}
+        getId={(item) => item.code}
+        getName={(item) => item.name}
         onSelect={(item) => {
           update("branchCode")(item.code);
           setIsBranchListOpen(false);
@@ -785,24 +793,11 @@ function DepositTab({ data }: { data: DepositDetails }) {
 
       <RadioGroup labelEn="Interest Paid in Cash" value={formData.interestPaidInCash} onChange={updateRadio("interestPaidInCash")} />
       <RadioGroup labelEn="Rate Discounted" value={formData.rateDiscounted} onChange={updateRadio("rateDiscounted")} />
-      <SelectField
-  icon={Calendar}
-  labelEn="Interest Payment Frequency"
-  labelMr="व्याज भरण्याची वारंवारिता"
-  value={formData.interestPaymentFrequency}
-  options={[
-    "Monthly",
-    "Quarterly",
-    "Half Yearly",
-    "Yearly",
-  ]}
-  onChange={update("interestPaymentFrequency")}
-/>
+      <SelectField icon={Calendar} labelEn="Interest Payment Frequency" labelMr="व्याज भरण्याची वारंवारिता" value={formData.interestPaymentFrequency} onChange={update("interestPaymentFrequency")} />
 
       <Field icon={Coins} labelEn="Deposit Amount" labelMr="ठेव रक्कम" value={formData.depositAmount} onChange={update("depositAmount")} />
-      <div className="sm:col-span-2 lg:col-span-2">
-        <Field icon={Coins} labelEn="Deposit Amount in words" labelMr="ठेव रक्कम शब्दांमध्ये" value={formData.depositAmountInWords} onChange={update("depositAmountInWords")} />
-      </div>
+      <Field icon={Coins} labelEn="Deposit Amount in words" labelMr="ठेव रक्कम शब्दांमध्ये" value={formData.depositAmountInWords} onChange={update("depositAmountInWords")} />
+      <span className="hidden lg:block" aria-hidden />
 
       <Field icon={IdCard} labelEn="Cash" labelMr="रोख" value={formData.cash} onChange={update("cash")} />
       <Field icon={Wrench} labelEn="Clearing" labelMr="क्लीअरिंग" value={formData.clearing} onChange={update("clearing")} />
@@ -828,7 +823,7 @@ function NomineeTab({ data }: { data: NomineeDetails }) {
 
   return (
     <>
-    <div className="rounded-[20px] border-x border-b-2 border-t-4 border-primary bg-white p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+    <div className="rounded-[20px] border-x border-b border-t-4 border-primary shadow-[0_2px_10px_rgba(0,0,0,0.05)] p-5">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[80px_1.3fr_1fr_1fr_1fr] [&>*]:min-w-0">
         <SrNoField value={formData.srNo} />
         <SelectField
@@ -843,14 +838,14 @@ function NomineeTab({ data }: { data: NomineeDetails }) {
         <SelectField icon={User} labelEn="Relation" value={formData.relation} onChange={update("relation")} />
       </div>
 
-      <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 [&>*]:min-w-0">
+      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 [&>*]:min-w-0">
         <Field icon={Home} labelEn="Address 1" labelMr="पत्ता १" value={formData.address1} onChange={update("address1")} />
         <Field icon={Home} labelEn="Address 2" labelMr="पत्ता २" value={formData.address2} onChange={update("address2")} />
         <Field icon={Home} labelEn="Address 3" labelMr="पत्ता ३" value={formData.address3} required={false} onChange={update("address3")} />
         <Field icon={Home} labelEn="Zip" labelMr="पिन कोड" value={formData.zip} onChange={update("zip")} />
       </div>
 
-      <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 [&>*]:min-w-0">
+      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 [&>*]:min-w-0">
         <SelectField icon={Landmark} labelEn="City" labelMr="शहरे" value={formData.city} onChange={update("city")} />
         <Field icon={Landmark} labelEn="State" labelMr="राज्य" value={formData.state} onChange={update("state")} />
         <Field icon={Flag} labelEn="Country" labelMr="देश" value={formData.country} onChange={update("country")} />
@@ -860,11 +855,11 @@ function NomineeTab({ data }: { data: NomineeDetails }) {
     {isCustomerListOpen && (
       <ListModal
         title="Customer Type List"
-        columns={[
-          { key: "id", label: "Customer ID" },
-          { key: "name", label: "Customer Name" },
-        ]}
-        rows={CUSTOMER_LIST}
+        idLabel="Customer ID"
+        nameLabel="Customer Name"
+        items={CUSTOMER_LIST}
+        getId={(item) => item.id}
+        getName={(item) => item.name}
         onSelect={(item) => {
           update("nomineeCustomerId")(item.id);
           update("nomineeName")(item.name);
@@ -890,7 +885,7 @@ function JointHolderTab({ data }: { data: JointHolderDetails }) {
 
   return (
     <>
-    <div className="rounded-[20px] border-x border-b-2 border-t-4 border-primary bg-white p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+    <div className="rounded-[20px] border-x border-b border-t-4 border-primary shadow-[0_2px_10px_rgba(0,0,0,0.05)] p-5">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[80px_1.3fr_1fr_1fr] [&>*]:min-w-0">
         <SrNoField value={formData.srNo} />
         <SelectField
@@ -904,13 +899,13 @@ function JointHolderTab({ data }: { data: JointHolderDetails }) {
         <Field icon={User} labelEn="J/T Holder Name" labelMr="J/T धारकाचे नाव" value={formData.jtHolderName} onChange={update("jtHolderName")} />
       </div>
 
-      <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 [&>*]:min-w-0">
+      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 [&>*]:min-w-0">
         <Field icon={Home} labelEn="Address 1" labelMr="पत्ता १" value={formData.address1} onChange={update("address1")} />
         <Field icon={Home} labelEn="Address 2" labelMr="पत्ता २" value={formData.address2} onChange={update("address2")} />
         <Field icon={Home} labelEn="Address 3" labelMr="पत्ता ३" value={formData.address3} required={false} onChange={update("address3")} />
       </div>
 
-      <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 [&>*]:min-w-0">
+      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 [&>*]:min-w-0">
         <Field icon={Home} labelEn="Zip" labelMr="पिन कोड" value={formData.zip} onChange={update("zip")} />
         <SelectField icon={Home} labelEn="City" labelMr="शहरे" value={formData.city} onChange={update("city")} />
         <Field icon={Landmark} labelEn="State" labelMr="राज्य" value={formData.state} onChange={update("state")} />
@@ -924,11 +919,11 @@ function JointHolderTab({ data }: { data: JointHolderDetails }) {
     {isCustomerListOpen && (
       <ListModal
         title="Customer Type List"
-        columns={[
-          { key: "id", label: "Customer ID" },
-          { key: "name", label: "Customer Name" },
-        ]}
-        rows={CUSTOMER_LIST}
+        idLabel="Customer ID"
+        nameLabel="Customer Name"
+        items={CUSTOMER_LIST}
+        getId={(item) => item.id}
+        getName={(item) => item.name}
         onSelect={(item) => {
           update("jtHolderCustomerId")(item.id);
           update("jtHolderName")(item.name);
@@ -943,12 +938,12 @@ function JointHolderTab({ data }: { data: JointHolderDetails }) {
 
 function HeaderIcon({ mode }: { mode: "view" | "edit" }) {
   return (
-    <span className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-slate-50 p-2 shadow-sm">
+    <span className="relative flex h-11 w-11 shrink-0 items-center justify-center">
       <Image
         src={mode === "edit" ? "/person%20edit%20icon.png" : "/person%20icon.png"}
         alt=""
         fill
-        sizes="48px"
+        sizes="44px"
         className="object-contain"
       />
     </span>
@@ -1059,22 +1054,21 @@ export default function ViewAccountModal({
   };
 
   return (
-    <EditModeContext.Provider value={isEdit}>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-        <div className="flex max-h-[90vh] w-[95vw] max-w-[1400px] flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
-          {/* Header */}
-<div className="flex items-start justify-between gap-4 border-b border-slate-100 px-6 py-5">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+      <div className="flex max-h-[90vh] w-[95vw] max-w-[1400px] flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+        {/* Header */}
+        <div className="flex items-start justify-between gap-4 px-6 pt-6">
           <div className="flex items-start gap-3">
             <HeaderIcon mode={mode} />
             <div>
-              <h2 className="text-[20px] font-semibold leading-6 tracking-[0.0025em] text-slate-800">
+              <h2 className="text-[32px] font-bold leading-[120%] tracking-[0.0025em] text-[#1E1B4B]">
                 {isEdit ? "Edit Deposit Account Details" : "View Deposit Account Details"}
                 <span className="text-slate-400"> / </span>
                 <span className="text-[#64748B]">
                   {isEdit ? "ठेवी खात्याचे तपशील संपादित करा" : "ठेव खाते तपशील पहा"}
                 </span>
               </h2>
-              <p className="mt-1 text-sm font-normal leading-5 tracking-[0.0025em] text-slate-500">
+              <p className="mt-1 text-[16px] font-normal leading-5 tracking-[0.0025em] text-[#64748B]">
                 {isEdit
                   ? "Edit some basic information related to the Employee / कर्मचाऱ्याशी संबंधित काही मूलभूत माहिती"
                   : "Only can view some basic information related to the Employee / कर्मचाऱ्याशी संबंधित काही मूलभूत माहिती"}
@@ -1085,78 +1079,77 @@ export default function ViewAccountModal({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full border border-slate-300 text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
+            className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-full border border-slate-300 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
           >
-            <X className="h-5 w-5" strokeWidth={1.75} />
+            <X className="h-6 w-6" strokeWidth={1.75} />
           </button>
         </div>
 
         {/* Tabs */}
-        <div className="px-6 pt-2">
-            <Tabs tabs={TABS} active={activeTab} onChange={setActiveTab} />
-          </div>
+        <div className="mt-4">
+          <Tabs tabs={TABS} active={activeTab} onChange={setActiveTab} />
+        </div>
 
-          {/* Body */}
-          <div className="scrollbar-hide flex-1 overflow-y-auto overflow-x-hidden px-6 py-5">
-            {activeTab === "Details" && <DetailsTab data={data} />}
-            {activeTab === "Deposit" && <DepositTab data={depositData} />}
-            {activeTab === "Nominee" && <NomineeTab data={nomineeData} />}
-            {activeTab === "Joint Holder" && <JointHolderTab data={jointHolderData} />}
-          </div>
-          <style jsx global>{`
-            .scrollbar-hide::-webkit-scrollbar {
-              display: none;
-            }
-            .scrollbar-hide {
-              -ms-overflow-style: none;
-              scrollbar-width: none;
-            }
-          `}</style>
+        {/* Body */}
+        <div className="scrollbar-hide flex-1 overflow-y-auto overflow-x-hidden px-6 py-5">
+          {activeTab === "Details" && <DetailsTab data={data} />}
+          {activeTab === "Deposit" && <DepositTab data={depositData} />}
+          {activeTab === "Nominee" && <NomineeTab data={nomineeData} />}
+          {activeTab === "Joint Holder" && <JointHolderTab data={jointHolderData} />}
+        </div>
+        <style jsx global>{`
+          .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+          }
+          .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+        `}</style>
 
-          {/* Footer */}
-          <div className="flex items-center justify-end gap-6 border-t border-slate-100 px-6 py-4">
-            {isEdit && (
-              <button
-                type="button"
-                onClick={onValidate}
-                className="flex items-center gap-1.5 rounded-lg bg-primary px-5 py-2 text-[14px] font-medium text-white transition hover:bg-primary-700"
-              >
-                Validate
-                <Check className="h-4 w-4" />
-              </button>
-            )}
-
+        {/* Footer */}
+        <div className="flex items-center justify-end gap-6 border-t border-slate-100 px-6 py-4">
+          {isEdit && (
             <button
               type="button"
-              onClick={onClose}
-              className="flex items-center gap-1.5 rounded-lg border border-slate-200 px-5 py-2 text-[14px] font-medium text-slate-600 transition hover:bg-slate-50"
+              onClick={onValidate}
+              className="flex items-center gap-1.5 rounded-lg bg-primary px-5 py-2 text-[14px] font-medium text-white transition hover:bg-primary-700"
             >
-              Cancel
-              <X className="h-4 w-4" />
+              Validate
+              <Check className="h-4 w-4" />
             </button>
+          )}
 
-            {isEdit ? (
-              <button
-                type="button"
-                onClick={goNext}
-                className="flex items-center gap-1.5 rounded-lg bg-primary-100 px-5 py-2 text-[14px] font-medium text-primary transition hover:bg-primary-200"
-              >
-                {isLastTab ? "Update" : "Next"}
-                {isLastTab ? <Check className="h-4 w-4" /> : <ChevronDown className="h-4 w-4 -rotate-90" />}
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={goNext}
-                className="flex items-center gap-1.5 rounded-lg bg-primary px-5 py-2 text-[14px] font-medium text-white transition hover:bg-primary-700"
-              >
-                {isLastTab ? "Ok, Got It" : "Next"}
-                {isLastTab ? <Check className="h-4 w-4" /> : <ChevronDown className="h-4 w-4 -rotate-90" />}
-              </button>
-            )}
-          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex items-center gap-1.5 rounded-lg border border-slate-200 px-5 py-2 text-[14px] font-medium text-slate-600 transition hover:bg-slate-50"
+          >
+            Cancel
+            <X className="h-4 w-4" />
+          </button>
+
+          {isEdit ? (
+            <button
+              type="button"
+              onClick={goNext}
+              className="flex items-center gap-1.5 rounded-lg bg-primary-100 px-5 py-2 text-[14px] font-medium text-primary transition hover:bg-primary-200"
+            >
+              {isLastTab ? "Update" : "Next"}
+              {isLastTab ? <Check className="h-4 w-4" /> : <ChevronDown className="h-4 w-4 -rotate-90" />}
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={goNext}
+              className="flex items-center gap-1.5 rounded-lg bg-primary px-5 py-2 text-[14px] font-medium text-white transition hover:bg-primary-700"
+            >
+              {isLastTab ? "Ok, Got It" : "Next"}
+              {isLastTab ? <Check className="h-4 w-4" /> : <ChevronDown className="h-4 w-4 -rotate-90" />}
+            </button>
+          )}
         </div>
       </div>
-    </EditModeContext.Provider>
+    </div>
   );
 }

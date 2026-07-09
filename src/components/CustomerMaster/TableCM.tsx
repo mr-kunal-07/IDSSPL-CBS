@@ -12,8 +12,9 @@ import {
   Mail,
   Copy,
 } from "lucide-react";
+import { type CustomerFilters } from "./FilterModal";
 
-type RowData = {
+export type RowData = {
   srNo: number;
   customerId: string;
   phone: string;
@@ -59,7 +60,23 @@ const menuOptions = [
 
 type SortKey = keyof Omit<RowData, "phone" | "email">;
 
-const TableCM = () => {
+interface TableCMProps {
+  filters?: CustomerFilters;
+  onView?: (row: RowData) => void;
+  onEdit?: (row: RowData) => void;
+  onServices?: (row: RowData) => void;
+  onEditPhone?: (row: RowData) => void;
+  onEditEmail?: (row: RowData) => void;
+}
+
+const TableCM = ({
+  filters,
+  onView,
+  onEdit,
+  onServices,
+  onEditPhone,
+  onEditEmail,
+}: TableCMProps) => {
   const [sortKey, setSortKey] = useState<SortKey | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
   const [openMenuRow, setOpenMenuRow] = useState<number | null>(null);
@@ -184,7 +201,15 @@ const TableCM = () => {
     });
   };
 
-  const sortedRows = [...rows].sort((a, b) => {
+  const filteredRows = rows.filter((r) => {
+    if (!filters) return true;
+    if (filters.customerName && !r.name.toLowerCase().includes(filters.customerName.toLowerCase())) return false;
+    if (filters.customerId && !r.customerId.toLowerCase().includes(filters.customerId.toLowerCase())) return false;
+    if (filters.status && r.status.toLowerCase() !== filters.status.toLowerCase()) return false;
+    return true;
+  });
+
+  const sortedRows = [...filteredRows].sort((a, b) => {
     if (!sortKey) return 0;
     const valA = a[sortKey];
     const valB = b[sortKey];
@@ -195,7 +220,7 @@ const TableCM = () => {
 
   const riskColor = (risk: string) => {
     if (risk === "High") return "text-red-600";
-    if (risk === "Medium") return "text-[#0B63C1]";
+    if (risk === "Medium") return "text-primary";
     return "text-amber-700";
   };
 
@@ -211,7 +236,7 @@ const TableCM = () => {
       >
         <table className="w-full border-collapse min-w-[1200px]">
           <thead>
-            <tr className="bg-[#0B63C1] rounded-t-xl">
+            <tr className="bg-primary rounded-t-xl">
               {columns.map((col) => (
                 <th
                   key={col.key}
@@ -239,7 +264,7 @@ const TableCM = () => {
                 className={`${idx !== sortedRows.length - 1 ? "border-b border-gray-100" : ""} hover:bg-gray-50 relative`}
               >
                 <td className="px-6 py-3">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-blue-50 text-[#0B63C1] text-sm font-semibold">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary-50 text-primary text-sm font-semibold">
                     {row.srNo}
                   </span>
                 </td>
@@ -262,14 +287,20 @@ const TableCM = () => {
                     <span className="inline-flex items-center gap-1.5 text-sm text-gray-600">
                       <Phone size={13} className="text-gray-400" />
                       {row.phone}
-                      <button className="text-blue-600 hover:text-blue-700">
+                      <button
+                        onClick={() => onEditPhone?.(row)}
+                        className="text-primary hover:text-primary-700"
+                      >
                         <Copy size={12} />
                       </button>
                     </span>
                     <span className="inline-flex items-center gap-1.5 text-sm text-gray-600">
                       <Mail size={13} className="text-gray-400" />
                       {row.email}
-                      <button className="text-blue-600 hover:text-blue-700">
+                      <button
+                        onClick={() => onEditEmail?.(row)}
+                        className="text-primary hover:text-primary-700"
+                      >
                         <Copy size={12} />
                       </button>
                     </span>
@@ -292,7 +323,7 @@ const TableCM = () => {
                   <span
                     className={`inline-flex h-7 w-7 items-center justify-center rounded-md text-xs font-semibold ${
                       row.gender === "M"
-                        ? "bg-blue-50 text-[#0B63C1]"
+                        ? "bg-primary-50 text-primary"
                         : "bg-pink-50 text-pink-600"
                     }`}
                   >
@@ -329,7 +360,7 @@ const TableCM = () => {
       {openMenuRow !== null && menuPosition && (
         <div
           ref={menuRef}
-          className="fixed z-50 w-64 rounded-xl border border-blue-200 bg-white py-2 shadow-lg"
+          className="fixed z-50 w-64 rounded-xl border border-primary-200 bg-white py-2 shadow-lg"
           style={{
             top: `${menuPosition.top}px`,
             left: `${menuPosition.left}px`,
@@ -346,12 +377,14 @@ const TableCM = () => {
                 onClick={() => {
                   setOpenMenuRow(null);
                   setMenuPosition(null);
-                  // Handle menu option click here
-                  console.log(`Clicked ${opt.key} for row`, row);
+                  if (!row) return;
+                  if (opt.key === "view") onView?.(row);
+                  if (opt.key === "edit") onEdit?.(row);
+                  if (opt.key === "services") onServices?.(row);
                 }}
                 className="flex w-full items-center gap-3 px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors"
               >
-                <Icon size={16} className="text-blue-600 flex-shrink-0" />
+                <Icon size={16} className="text-primary shrink-0" />
                 <span className="text-gray-700">{opt.label}</span>
               </button>
             );

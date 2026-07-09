@@ -3,8 +3,9 @@ import { useState, useRef, useEffect } from "react";
 import type { MouseEvent as ReactMouseEvent } from "react";
 import { ArrowUpDown, MoreVertical, ExternalLink, Eye, SquarePen, UserRoundCog } from "lucide-react";
 import { useBilingual } from "@/i18n/useBilingual";
+import { type AccountFilters } from "../shared/FilterModal";
 
-type RowData = {
+export type RowData = {
   srNo: number;
   accountId: string;
   status: string;
@@ -43,10 +44,13 @@ const menuOptions = [
 ];
 
 type AccountMasterTableProps = {
+  filters?: AccountFilters;
+  onView?: (row: RowData) => void;
+  onEdit?: (row: RowData) => void;
   onChequeBookIssue?: (row: RowData) => void;
 };
 
-const AccountMasterTable = ({ onChequeBookIssue }: AccountMasterTableProps) => {
+const AccountMasterTable = ({ filters, onView, onEdit, onChequeBookIssue }: AccountMasterTableProps) => {
   const { tRaw } = useBilingual();
   const [sortKey, setSortKey] = useState<keyof RowData | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
@@ -170,7 +174,15 @@ const AccountMasterTable = ({ onChequeBookIssue }: AccountMasterTableProps) => {
     });
   };
 
-  const sortedRows = [...rows].sort((a, b) => {
+  const filteredRows = rows.filter((r) => {
+    if (!filters) return true;
+    if (filters.accountName && !r.accountName.toLowerCase().includes(filters.accountName.toLowerCase())) return false;
+    if (filters.accountNumber && !r.accountId.toLowerCase().includes(filters.accountNumber.toLowerCase())) return false;
+    if (filters.accountType && r.accountType.toLowerCase() !== filters.accountType.toLowerCase()) return false;
+    return true;
+  });
+
+  const sortedRows = [...filteredRows].sort((a, b) => {
     if (!sortKey) return 0;
     const valA = a[sortKey];
     const valB = b[sortKey];
@@ -192,7 +204,7 @@ const AccountMasterTable = ({ onChequeBookIssue }: AccountMasterTableProps) => {
       >
         <table className="w-full border-collapse min-w-[1520px] table-fixed">
           <thead>
-            <tr className="bg-[#0B63C1] rounded-t-xl">
+            <tr className="bg-primary rounded-t-xl">
               {columns.map((col) => (
                 <th
                   key={col.key}
@@ -217,7 +229,7 @@ const AccountMasterTable = ({ onChequeBookIssue }: AccountMasterTableProps) => {
                 className={`${idx !== sortedRows.length - 1 ? "border-b border-gray-100" : ""} hover:bg-gray-50 relative`}
               >
                 <td className="px-6 py-3" style={{ width: "80px" }}>
-                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-blue-50 text-[#0B63C1] text-sm font-semibold">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary-50 text-primary text-sm font-semibold">
                     {row.srNo}
                   </span>
                 </td>
@@ -256,7 +268,7 @@ const AccountMasterTable = ({ onChequeBookIssue }: AccountMasterTableProps) => {
       {openMenuRow !== null && menuPosition && (
         <div
           ref={menuRef}
-          className="fixed z-50 w-64 rounded-xl border border-blue-200 bg-white py-2 shadow-lg"
+          className="fixed z-50 w-64 rounded-xl border border-primary-200 bg-white py-2 shadow-lg"
           style={{
             top: `${menuPosition.top}px`,
             left: `${menuPosition.left}px`,
@@ -273,13 +285,14 @@ const AccountMasterTable = ({ onChequeBookIssue }: AccountMasterTableProps) => {
                 onClick={() => {
                   setOpenMenuRow(null);
                   setMenuPosition(null);
-                  if (opt.key === "cheque") {
-                    onChequeBookIssue?.(row!);
-                  }
+                  if (!row) return;
+                  if (opt.key === "view") onView?.(row);
+                  if (opt.key === "edit") onEdit?.(row);
+                  if (opt.key === "cheque") onChequeBookIssue?.(row);
                 }}
                 className="flex w-full items-center gap-3 px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors"
               >
-                <Icon size={16} className="text-blue-600 flex-shrink-0" />
+                <Icon size={16} className="text-primary shrink-0" />
                 <span className="text-gray-700">{tRaw(opt.labelKey)}</span>
               </button>
             );

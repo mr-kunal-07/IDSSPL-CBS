@@ -3,7 +3,8 @@
 import { useState } from "react";
 import NavbarAM from "./NavbarAM";
 import FilterModal, { type AccountFilters } from "../shared/FilterModal";
-import AccountMasterTable from "./AccountMasterTable";
+import AccountMasterTable, { type RowData } from "./AccountMasterTable";
+import ViewAccountModal, { type AccountDetails } from "./ViewAccount";
 
 export default function AccountMasterPage() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -11,6 +12,30 @@ export default function AccountMasterPage() {
     accountName: "",
     accountNumber: "",
     accountType: "",
+  });
+  const [viewMode, setViewMode] = useState<"view" | "edit" | null>(null);
+  const [selectedAccountRow, setSelectedAccountRow] = useState<RowData | null>(null);
+
+  const handleView = (row: RowData) => {
+    setSelectedAccountRow(row);
+    setViewMode("view");
+  };
+
+  const handleEdit = (row: RowData) => {
+    setSelectedAccountRow(row);
+    setViewMode("edit");
+  };
+
+  const toAccountDetails = (row: RowData): AccountDetails => ({
+    accountCode: row.accountId,
+    accountName: row.accountName,
+    accountOpenDate: row.openingDate,
+    customerId: row.customerId,
+    customerName: row.accountName,
+    createdBy: row.createdBy,
+    applicationNumber: row.applicationNo,
+    categoryCode: row.accountType,
+    accountStatus: row.status,
   });
 
   return (
@@ -44,8 +69,16 @@ export default function AccountMasterPage() {
       )}
 
       <div className="mt-6">
-        <AccountMasterTable filters={filters} />
+        <AccountMasterTable filters={filters} onView={handleView} onEdit={handleEdit} />
       </div>
+
+      {viewMode && selectedAccountRow && (
+        <ViewAccountModal
+          mode={viewMode}
+          data={toAccountDetails(selectedAccountRow)}
+          onClose={() => setViewMode(null)}
+        />
+      )}
     </div>
   );
 }
