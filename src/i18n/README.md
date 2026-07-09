@@ -29,13 +29,16 @@ export default function MyComponent() {
 }
 ```
 
-- **`en(key)`** → the English text (the fixed, left-hand side).
-- **`t(key)`** → the text in the selected language (the right-hand side).
-  **When English is the selected language, `t()` returns `""`** so the
-  duplicate collapses and you see only the English label.
+- **`en(key)`** → the English text (the fixed, left-hand side; also buttons/breadcrumbs).
+- **`t(key)`** → the **right-hand half of a bilingual pair only**. Returns `""`
+  when English is selected, so the duplicate collapses and you see just English.
+- **`tRaw(key)`** → the selected language for **any standalone translated text**
+  (placeholders, table headers, tooltips). Never blank in English — this is your
+  default for text that isn't part of a left/right pair.
 
-Both take the same key. That's the whole idea: one key, two renderings — and
-the right side automatically disappears when it would just repeat the English.
+`en` and `t` take the same key: one key, two renderings, and the right side
+disappears in English. Use `t()` *only* for that right side — everywhere else
+use `tRaw()` (translated) or `en()` (always English).
 
 > **Always guard the secondary side** with `{t("key") ? <span> / {t("key")}</span> : null}`
 > (or `{t("key") && ...}`). If you render `{t("key")}` bare next to a literal
@@ -78,11 +81,38 @@ app. See `DEFAULT_SECONDARY_LANGUAGE` in `config.ts`.
 
 | Field            | Use it for                                                        |
 | ---------------- | ----------------------------------------------------------------- |
-| `en(key)`        | Left / English text. Always English.                              |
-| `t(key)`         | Right / secondary text. **`""` when English is selected.**        |
-| `tRaw(key)`      | Selected language **including English** — for standalone text (e.g. an `<input placeholder>`), where an empty string would be wrong. |
+| `en(key)`        | Left / English text. Always English (buttons, breadcrumbs, the English half of a pair). |
+| `t(key)`         | **ONLY the right-hand half of a bilingual pair.** Returns `""` when English is selected so the duplicate collapses. Never use it on its own. |
+| `tRaw(key)`      | **The default for any standalone translated text** — placeholders, tooltips, table headers, toasts, single labels. Returns the selected language including English, so it never goes blank. |
 | `isEnglish`      | `true` when English is selected. Handy for hiding data-driven secondary text that doesn't come from a key. |
 | `i18n`           | The i18next instance (rarely needed).                             |
+
+> ### ⭐ The one rule to remember
+>
+> **Use `t()` only inside a guarded bilingual pair (English on the left, secondary
+> on the right). For every other translated string, use `tRaw()`.**
+>
+> Why: `t()` deliberately returns `""` in English so paired labels don't show
+> `User Master | User Master`. But that means a **lonely** `t()` (a placeholder,
+> a button, a table header) will render **blank** when English is selected.
+> `tRaw()` always returns real text, so it's the safe default everywhere except
+> the right side of a pair.
+>
+> ```tsx
+> // ✅ pair — right side only, guarded
+> {en("fields.remark")}
+> {t("fields.remark") ? <span> / {t("fields.remark")}</span> : null}
+>
+> // ✅ standalone translated text → tRaw()
+> <input placeholder={tRaw("memo.detailsPlaceholder")} />
+> <th>{tRaw("branchMaster.filters.branchCode")}</th>
+>
+> // ✅ always-English UI (buttons, breadcrumbs) → en()
+> <button>{en("common.save")}</button>
+>
+> // ❌ never do this — blank in English
+> <input placeholder={t("memo.detailsPlaceholder")} />
+> ```
 
 ---
 
@@ -297,12 +327,14 @@ The switcher and everything else pick it up automatically.
 
 ## Rules of thumb
 
+- ✅ **`t()` is only for the right-hand side of a bilingual pair. For all other
+  translated text use `tRaw()`** (or `en()` for always-English UI).
 - ✅ Every new key goes into **all three** locale files.
-- ✅ Component using `en()`/`t()` must be `"use client"`.
+- ✅ Component using `en()`/`t()`/`tRaw()` must be `"use client"`.
 - ✅ Left side = `en()`, right side = `t()`, same key.
 - ✅ **Always guard the secondary side**: `{t("key") ? <span> / {t("key")}</span> : null}`.
-- ✅ Use `tRaw()` for standalone text (placeholders, `title` attrs) that must never be empty.
 - ✅ Reuse `common.*` / `fields.*` before inventing a new namespace.
+- ❌ Don't use a lonely `t()` (placeholder, button, table header) — it renders **blank** in English. Use `tRaw()`.
 - ❌ Don't render `{t("key")}` bare next to a literal `/` or `|` — English leaves a dangling separator.
 - ❌ Don't hardcode display strings in JSX — route them through a key.
 - ❌ Don't hand-edit the JSON for keys that live in the script's `CATALOG`.
