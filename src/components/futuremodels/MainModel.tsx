@@ -18,6 +18,7 @@ const modules: ModuleItem[] = [
   { name: 'Un-Lean', route: '/futuremodels/un-lean', icon: FileText },
   { name: 'Standing Instructions', route: '/futuremodels/standing-instructions', icon: FileText },
   { name: 'Memo', route: '/futuremodels/memo', icon: FileText },
+  { name: 'Term Loan Open', route: '/futuremodels/tl-open', icon: FileText },
 ]
 
 const MainModel = () => {
