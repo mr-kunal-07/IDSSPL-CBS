@@ -72,9 +72,9 @@ export const TextInput = ({
   trailing,
   type = "text",
 }: TextInputProps) => (
-  <div className="flex items-center gap-2">
+  <div className="relative flex items-center gap-2">
     {icon && (
-      <span className="pointer-events-none absolute left-3 text-slate-400">{icon}</span>
+      <span className="pointer-events-none forced-colors: #4F46E5 absolute left-3 top-1/2 z-10 -translate-y-1/2 text-slate-500 ">{icon}</span>
     )}
     <input
       type={type}

@@ -28,7 +28,7 @@ export interface StopSIProps {
 const StopSI = ({ onClose, onSave, data }: StopSIProps) => {
   const [stopReason, setStopReason] = useState("");
 
-  const grid4 = "grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4";
+  const grid4 = "grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
 
   const handleSave = () => {
     onSave?.(stopReason);
@@ -40,6 +40,7 @@ const StopSI = ({ onClose, onSave, data }: StopSIProps) => {
       onClose={onClose}
       titleEn="Stop Standing Instruction"
       titleHi="नियतकालिक सूचना थांबवणे"
+      headerIcon={<ListChecks size={24} className="text-primary" />}
       tabs={[]}
       activeTab=""
       onTabChange={() => {}}
@@ -53,7 +54,7 @@ const StopSI = ({ onClose, onSave, data }: StopSIProps) => {
           <FieldShell label="Name" labelHi="नाव" required>
             <TextInput icon={<User size={16} />} value={data.debitName} onChange={() => {}} readOnly />
           </FieldShell>
-          <FieldShell label="Credit Account Code" labelHi="जमा खात्याचा कोड" required noWrap>
+          <FieldShell label="Credit Account Code" labelHi="जमा खात्याचा कोड" required>
             <TextInput icon={<CreditCard size={16} />} value={data.creditAccountCode} onChange={() => {}} readOnly />
           </FieldShell>
           <FieldShell label="Name" labelHi="नाव" required>

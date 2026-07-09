@@ -71,7 +71,7 @@ const AddSI = ({ onClose, onSave, debitAccountCode = "022010014255", debitName =
   const [showSuccess, setShowSuccess] = useState(false);
 
 const grid4 =
-  "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-x-4 gap-y-5";
+  "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-5";
 
   const markDirty = (field: string) => {
     setIsValidated(false);
@@ -128,6 +128,7 @@ const grid4 =
       onClose={onClose}
       titleEn="New Standing Instruction"
       titleHi="नवीन स्थायी सूचना"
+      headerIcon={<Repeat size={24} className="text-primary" />}
       tabs={[]}
       activeTab=""
       onTabChange={() => {}}
@@ -141,7 +142,7 @@ const grid4 =
           <FieldShell label="Name" labelHi="नाव" required>
             <TextInput icon={<User size={16} />} value={account.debitName} onChange={() => {}} readOnly />
           </FieldShell>
-          <FieldShell label="Credit Account Code" labelHi="जमा खात्याचा कोड" required noWrap error={errors.creditAccountCode}>
+          <FieldShell label="Credit Account Code" labelHi="जमा खात्याचा कोड" required error={errors.creditAccountCode}>
             <div className="flex items-center gap-2 w-full">
               <div className="flex-1">
                 <TextInput
@@ -197,7 +198,7 @@ const grid4 =
           <FieldShell label="Maturity Date" labelHi="परिपक्वता तारीख" required error={errors.maturityDate}>
             <DateInput value={si.maturityDate} onChange={(v) => { markDirty("maturityDate"); setSi((s) => ({ ...s, maturityDate: v })); }} error={errors.maturityDate} />
           </FieldShell>
-          <FieldShell label="Debit Acc. Particular" labelHi="नावे खात्याचा तपशील" required noWrap error={errors.debitParticular}>
+          <FieldShell label="Debit Acc. Particular" labelHi="नावे खात्याचा तपशील" required error={errors.debitParticular}>
             <TextInput
               icon={<FileText size={16} />}
               value={si.debitParticular}
@@ -206,7 +207,7 @@ const grid4 =
               error={errors.debitParticular}
             />
           </FieldShell>
-          <FieldShell label="Credit Acc. Particular" labelHi="जमा खात्याचा तपशील" required noWrap error={errors.creditParticular}>
+          <FieldShell label="Credit Acc. Particular" labelHi="जमा खात्याचा तपशील" required error={errors.creditParticular}>
             <TextInput
               icon={<FileText size={16} />}
               value={si.creditParticular}

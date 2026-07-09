@@ -285,7 +285,7 @@ export default function DepositCloseModal({ open, initialData, onClose, onSubmit
   const [isValidated, setIsValidated] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
  
-  if (open) return null;
+  if (!open) return null;
  
   if (showSuccess) {
     return (
