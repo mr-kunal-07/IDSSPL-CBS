@@ -2,10 +2,12 @@
 
 import type { ComponentType } from "react";
 import { useRouter } from "next/navigation";
+import { useBilingual } from "@/i18n/useBilingual";
 
 type NavItemData = {
   id: string;
   title: string;
+  titleKey?: string;
   href?: string;
   icon?: ComponentType<{ size?: number; className?: string }>;
 };
@@ -24,7 +26,12 @@ export default function NavItem({
   isLast = false,
 }: NavItemProps) {
   const router = useRouter();
+  const { tRaw } = useBilingual();
   const Icon = item.icon;
+
+  // Sidebar items are single labels (not bilingual pairs), so use tRaw so the
+  // label always shows the selected language and never goes blank in English.
+  const label = item.titleKey ? tRaw(item.titleKey) : item.title;
 
   const handleClick = () => {
     if (item.href) {
@@ -49,7 +56,7 @@ export default function NavItem({
           />
         )}
 
-        <span>{item.title}</span>
+        <span>{label}</span>
       </button>
     );
   }
@@ -74,7 +81,7 @@ export default function NavItem({
             : "text-[#ECECF4] hover:bg-[#242846]"
         }`}
       >
-        {item.title}
+        {label}
       </button>
     </div>
   );

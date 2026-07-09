@@ -4,16 +4,19 @@ import { useEffect, useState } from "react";
 import type { ComponentType } from "react";
 import { ChevronDown } from "lucide-react";
 import NavItem from "./NavItem";
+import { useBilingual } from "@/i18n/useBilingual";
 
 type NavChild = {
   id: string;
   title: string;
+  titleKey?: string;
   href: string;
 };
 
 type NavItemData = {
   id: string;
   title: string;
+  titleKey?: string;
   icon: ComponentType<{ size?: number; className?: string }>;
   href?: string;
   children?: NavChild[];
@@ -30,7 +33,9 @@ export default function NavGroup({
   pathname,
   defaultOpen = false,
 }: NavGroupProps) {
+  const { tRaw } = useBilingual();
   const children = item.children ?? [];
+  const label = item.titleKey ? tRaw(item.titleKey) : item.title;
 
   const hasActiveChild = children.some(
     (child) => child.href === pathname
@@ -63,7 +68,7 @@ export default function NavGroup({
         />
 
         <span className="flex-1 text-left">
-          {item.title}
+          {label}
         </span>
 
         <ChevronDown
