@@ -17,6 +17,8 @@ type NavbarCMProps = {
   onToggleSearch?: () => void;
   onOpenFilter?: () => void;
   onResetFilters?: () => void;
+  /** Hide the Filter/Add action buttons for routes that only need the breadcrumb header. */
+  hideActions?: boolean;
 };
 
 type BreadcrumbProps = {
@@ -37,6 +39,7 @@ const NavbarCM = ({
   onToggleSearch,
   onOpenFilter,
   onResetFilters,
+  hideActions = false,
 }: NavbarCMProps) => {
   const Breadcrumb = ({ label, isLast, isFirst, href }: BreadcrumbProps) => (
     <div className="flex items-center gap-1">
@@ -120,6 +123,7 @@ const NavbarCM = ({
             </div>
           </div>
 
+          {!hideActions && (
           <div className="flex items-center gap-3">
             {isSearchVisible && (
               <div className="flex items-center gap-2">
@@ -184,6 +188,7 @@ const NavbarCM = ({
               </div>
             </button>
           </div>
+          )}
         </div>
       </div>
     </div>

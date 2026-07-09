@@ -62,6 +62,11 @@ export const menuItems = [
         href: "/customermaster",
       },
       {
+        id: "transaction",
+        title: "Transaction Master",
+        href: "/transactionmaster",
+      },
+      {
         id: "user",
         title: "User Master",
         titleKey: "sidebar.userMaster",

@@ -23,6 +23,9 @@ export interface FormModalProps {
   tabActions?: ReactNode;
   maxWidth?: string;
   hideFooter?: boolean;
+  /** "modal" (default) renders as a centered overlay dialog. "page" renders as a
+   * plain inline card with no backdrop, for routes that host the form directly. */
+  variant?: "modal" | "page";
 }
 
 const FormModal = ({
@@ -43,14 +46,19 @@ const FormModal = ({
   tabActions,
   maxWidth = "max-w-6xl",
   hideFooter = false,
+  variant = "modal",
 }: FormModalProps) => {
   const [saveMenuOpen, setSaveMenuOpen] = useState(false);
+  const isPage = variant === "page";
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 ">
-      <div
-        className={`max-h-[92vh] w-full ${maxWidth} overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl`}
-      >
+  const card = (
+    <div
+      className={
+        isPage
+          ? "w-full rounded-2xl bg-white p-6 shadow-2xl"
+          : `max-h-[92vh] w-full ${maxWidth} overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl`
+      }
+    >
         {/* Header */}
         <div className="flex items-start justify-between border-b border-slate-100 pb-4">
           <div className="flex items-center gap-3">
@@ -70,13 +78,15 @@ const FormModal = ({
               )}
             </div>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-gray-300 text-gray-500 transition hover:bg-gray-100"
-          >
-            <X size={18} strokeWidth={2.5} />
-          </button>
+          {!isPage && (
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-gray-300 text-gray-500 transition hover:bg-gray-100"
+            >
+              <X size={18} strokeWidth={2.5} />
+            </button>
+          )}
         </div>
 
         {/* Tabs */}
@@ -103,7 +113,13 @@ const FormModal = ({
         </div>
 
         {/* Content */}
-        <div className="mt-3 max-h-[58vh] space-y-4 overflow-y-auto pr-1">
+        <div
+          className={
+            isPage
+              ? "mt-3 space-y-4"
+              : "mt-3 max-h-[58vh] space-y-4 overflow-y-auto pr-1"
+          }
+        >
           {children}
         </div>
 
@@ -170,7 +186,14 @@ const FormModal = ({
             )}
           </div>
         )}
-      </div>
+    </div>
+  );
+
+  if (isPage) return card;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 ">
+      {card}
     </div>
   );
 };

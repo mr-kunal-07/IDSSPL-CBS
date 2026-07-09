@@ -1,33 +1,24 @@
+
 "use client";
 import { useState } from "react";
 import { useBilingual } from "@/i18n/useBilingual";
-import AccountMasterTable from "@/components/AccountMaster/AccountMasterTable";
-import NavbarAM from "@/components/AccountMaster/NavbarAM";
+import AccountMasterTable from '@/components/AccountMaster/AccountMasterTable'
+import NavbarAM from '@/components/AccountMaster/NavbarAM'
 import AddAccountMaster from "@/components/AccountMaster/AddAccountMaster";
-import FilterModal, { type AccountFilters } from "@/components/shared/FilterModal";
+import ChequeBookIssue from '@/components/AccountMaster/Cheque/cheque-issue';
+import DisplayVouchers from '@/components/AccountMaster/Cheque/voucher';
 
-const AccountMasterPage = () => {
-  const { t, en } = useBilingual();
+
+ 
+
+const page = () => {
   const [openAddModal, setOpenAddModal] = useState(false);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [filters, setFilters] = useState<AccountFilters>({
-    accountName: "",
-    accountNumber: "",
-    accountType: "",
-  });
-
-  const handleResetFilters = () => {
-    setFilters({
-      accountName: "",
-      accountNumber: "",
-      accountType: "",
-    });
-    setIsSearchVisible(false);
-  };
+  const [openChequeModal, setOpenChequeModal] = useState(false);
+  const [openVoucherModal, setOpenVoucherModal] = useState(false);
+   const { t, en } = useBilingual();
 
   return (
-    <div className="min-h-screen bg-[#F4F6FC] relative">
+    <div className="min-h-screen bg-[#F4F6FC] relative" >
       <NavbarAM
         titleEn={en("accountMaster.title")}
         titleHi={t("accountMaster.title")}
@@ -38,39 +29,34 @@ const AccountMasterPage = () => {
         ]}
         onBack={() => window.history.back()}
         onAdd={() => setOpenAddModal(true)}
-        isSearchVisible={isSearchVisible}
-        filters={filters}
-        onToggleSearch={() => setIsSearchVisible((prev) => !prev)}
-        onOpenFilter={() => setIsFilterOpen(true)}
-        onResetFilters={handleResetFilters}
       />
 
       <div className="px-3 py-2">
-        <AccountMasterTable filters={filters} />
+        <AccountMasterTable
+          onChequeBookIssue={() => setOpenChequeModal(true)}
+        />
       </div>
 
-      {/* Filter Modal */}
-      {isFilterOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
-          onClick={() => setIsFilterOpen(false)}
-        >
-          <div onClick={(e) => e.stopPropagation()}>
-            <FilterModal
-              onClose={() => setIsFilterOpen(false)}
-              onApply={(newFilters) => setFilters(newFilters)}
-              initialValues={filters}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Add Modal */}
+      {/* Modal */}
       {openAddModal && (
-        <AddAccountMaster onClose={() => setOpenAddModal(false)} />
+        <AddAccountMaster
+          onClose={() => setOpenAddModal(false)}
+        />
+      )}
+      {openChequeModal && (
+        <ChequeBookIssue
+          onClose={() => setOpenChequeModal(false)}
+          onDisplayVouchers={() => {
+            setOpenChequeModal(false);
+            setOpenVoucherModal(true);
+          }}
+        />
+      )}
+      {openVoucherModal && (
+        <DisplayVouchers onClose={() => setOpenVoucherModal(false)} />
       )}
     </div>
-  );
-};
+  )
+ }
 
-export default AccountMasterPage;
+export default page;
