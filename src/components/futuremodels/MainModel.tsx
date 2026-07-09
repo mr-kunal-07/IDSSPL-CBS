@@ -19,6 +19,7 @@ const modules: ModuleItem[] = [
   { name: 'Standing Instructions', route: '/futuremodels/standing-instructions', icon: FileText },
   { name: 'Memo', route: '/futuremodels/memo', icon: FileText },
   { name: 'Term Loan Open', route: '/futuremodels/tl-open', icon: FileText },
+  { name: 'Term Loan Close', route: '/futuremodels/tl-close', icon: FileText },
   { name: 'Calculator', route: '/Calculator', icon: FileText },
 ]
 
@@ -41,7 +42,7 @@ const MainModel = () => {
               </span>
 
             </div>
-          </Link>
+          </Linkte>
         )
       })}
     </div>
