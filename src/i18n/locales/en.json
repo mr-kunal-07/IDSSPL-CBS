@@ -10,11 +10,23 @@
     "revoke": "Revoke",
     "details": "Details",
     "accountDetails": "Account Details",
-    "lienDetails": "Lien Details"
+    "lienDetails": "Lien Details",
+    "add": "Add",
+    "search": "Search",
+    "searchOrFilter": "Search/ Filter",
+    "actions": "Actions",
+    "select": "Select",
+    "noResultsFound": "No results found",
+    "view": "View",
+    "edit": "Edit"
   },
   "fields": {
     "accountCode": "Account Code",
     "accountName": "Account Name",
+    "accountType": "Account Type",
+    "productType": "Product Type",
+    "productCode": "Product Code",
+    "description": "Description",
     "name": "Name",
     "ledgerBalance": "Ledger Balance",
     "availableBalance": "Available Balance",
@@ -26,7 +38,33 @@
   },
   "accountMaster": {
     "title": "Account Master",
-    "breadcrumb": "Account Master"
+    "breadcrumb": "Account Master",
+    "filters": {
+      "id": "ID",
+      "name": "Name",
+      "type": "Type"
+    },
+    "table": {
+      "srNo": "Sr No.",
+      "action": "Action",
+      "applicationNo": "Application No.",
+      "accountId": "Account ID",
+      "status": "Status",
+      "statusLive": "Live",
+      "customerId": "Customer ID",
+      "createdBy": "Created By",
+      "openingDate": "Opening Date",
+      "menuFreeze": "Account Freeze / Unfreeze",
+      "menuCheque": "Cheque Book Issue"
+    },
+    "addForm": {
+      "title": "Add Account",
+      "subtitle": "Add some basic information related to the Employee",
+      "accountTypePlaceholder": "Select Account Type",
+      "productTypePlaceholder": "Select Product Type",
+      "accountTypeListTitle": "Account Type List",
+      "subProductListTitle": "Sub Product List"
+    }
   },
   "userMaster": {
     "title": "User Master",

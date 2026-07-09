@@ -10,11 +10,23 @@
     "revoke": "रद्द करा",
     "details": "तपशील",
     "accountDetails": "खात्याचा तपशील",
-    "lienDetails": "बोजा तपशील"
+    "lienDetails": "बोजा तपशील",
+    "add": "जोडा",
+    "search": "शोधा",
+    "searchOrFilter": "शोधा/ फिल्टर करा",
+    "actions": "क्रिया",
+    "select": "निवडा",
+    "noResultsFound": "कोणतेही निकाल आढळले नाहीत",
+    "view": "पहा",
+    "edit": "संपादित करा"
   },
   "fields": {
     "accountCode": "खाते कोड",
     "accountName": "खाते नाव",
+    "accountType": "खात्याचा प्रकार",
+    "productType": "उत्पादनाचा प्रकार",
+    "productCode": "उत्पादन कोड",
+    "description": "वर्णन",
     "name": "नाव",
     "ledgerBalance": "लेजर शिल्लक",
     "availableBalance": "उपलब्ध शिल्लक",
@@ -26,7 +38,33 @@
   },
   "accountMaster": {
     "title": "खाते मास्टर",
-    "breadcrumb": "खाते मास्टर"
+    "breadcrumb": "खाते मास्टर",
+    "filters": {
+      "id": "आयडी",
+      "name": "नाव",
+      "type": "प्रकार"
+    },
+    "table": {
+      "srNo": "अ.क्र.",
+      "action": "कृती",
+      "applicationNo": "अर्ज क्रमांक",
+      "accountId": "खाते आयडी",
+      "status": "स्थिती",
+      "statusLive": "लाइव्ह",
+      "customerId": "ग्राहक आयडी",
+      "createdBy": "तयार केले",
+      "openingDate": "खाते उघडण्याची तारीख",
+      "menuFreeze": "खाते फ्रीज / अनफ्रीज",
+      "menuCheque": "चेक बुक इश्यू"
+    },
+    "addForm": {
+      "title": "खाते जोडा",
+      "subtitle": "कर्मचाऱ्याशी संबंधित काही मूलभूत माहिती",
+      "accountTypePlaceholder": "खात्याचा प्रकार निवडा",
+      "productTypePlaceholder": "उत्पादनाचा प्रकार निवडा",
+      "accountTypeListTitle": "खात्याच्या प्रकाराची यादी",
+      "subProductListTitle": "उप उत्पादन यादी"
+    }
   },
   "userMaster": {
     "title": "युझर मास्टर",

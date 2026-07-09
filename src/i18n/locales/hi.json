@@ -10,11 +10,23 @@
     "revoke": "निरस्त करें",
     "details": "विवरण",
     "accountDetails": "खाता विवरण",
-    "lienDetails": "ग्रहणाधिकार विवरण"
+    "lienDetails": "ग्रहणाधिकार विवरण",
+    "add": "जोड़ें",
+    "search": "खोजें",
+    "searchOrFilter": "खोजें/ फ़िल्टर करें",
+    "actions": "कार्रवाइयां",
+    "select": "चुनें",
+    "noResultsFound": "कोई परिणाम नहीं मिला",
+    "view": "देखें",
+    "edit": "संपादित करें"
   },
   "fields": {
     "accountCode": "खाता कोड",
     "accountName": "खाता नाम",
+    "accountType": "खाता प्रकार",
+    "productType": "उत्पाद प्रकार",
+    "productCode": "उत्पाद कोड",
+    "description": "विवरण",
     "name": "नाम",
     "ledgerBalance": "लेजर बैलेंस",
     "availableBalance": "उपलब्ध बैलेंस",
@@ -26,7 +38,33 @@
   },
   "accountMaster": {
     "title": "खाता मास्टर",
-    "breadcrumb": "खाता मास्टर"
+    "breadcrumb": "खाता मास्टर",
+    "filters": {
+      "id": "आईडी",
+      "name": "नाम",
+      "type": "प्रकार"
+    },
+    "table": {
+      "srNo": "क्र.सं.",
+      "action": "कार्रवाई",
+      "applicationNo": "आवेदन क्रमांक",
+      "accountId": "खाता आईडी",
+      "status": "स्थिति",
+      "statusLive": "लाइव",
+      "customerId": "ग्राहक आईडी",
+      "createdBy": "द्वारा बनाया गया",
+      "openingDate": "खाता खोलने की तारीख",
+      "menuFreeze": "खाता फ्रीज / अनफ्रीज",
+      "menuCheque": "चेक बुक जारी करना"
+    },
+    "addForm": {
+      "title": "खाता जोड़ें",
+      "subtitle": "कर्मचारी से संबंधित कुछ बुनियादी जानकारी जोड़ें",
+      "accountTypePlaceholder": "खाता प्रकार चुनें",
+      "productTypePlaceholder": "उत्पाद प्रकार चुनें",
+      "accountTypeListTitle": "खाता प्रकार सूची",
+      "subProductListTitle": "उप उत्पाद सूची"
+    }
   },
   "userMaster": {
     "title": "यूज़र मास्टर",

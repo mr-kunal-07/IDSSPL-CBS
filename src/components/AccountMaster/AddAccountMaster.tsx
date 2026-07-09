@@ -16,6 +16,7 @@ import SuccessModal from "../shared/SuccessModal";
 import Image from "next/image";
 import ListModal from "./ListModal";
 import AddSavingAccountModal from "./AddSavingAccountModal";
+import { useBilingual } from "@/i18n/useBilingual";
 
 /* ------------------------------------------------------------------ */
 /* Static data                                                         */
@@ -111,10 +112,12 @@ function FormField({
       {/* Label */}
       <label className="block text-[16px] font-semibold text-black">
         {field.label}
-        <span className="text-gray-500 font-semibold">
-          {" "}
-          <span className="text-black">/</span> {field.labelHi}
-        </span>
+        {field.labelHi ? (
+          <span className="text-gray-500 font-semibold">
+            {" "}
+            <span className="text-black">/</span> {field.labelHi}
+          </span>
+        ) : null}
         <span className="text-red-500">*</span>
       </label>
 
@@ -220,6 +223,7 @@ type Step =
   | "success";
 
 export default function AddAccountFlow({ onClose = () => { } }: AddAccountFlowProps) {
+  const { en, t, tRaw } = useBilingual();
   const [step, setStep] = useState<Step>("form");
   const [formData, setFormData] = useState<FormData>({
     accountType: "",
@@ -256,34 +260,34 @@ export default function AddAccountFlow({ onClose = () => { } }: AddAccountFlowPr
   const fields: FieldConfig[] = [
     {
       key: "accountType",
-      label: "Account Type",
-      labelHi: "खाते प्रकार",
-      placeholder: "Select Account Type",
+      label: en("fields.accountType"),
+      labelHi: t("fields.accountType"),
+      placeholder: tRaw("accountMaster.addForm.accountTypePlaceholder"),
       icon: MapPin,
       readOnly: true,
       onMenuClick: () => setStep("accountTypeList"),
     },
     {
       key: "accountDescription",
-      label: "Description",
-      labelHi: "वर्णन",
-      placeholder: "Description",
+      label: en("fields.description"),
+      labelHi: t("fields.description"),
+      placeholder: tRaw("fields.description"),
       icon: AlignLeft,
     },
     {
       key: "productType",
-      label: "Product Type",
-      labelHi: "उत्पादनाचा प्रकार",
-      placeholder: "Select Product Type",
+      label: en("fields.productType"),
+      labelHi: t("fields.productType"),
+      placeholder: tRaw("accountMaster.addForm.productTypePlaceholder"),
       icon: MapPin,
       readOnly: true,
       onMenuClick: () => setStep("subProductList"),
     },
     {
       key: "productDescription",
-      label: "Description",
-      labelHi: "वर्णन",
-      placeholder: "Description",
+      label: en("fields.description"),
+      labelHi: t("fields.description"),
+      placeholder: tRaw("fields.description"),
       icon: AlignLeft,
     },
   ];
@@ -312,11 +316,19 @@ export default function AddAccountFlow({ onClose = () => { } }: AddAccountFlowPr
 
             <div>
               <h2 className="text-2xl font-bold text-slate-900">
-                Add Account <span className="font-bold text-[#64748B]">/ खाते जोडा</span>
+                {en("accountMaster.addForm.title")}
+                {t("accountMaster.addForm.title") ? (
+                  <span className="font-bold text-[#64748B]"> / {t("accountMaster.addForm.title")}</span>
+                ) : null}
               </h2>
               <p className="text-sm text-gray-700">
-                Add some basic information related to the Employee /{" "}
-                <span>कर्मचाऱ्याशी संबंधित काही मूलभूत माहिती</span>
+                {en("accountMaster.addForm.subtitle")}
+                {t("accountMaster.addForm.subtitle") ? (
+                  <>
+                    {" "}
+                    / <span>{t("accountMaster.addForm.subtitle")}</span>
+                  </>
+                ) : null}
               </p>
             </div>
           </div>
@@ -337,7 +349,7 @@ export default function AddAccountFlow({ onClose = () => { } }: AddAccountFlowPr
               onClick={onClose}
               className="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-primary-500 text-primary font-medium text-sm hover:bg-primary-50 transition"
             >
-              Cancel <X size={16} />
+              {en("common.cancel")} <X size={16} />
             </button>
             <button
               type="button"
@@ -348,7 +360,7 @@ export default function AddAccountFlow({ onClose = () => { } }: AddAccountFlowPr
                   : "bg-gray-200 text-gray-400 cursor-not-allowed"
                 }`}
             >
-              Submit <Upload size={16} />
+              {en("common.submit")} <Upload size={16} />
             </button>
           </div>
         </div>
@@ -357,10 +369,10 @@ export default function AddAccountFlow({ onClose = () => { } }: AddAccountFlowPr
       {/* Account Type List overlay */}
       {step === "accountTypeList" && (
         <ListModal
-          title="Account Type List"
+          title={tRaw("accountMaster.addForm.accountTypeListTitle")}
           columns={[
-            { key: "code", label: "Account Type" },
-            { key: "name", label: "Name" },
+            { key: "code", label: tRaw("fields.accountType") },
+            { key: "name", label: tRaw("fields.name") },
           ]}
           rows={ACCOUNT_TYPES}
           onSelect={handleSelectAccountType}
@@ -371,10 +383,10 @@ export default function AddAccountFlow({ onClose = () => { } }: AddAccountFlowPr
       {/* Sub Product List overlay */}
       {step === "subProductList" && (
         <ListModal
-          title="Sub Product List"
+          title={tRaw("accountMaster.addForm.subProductListTitle")}
           columns={[
-            { key: "code", label: "Product Code" },
-            { key: "description", label: "Description" },
+            { key: "code", label: tRaw("fields.productCode") },
+            { key: "description", label: tRaw("fields.description") },
           ]}
           rows={subProductRows}
           onSelect={handleSelectSubProduct}

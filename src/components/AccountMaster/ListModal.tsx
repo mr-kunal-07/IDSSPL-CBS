@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Search, X } from "lucide-react";
+import { useBilingual } from "@/i18n/useBilingual";
 
 interface Column<T> {
   key: keyof T;
@@ -23,6 +24,7 @@ function SearchInput({
   value: string;
   onChange: (value: string) => void;
 }) {
+  const { tRaw } = useBilingual();
   return (
     <div className="relative">
       <Search
@@ -34,7 +36,7 @@ function SearchInput({
         autoFocus
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Search"
+        placeholder={tRaw("common.search")}
         className="h-9 w-64 rounded-md border border-gray-300 bg-white pl-9 pr-3 text-sm outline-none transition focus:border-primary-500 placeholder:text-gray-600"
       />
     </div>
@@ -42,6 +44,7 @@ function SearchInput({
 }
 
 function TableHeader<T>({ columns }: { columns: Column<T>[] }) {
+  const { tRaw } = useBilingual();
   return (
     <thead className="sticky top-0 z-20">
       <tr className="bg-[#CFE3FF]">
@@ -57,7 +60,7 @@ function TableHeader<T>({ columns }: { columns: Column<T>[] }) {
         ))}
 
         <th className="rounded-r-xl py-2.5 px-4 text-left text-xs font-semibold text-[#1B2143]">
-          Actions
+          {tRaw("common.actions")}
         </th>
       </tr>
     </thead>
@@ -73,6 +76,7 @@ function TableRow<T extends Record<string, any>>({
   columns: Column<T>[];
   onSelect: (row: T) => void;
 }) {
+  const { tRaw } = useBilingual();
   return (
     <tr className="border-b border-[#ECECEC] hover:bg-[#F8FBFF]">
       {columns.map((column, i) => (
@@ -92,7 +96,7 @@ function TableRow<T extends Record<string, any>>({
           onClick={() => onSelect(row)}
           className="h-7 w-20 rounded-lg bg-[#EEF3FF] text-xs font-semibold text-[#0B67D9] transition hover:bg-[#DDEAFF] active:scale-95"
         >
-          Select
+          {tRaw("common.select")}
         </button>
       </td>
     </tr>
@@ -106,6 +110,7 @@ export default function ListModal<T extends Record<string, any>>({
   onSelect,
   onClose,
 }: ListModalProps<T>) {
+  const { tRaw } = useBilingual();
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
@@ -166,7 +171,7 @@ export default function ListModal<T extends Record<string, any>>({
                       colSpan={columns.length + 1}
                       className="py-8 text-center text-xs text-gray-400"
                     >
-                      No results found
+                      {tRaw("common.noResultsFound")}
                     </td>
                   </tr>
                 )}

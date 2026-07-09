@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import type { MouseEvent as ReactMouseEvent } from "react";
 import { ArrowUpDown, MoreVertical, ExternalLink, Eye, SquarePen, UserRoundCog } from "lucide-react";
+import { useBilingual } from "@/i18n/useBilingual";
 
 type RowData = {
   srNo: number;
@@ -16,16 +17,16 @@ type RowData = {
 };
 
 const columns = [
-  { key: "srNo", label: "Sr No.", sortable: false, width: "80px" },
-  { key: "action", label: "Action", sortable: false, width: "80px" },
-  { key: "applicationNo", label: "Application No.", sortable: false, width: "180px" },
-  { key: "accountId", label: "Account ID", sortable: true, width: "180px" },
-  { key: "status", label: "Status", sortable: true, width: "140px" },
-  { key: "customerId", label: "Customer ID", sortable: true, width: "160px" },
-  { key: "accountName", label: "Account Name", sortable: true, width: "200px" },
-  { key: "accountType", label: "Account Type", sortable: true, width: "180px" },
-  { key: "createdBy", label: "Created By", sortable: true, width: "160px" },
-  { key: "openingDate", label: "Opening Date", sortable: true, width: "160px" },
+  { key: "srNo", labelKey: "accountMaster.table.srNo", sortable: false, width: "80px" },
+  { key: "action", labelKey: "accountMaster.table.action", sortable: false, width: "80px" },
+  { key: "applicationNo", labelKey: "accountMaster.table.applicationNo", sortable: false, width: "180px" },
+  { key: "accountId", labelKey: "accountMaster.table.accountId", sortable: true, width: "180px" },
+  { key: "status", labelKey: "accountMaster.table.status", sortable: true, width: "140px" },
+  { key: "customerId", labelKey: "accountMaster.table.customerId", sortable: true, width: "160px" },
+  { key: "accountName", labelKey: "fields.accountName", sortable: true, width: "200px" },
+  { key: "accountType", labelKey: "fields.accountType", sortable: true, width: "180px" },
+  { key: "createdBy", labelKey: "accountMaster.table.createdBy", sortable: true, width: "160px" },
+  { key: "openingDate", labelKey: "accountMaster.table.openingDate", sortable: true, width: "160px" },
 ] as const;
 
 const rows: RowData[] = [
@@ -35,10 +36,10 @@ const rows: RowData[] = [
 ];
 
 const menuOptions = [
-  { key: "view", label: "View", icon: Eye },
-  { key: "edit", label: "Edit", icon: SquarePen },
-  { key: "freeze", label: "Account Freeze / Unfreeze", icon: UserRoundCog },
-  { key: "cheque", label: "Cheque Book Issue", icon: UserRoundCog }
+  { key: "view", labelKey: "common.view", icon: Eye },
+  { key: "edit", labelKey: "common.edit", icon: SquarePen },
+  { key: "freeze", labelKey: "accountMaster.table.menuFreeze", icon: UserRoundCog },
+  { key: "cheque", labelKey: "accountMaster.table.menuCheque", icon: UserRoundCog }
 ];
 
 type AccountMasterTableProps = {
@@ -46,6 +47,7 @@ type AccountMasterTableProps = {
 };
 
 const AccountMasterTable = ({ onChequeBookIssue }: AccountMasterTableProps) => {
+  const { tRaw } = useBilingual();
   const [sortKey, setSortKey] = useState<keyof RowData | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
   const [openMenuRow, setOpenMenuRow] = useState<number | null>(null);
@@ -201,7 +203,7 @@ const AccountMasterTable = ({ onChequeBookIssue }: AccountMasterTableProps) => {
                   style={{ width: col.width }}
                 >
                   <span className="inline-flex items-center gap-1">
-                    {col.label}
+                    {tRaw(col.labelKey)}
                     {col.sortable && <ArrowUpDown size={13} className="opacity-80" />}
                   </span>
                 </th>
@@ -235,7 +237,7 @@ const AccountMasterTable = ({ onChequeBookIssue }: AccountMasterTableProps) => {
                 <td className="px-6 py-3" style={{ width: "140px" }}>
                   <span className="inline-flex items-center gap-1.5 rounded-md border border-emerald-500 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-600 whitespace-nowrap">
                     <span className="h-2 w-1.5 rounded-full bg-emerald-700" />
-                    {row.status}
+                    {row.status === "Live" ? tRaw("accountMaster.table.statusLive") : row.status}
                     <ExternalLink size={12} />
                   </span>
                 </td>
@@ -278,7 +280,7 @@ const AccountMasterTable = ({ onChequeBookIssue }: AccountMasterTableProps) => {
                 className="flex w-full items-center gap-3 px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors"
               >
                 <Icon size={16} className="text-blue-600 flex-shrink-0" />
-                <span className="text-gray-700">{opt.label}</span>
+                <span className="text-gray-700">{tRaw(opt.labelKey)}</span>
               </button>
             );
           })}

@@ -1,5 +1,8 @@
+"use client";
+
 import { ArrowLeft, Home, ChevronRight, Filter, Plus, Search, RefreshCw } from "lucide-react";
 import { type AccountFilters } from "../shared/FilterModal";
+import { useBilingual } from "@/i18n/useBilingual";
 
 type BreadcrumbItem = {
   label: string;
@@ -38,6 +41,8 @@ const NavbarAM = ({
   onOpenFilter,
   onResetFilters,
 }: NavbarAMProps) => {
+  const { en } = useBilingual();
+
   const Breadcrumb = ({ label, isLast, isFirst, href }: BreadcrumbProps) => (
     <div className="flex items-center gap-1">
       {!isFirst && <ChevronRight size={14} className="text-gray-400" />}
@@ -110,7 +115,7 @@ const NavbarAM = ({
                   className="flex w-[200px] items-center gap-2.5 rounded-lg border border-primary bg-white px-3 py-2 text-left hover:bg-[#F8FBFF] sm:w-[240px] h-10 transition shrink-0 animate-fade-in"
                 >
                   <Search size={16} className="shrink-0 text-primary" />
-                  <span className="text-sm text-gray-400">Search/ Filter</span>
+                  <span className="text-sm text-gray-400">{en("common.searchOrFilter")}</span>
                 </button>
 
                 {hasActiveFilters && (
@@ -133,11 +138,11 @@ const NavbarAM = ({
                         {(() => {
                           const active: { label: string; value: string }[] = [];
                           if (filters.accountNumber)
-                            active.push({ label: "ID", value: filters.accountNumber });
+                            active.push({ label: en("accountMaster.filters.id"), value: filters.accountNumber });
                           if (filters.accountName)
-                            active.push({ label: "Name", value: filters.accountName });
+                            active.push({ label: en("accountMaster.filters.name"), value: filters.accountName });
                           if (filters.accountType)
-                            active.push({ label: "Type", value: filters.accountType });
+                            active.push({ label: en("accountMaster.filters.type"), value: filters.accountType });
 
                           if (active.length === 0) return "";
                           const first = active[0];
@@ -179,7 +184,7 @@ const NavbarAM = ({
 
               {/* Text */}
               <div className="flex flex-1 items-center justify-center">
-                <span className="text-md font-medium text-white">Add</span>
+                <span className="text-md font-medium text-white">{en("common.add")}</span>
               </div>
             </button>
           </div>
