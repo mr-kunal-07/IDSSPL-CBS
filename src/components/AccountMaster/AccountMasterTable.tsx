@@ -1,9 +1,12 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
-import type { MouseEvent as ReactMouseEvent } from "react";
-import { ArrowUpDown, MoreVertical, ExternalLink, Eye, SquarePen, UserRoundCog } from "lucide-react";
+import { useState } from "react";
+import { Eye, SquarePen, UserRoundCog } from "lucide-react";
 import { useBilingual } from "@/i18n/useBilingual";
 import { type AccountFilters } from "../shared/FilterModal";
+import RowActionMenu from "../shared/RowActionMenu";
+import SrNoBadge from "../shared/SrNoBadge";
+import StatusPill from "../shared/StatusPill";
+import SortableHeaderLabel from "../shared/SortableHeaderLabel";
 
 export type RowData = {
   srNo: number;
@@ -36,13 +39,6 @@ const rows: RowData[] = [
   { srNo: 3, accountId: "000320100000003", status: "Live", customerId: "0003000003", accountName: "Karan Patil", accountType: "Term Loan", createdBy: "Admin", applicationNo: "00326270000003", openingDate: "21-Jun-2024" },
 ];
 
-const menuOptions = [
-  { key: "view", labelKey: "common.view", icon: Eye },
-  { key: "edit", labelKey: "common.edit", icon: SquarePen },
-  { key: "freeze", labelKey: "accountMaster.table.menuFreeze", icon: UserRoundCog },
-  { key: "cheque", labelKey: "accountMaster.table.menuCheque", icon: UserRoundCog }
-];
-
 type AccountMasterTableProps = {
   filters?: AccountFilters;
   onView?: (row: RowData) => void;
@@ -54,99 +50,6 @@ const AccountMasterTable = ({ filters, onView, onEdit, onChequeBookIssue }: Acco
   const { tRaw } = useBilingual();
   const [sortKey, setSortKey] = useState<keyof RowData | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
-  const [openMenuRow, setOpenMenuRow] = useState<number | null>(null);
-  const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
-  const menuRef = useRef<HTMLDivElement | null>(null);
-  const buttonRefs = useRef<{ [key: number]: HTMLButtonElement | null }>({});
-  const tableContainerRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setOpenMenuRow(null);
-        setMenuPosition(null);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  // Recalculate menu position on scroll (both vertical and horizontal)
-  useEffect(() => {
-    const handleScroll = () => {
-      if (openMenuRow !== null) {
-        const button = buttonRefs.current[openMenuRow];
-        if (button) {
-          calculateMenuPosition(button);
-        }
-      }
-    };
-
-    const container = tableContainerRef.current;
-    if (container) {
-      container.addEventListener('scroll', handleScroll);
-    }
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('resize', handleScroll);
-
-    return () => {
-      if (container) {
-        container.removeEventListener('scroll', handleScroll);
-      }
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
-    };
-  }, [openMenuRow]);
-
-  const calculateMenuPosition = (button: HTMLButtonElement) => {
-    const rect = button.getBoundingClientRect();
-    
-    // Calculate the actual menu height based on number of options
-    // Each option is ~40px tall (padding + text height)
-    const optionHeight = 40;
-    const menuPadding = 16; // py-2 = 8px top + 8px bottom
-    const menuHeight = (menuOptions.length * optionHeight) + menuPadding;
-    
-    const spaceBelow = window.innerHeight - rect.bottom;
-    const spaceAbove = rect.top;
-    
-    // Check if there's enough space below (with some padding)
-    const showBelow = spaceBelow > menuHeight + 20;
-    
-    let topPosition: number;
-    
-    if (showBelow) {
-      // Show below the button
-      topPosition = rect.bottom + window.scrollY + 4;
-    } else {
-      // Show above the button
-      topPosition = rect.top + window.scrollY - menuHeight - 4;
-      
-      // If menu would go above viewport, clamp it to 10px from top
-      if (topPosition < 10) {
-        topPosition = 10;
-      }
-    }
-    
-    // Calculate left position - always align to the three dots button
-    let leftPosition = rect.left + window.scrollX - 40;
-    const menuWidth = 256; // w-64 = 256px
-    
-    // If menu would go off the right side of viewport, adjust
-    if (leftPosition + menuWidth > window.innerWidth - 10) {
-      leftPosition = window.innerWidth - menuWidth - 10;
-    }
-    
-    // If menu would go off the left side of viewport, adjust
-    if (leftPosition < 10) {
-      leftPosition = 10;
-    }
-    
-    setMenuPosition({
-      top: topPosition,
-      left: leftPosition,
-    });
-  };
 
   const handleSort = (key: keyof RowData) => {
     if (sortKey === key) {
@@ -155,23 +58,6 @@ const AccountMasterTable = ({ filters, onView, onEdit, onChequeBookIssue }: Acco
       setSortKey(key);
       setSortAsc(true);
     }
-  };
-
-  const handleMenuToggle = (srNo: number) => {
-    if (openMenuRow === srNo) {
-      setOpenMenuRow(null);
-      setMenuPosition(null);
-      return;
-    }
-
-    // Use requestAnimationFrame to ensure button is rendered
-    requestAnimationFrame(() => {
-      const button = buttonRefs.current[srNo];
-      if (button) {
-        calculateMenuPosition(button);
-      }
-      setOpenMenuRow(srNo);
-    });
   };
 
   const filteredRows = rows.filter((r) => {
@@ -194,14 +80,7 @@ const AccountMasterTable = ({ filters, onView, onEdit, onChequeBookIssue }: Acco
   return (
     <div className="w-full bg-white rounded-xl overflow-visible shadow-sm">
       {/* Table container with relative positioning and hidden scrollbar */}
-      <div 
-        ref={tableContainerRef}
-        className="table-container relative overflow-x-auto [&::-webkit-scrollbar]:hidden"
-        style={{
-          scrollbarWidth: 'none', // Firefox
-          msOverflowStyle: 'none', // IE/Edge
-        }}
-      >
+      <div className="table-container relative overflow-x-auto no-scrollbar">
         <table className="w-full border-collapse min-w-[1520px] table-fixed">
           <thead>
             <tr className="bg-primary rounded-t-xl">
@@ -214,10 +93,7 @@ const AccountMasterTable = ({ filters, onView, onEdit, onChequeBookIssue }: Acco
                   }`}
                   style={{ width: col.width }}
                 >
-                  <span className="inline-flex items-center gap-1">
-                    {tRaw(col.labelKey)}
-                    {col.sortable && <ArrowUpDown size={13} className="opacity-80" />}
-                  </span>
+                  <SortableHeaderLabel label={tRaw(col.labelKey)} sortable={col.sortable} />
                 </th>
               ))}
             </tr>
@@ -229,29 +105,24 @@ const AccountMasterTable = ({ filters, onView, onEdit, onChequeBookIssue }: Acco
                 className={`${idx !== sortedRows.length - 1 ? "border-b border-gray-100" : ""} hover:bg-gray-50 relative`}
               >
                 <td className="px-6 py-3" style={{ width: "80px" }}>
-                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary-50 text-primary text-sm font-semibold">
-                    {row.srNo}
-                  </span>
+                  <SrNoBadge value={row.srNo} />
                 </td>
-                
+
                 {/* Action column */}
                 <td className="px-6 py-3 relative" style={{ width: "80px" }}>
-                  <button
-                    ref={(el) => { buttonRefs.current[row.srNo] = el; }}
-                    onClick={() => handleMenuToggle(row.srNo)}
-                    className="text-gray-400 hover:text-gray-600 relative z-10"
-                  >
-                    <MoreVertical size={18} />
-                  </button>
+                  <RowActionMenu
+                    items={[
+                      { key: "view", label: tRaw("common.view"), icon: Eye, onClick: () => onView?.(row) },
+                      { key: "edit", label: tRaw("common.edit"), icon: SquarePen, onClick: () => onEdit?.(row) },
+                      { key: "freeze", label: tRaw("accountMaster.table.menuFreeze"), icon: UserRoundCog, onClick: () => {} },
+                      { key: "cheque", label: tRaw("accountMaster.table.menuCheque"), icon: UserRoundCog, onClick: () => onChequeBookIssue?.(row) },
+                    ]}
+                  />
                 </td>
                 <td className="px-6 py-3 text-[16px] text-gray-700 truncate" style={{ width: "180px" }}>{row.applicationNo}</td>
                 <td className="px-6 py-3 text-sm font-medium text-gray-900 truncate" style={{ width: "180px" }}>{row.accountId}</td>
                 <td className="px-6 py-3" style={{ width: "140px" }}>
-                  <span className="inline-flex items-center gap-1.5 rounded-md border border-emerald-500 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-600 whitespace-nowrap">
-                    <span className="h-2 w-1.5 rounded-full bg-emerald-700" />
-                    {row.status === "Live" ? tRaw("accountMaster.table.statusLive") : row.status}
-                    <ExternalLink size={12} />
-                  </span>
+                  <StatusPill label={row.status === "Live" ? tRaw("accountMaster.table.statusLive") : row.status} />
                 </td>
                 <td className="px-6 py-3 text-[16px] text-gray-700 truncate" style={{ width: "160px" }}>{row.customerId}</td>
                 <td className="px-6 py-3 text-[16px] text-gray-700 truncate" style={{ width: "200px" }}>{row.accountName}</td>
@@ -263,42 +134,6 @@ const AccountMasterTable = ({ filters, onView, onEdit, onChequeBookIssue }: Acco
           </tbody>
         </table>
       </div>
-
-      {/* Menu dropdown with smart positioning */}
-      {openMenuRow !== null && menuPosition && (
-        <div
-          ref={menuRef}
-          className="fixed z-50 w-64 rounded-xl border border-primary-200 bg-white py-2 shadow-lg"
-          style={{
-            top: `${menuPosition.top}px`,
-            left: `${menuPosition.left}px`,
-            maxHeight: 'min(300px, 80vh)',
-            overflowY: 'auto'
-          }}
-        >
-          {menuOptions.map((opt) => {
-            const Icon = opt.icon;
-            const row = sortedRows.find(r => r.srNo === openMenuRow);
-            return (
-              <button
-                key={opt.key}
-                onClick={() => {
-                  setOpenMenuRow(null);
-                  setMenuPosition(null);
-                  if (!row) return;
-                  if (opt.key === "view") onView?.(row);
-                  if (opt.key === "edit") onEdit?.(row);
-                  if (opt.key === "cheque") onChequeBookIssue?.(row);
-                }}
-                className="flex w-full items-center gap-3 px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors"
-              >
-                <Icon size={16} className="text-primary shrink-0" />
-                <span className="text-gray-700">{tRaw(opt.labelKey)}</span>
-              </button>
-            );
-          })}
-        </div>
-      )}
     </div>
   );
 };

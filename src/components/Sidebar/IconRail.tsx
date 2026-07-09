@@ -26,7 +26,9 @@ export default function IconRail({ items, active, onSelect }: IconRailProps) {
           <div key={item.id} className="flex flex-col items-center">
             <button
               onClick={() => onSelect(item.id)}
-              className="group flex h-18 w-18 items-center justify-center transition-all duration-300 ease-out hover:scale-125"
+              className={`group flex h-18 w-18 items-center justify-center rounded-xl transition-all duration-300 ease-out hover:scale-125 ${
+                active === item.id ? "bg-white/10 scale-110" : ""
+              }`}
             >
               <img
                 src={item.icon}

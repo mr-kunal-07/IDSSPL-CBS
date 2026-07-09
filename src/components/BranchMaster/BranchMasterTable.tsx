@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import { ArrowUpDown, ChevronUp, ChevronDown, MoreVertical, Eye, Landmark, CreditCard, Receipt } from "lucide-react";
+import { useMemo, useState } from "react";
+import { ArrowUpDown, ChevronUp, ChevronDown, Eye, Landmark, CreditCard, Receipt } from "lucide-react";
 import { emptyBranchFormData, type BranchFormData } from "./AddBranchModal";
+import { useBilingual } from "@/i18n/useBilingual";
+import RowActionMenu from "../shared/RowActionMenu";
 
 export interface BranchRow {
   sr: number;
@@ -22,7 +23,7 @@ type SortableRowKey = Exclude<keyof BranchRow, "sr">;
 
 interface ColumnDef {
   key: string;
-  label: string;
+  labelKey: string;
   sortKey?: SortableRowKey;
 }
 
@@ -34,15 +35,15 @@ interface SortConfig {
 }
 
 const columns: ColumnDef[] = [
-  { key: "branchCode", label: "Branch Code", sortKey: "branchCode" },
-  { key: "ifscCode", label: "IFSC Code", sortKey: "ifscCode" },
-  { key: "branchName", label: "Branch Name", sortKey: "branchName" },
-  { key: "shortName", label: "Short Name", sortKey: "shortName" },
-  { key: "address", label: "Address", sortKey: "address" },
-  { key: "cityCode", label: "City Code", sortKey: "cityCode" },
-  { key: "emailId", label: "Email ID", sortKey: "emailId" },
-  { key: "phoneNo", label: "Phone No.", sortKey: "phoneNo" },
-  { key: "isImplemented", label: "Is Implemented", sortKey: "isImplemented" },
+  { key: "branchCode", labelKey: "branchMaster.table.branchCode", sortKey: "branchCode" },
+  { key: "ifscCode", labelKey: "branchMaster.table.ifscCode", sortKey: "ifscCode" },
+  { key: "branchName", labelKey: "branchMaster.table.branchName", sortKey: "branchName" },
+  { key: "shortName", labelKey: "branchMaster.table.shortName", sortKey: "shortName" },
+  { key: "address", labelKey: "branchMaster.table.address", sortKey: "address" },
+  { key: "cityCode", labelKey: "branchMaster.table.cityCode", sortKey: "cityCode" },
+  { key: "emailId", labelKey: "branchMaster.table.emailId", sortKey: "emailId" },
+  { key: "phoneNo", labelKey: "branchMaster.table.phoneNo", sortKey: "phoneNo" },
+  { key: "isImplemented", labelKey: "branchMaster.table.isImplemented", sortKey: "isImplemented" },
 ];
 
 export const DEFAULT_BRANCH_ROWS: BranchRow[] = [
@@ -121,124 +122,6 @@ export interface BranchActionHandlers {
   onBranchTdReceiptLot?: (row: BranchRow) => void;
 }
 
-interface ActionMenuButtonProps extends BranchActionHandlers {
-  row: BranchRow;
-}
-
-const MENU_WIDTH = 224;
-const MENU_MARGIN = 8;
-
-function ActionMenuButton({ row, onView, onBranchNonCbsParameter, onBranchChequeBookLot, onBranchTdReceiptLot }: ActionMenuButtonProps) {
-  const [open, setOpen] = useState(false);
-  const [position, setPosition] = useState<{ top: number; left: number; openUp: boolean } | null>(null);
-  const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const menuRef = useRef<HTMLDivElement | null>(null);
-
-  const updatePosition = () => {
-    const btn = buttonRef.current;
-    if (!btn) return;
-    const rect = btn.getBoundingClientRect();
-    const spaceBelow = window.innerHeight - rect.bottom;
-    const estimatedMenuHeight = 4 * 32 + 16;
-    const openUp = spaceBelow < estimatedMenuHeight + MENU_MARGIN;
-
-    let left = rect.left;
-    if (left + MENU_WIDTH > window.innerWidth - MENU_MARGIN) {
-      left = window.innerWidth - MENU_WIDTH - MENU_MARGIN;
-    }
-    left = Math.max(MENU_MARGIN, left);
-
-    const top = openUp ? rect.top - MENU_MARGIN : rect.bottom + MENU_MARGIN;
-    setPosition({ top, left, openUp });
-  };
-
-  useLayoutEffect(() => {
-    if (open) updatePosition();
-  }, [open]);
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(e.target as Node) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(e.target as Node)
-      ) {
-        setOpen(false);
-      }
-    }
-    function handleReposition() {
-      updatePosition();
-    }
-    if (open) {
-      document.addEventListener("mousedown", handleClickOutside);
-      window.addEventListener("scroll", handleReposition, true);
-      window.addEventListener("resize", handleReposition);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      window.removeEventListener("scroll", handleReposition, true);
-      window.removeEventListener("resize", handleReposition);
-    };
-  }, [open]);
-
-  const items = [
-    { label: "View", icon: Eye, onClick: () => onView?.(row) },
-    { label: "Branch Non CBS Parameter", icon: Landmark, onClick: () => onBranchNonCbsParameter?.(row) },
-    { label: "Branch Cheque Book Lot", icon: CreditCard, onClick: () => onBranchChequeBookLot?.(row) },
-    { label: "Branch TD Receipt Lot", icon: Receipt, onClick: () => onBranchTdReceiptLot?.(row) },
-  ];
-
-  return (
-    <>
-      <button
-        ref={buttonRef}
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-500"
-        aria-label="Row actions"
-        aria-haspopup="menu"
-        aria-expanded={open}
-      >
-        <MoreVertical className="w-4 h-4" />
-      </button>
-
-      {open && position && typeof document !== "undefined" &&
-        createPortal(
-          <div
-            ref={menuRef}
-            role="menu"
-            style={{
-              position: "fixed",
-              top: position.openUp ? undefined : position.top,
-              bottom: position.openUp ? window.innerHeight - position.top : undefined,
-              left: position.left,
-              width: MENU_WIDTH,
-            }}
-            className="z-50 bg-white rounded-lg shadow-lg border border-primary overflow-hidden"
-          >
-            {items.map(({ label, icon: Icon, onClick }) => (
-              <button
-                key={label}
-                type="button"
-                role="menuitem"
-                onClick={() => {
-                  onClick();
-                  setOpen(false);
-                }}
-                className="w-full flex items-center gap-2.5 px-3 py-1 text-sm font-medium text-left text-slate-700 hover:bg-slate-50 transition-colors"
-              >
-                <Icon className="w-4 h-4 shrink-0 text-primary" />
-                {label}
-              </button>
-            ))}
-          </div>,
-          document.body
-        )}
-    </>
-  );
-}
-
 export interface BranchMasterTableProps extends BranchActionHandlers {
   rows?: BranchRow[];
 }
@@ -250,6 +133,7 @@ export default function BranchMasterTable({
   onBranchChequeBookLot,
   onBranchTdReceiptLot,
 }: BranchMasterTableProps) {
+  const { tRaw } = useBilingual();
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
 
   const handleSort = (col: ColumnDef) => {
@@ -276,12 +160,12 @@ export default function BranchMasterTable({
 
   return (
     <div className="w-full bg-white rounded-xl overflow-hidden shadow-sm">
-      <div className="overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="overflow-x-auto no-scrollbar">
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-primary">
-              <th className="text-left text-[15px] font-medium text-white px-4 py-3 whitespace-nowrap">Sr No.</th>
-              <th className="text-left text-[15px] font-medium text-white px-4 py-3 whitespace-nowrap">Actions</th>
+              <th className="text-left text-[15px] font-medium text-white px-4 py-3 whitespace-nowrap">{tRaw("branchMaster.table.srNo")}</th>
+              <th className="text-left text-[15px] font-medium text-white px-4 py-3 whitespace-nowrap">{tRaw("common.actions")}</th>
               {columns.map((col) => (
                 <th
                   key={col.key}
@@ -289,7 +173,7 @@ export default function BranchMasterTable({
                   className="text-left text-[15px] font-medium text-white px-4 py-3 whitespace-nowrap cursor-pointer select-none"
                 >
                   <SortableHeader
-                    label={col.label}
+                    label={tRaw(col.labelKey)}
                     active={sortConfig?.key === col.sortKey}
                     direction={sortConfig && sortConfig.key === col.sortKey ? sortConfig.direction : null}
                   />
@@ -301,7 +185,7 @@ export default function BranchMasterTable({
             {sortedRows.length === 0 ? (
               <tr>
                 <td colSpan={columns.length + 2} className="px-4 py-8 text-center text-gray-400">
-                  No records found
+                  {tRaw("branchMaster.table.noRecordsFound")}
                 </td>
               </tr>
             ) : (
@@ -313,12 +197,15 @@ export default function BranchMasterTable({
                     </span>
                   </td>
                   <td className="px-4 py-3 align-middle">
-                    <ActionMenuButton
-                      row={r}
-                      onView={onView}
-                      onBranchNonCbsParameter={onBranchNonCbsParameter}
-                      onBranchChequeBookLot={onBranchChequeBookLot}
-                      onBranchTdReceiptLot={onBranchTdReceiptLot}
+                    <RowActionMenu
+                      menuWidth={224}
+                      triggerClassName="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-500"
+                      items={[
+                        { key: "view", label: tRaw("common.view"), icon: Eye, onClick: () => onView?.(r) },
+                        { key: "nonCbs", label: tRaw("branchMaster.table.menuNonCbsParameter"), icon: Landmark, onClick: () => onBranchNonCbsParameter?.(r) },
+                        { key: "chequeBookLot", label: tRaw("branchMaster.table.menuChequeBookLot"), icon: CreditCard, onClick: () => onBranchChequeBookLot?.(r) },
+                        { key: "tdReceiptLot", label: tRaw("branchMaster.table.menuTdReceiptLot"), icon: Receipt, onClick: () => onBranchTdReceiptLot?.(r) },
+                      ]}
                     />
                   </td>
                   <td className="px-4 py-3 align-middle text-slate-800 text-sm font-medium whitespace-nowrap">{r.branchCode}</td>

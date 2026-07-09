@@ -64,6 +64,7 @@ export const menuItems = [
       {
         id: "transaction",
         title: "Transaction Master",
+        titleKey: "sidebar.transactionMaster",
         href: "/transactionmaster",
       },
       {
@@ -110,6 +111,6 @@ export const user = {
   name: "Kunal Jadhav",
   role: "Admin",
   email: "kunal.jadhav@idsspl.com",
-  avatar: "https://flowbite.com/docs/images/people/profile-picture-5.jpg",
+  avatar: "/profile.png",
   lastLogin: "Today, 10:45 AM",
 };

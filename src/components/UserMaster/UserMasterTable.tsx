@@ -1,8 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import {
-  ArrowUpDown,
-  MoreVertical,
-  ExternalLink,
   Phone,
   Mail,
   SquarePenIcon,
@@ -10,13 +7,18 @@ import {
   KeyRound,
   Lock,
   Power,
-  LucideIcon,
+  type LucideIcon,
 } from "lucide-react";
 import UserDetailsModal from "./UserDetailsModal";
 import EditMobileEmailModal from "../common/EditMobileEmailModal";
 import SetUserPasswordModal, { type SetUserPasswordData } from "./SetUserPassword";
 import SetOtpModal, { type SetOtpData } from "./SetOTP";
 import { type UserFilters } from "./FilterModal";
+import { useBilingual } from "@/i18n/useBilingual";
+import RowActionMenu from "../shared/RowActionMenu";
+import SrNoBadge from "../shared/SrNoBadge";
+import StatusPill from "../shared/StatusPill";
+import SortableHeaderLabel from "../shared/SortableHeaderLabel";
 
 /* ===================== Types ===================== */
 
@@ -48,7 +50,7 @@ export type SortableRowKey = Extract<
 
 interface ColumnDef {
   key: string;
-  label: string;
+  labelKey: string;
   sortable: boolean;
   sortKey?: SortableRowKey;
 }
@@ -84,16 +86,16 @@ export interface UserFormData {
 }
 
 const columns: ColumnDef[] = [
-  { key: "srNo", label: "Sr No.", sortable: false },
-  { key: "action", label: "Action", sortable: false },
-  { key: "userDetails", label: "User Details", sortable: true, sortKey: "code" },
-  { key: "status", label: "Status", sortable: true, sortKey: "status" },
-  { key: "name", label: "User Name", sortable: true, sortKey: "name" },
-  { key: "role", label: "User Role", sortable: true, sortKey: "role" },
-  { key: "createdBy", label: "Created By", sortable: true, sortKey: "createdBy" },
-  { key: "date", label: "Created Date", sortable: true, sortKey: "date" },
-  { key: "branchCode", label: "Branch Code", sortable: true, sortKey: "branchCode" },
-  { key: "branchName", label: "Branch Name", sortable: true, sortKey: "branchName" },
+  { key: "srNo", labelKey: "userMaster.table.srNo", sortable: false },
+  { key: "action", labelKey: "userMaster.table.action", sortable: false },
+  { key: "userDetails", labelKey: "userMaster.table.userDetails", sortable: true, sortKey: "code" },
+  { key: "status", labelKey: "userMaster.table.status", sortable: true, sortKey: "status" },
+  { key: "name", labelKey: "userMaster.table.userName", sortable: true, sortKey: "name" },
+  { key: "role", labelKey: "userMaster.table.userRole", sortable: true, sortKey: "role" },
+  { key: "createdBy", labelKey: "userMaster.table.createdBy", sortable: true, sortKey: "createdBy" },
+  { key: "date", labelKey: "userMaster.table.createdDate", sortable: true, sortKey: "date" },
+  { key: "branchCode", labelKey: "userMaster.table.branchCode", sortable: true, sortKey: "branchCode" },
+  { key: "branchName", labelKey: "userMaster.table.branchName", sortable: true, sortKey: "branchName" },
 ];
 
 const ROWS: UserRow[] = [
@@ -107,29 +109,6 @@ const ROWS: UserRow[] = [
   { sr: 8, code: "KWB", phone: "8901234567", email: "karen.williams@co.com", status: "Active", name: "Karen Williams Brown", role: "Officer", createdBy: "Admin", date: "22-Apr-2026", branchCode: "0009", branchName: "Haveri" },
   { sr: 9, code: "DJB", phone: "9012345678", email: "david.johnson@place.org", status: "Active", name: "David Johnson Brown", role: "Officer", createdBy: "Admin", date: "18-Sep-2023", branchCode: "0010", branchName: "Chitradurga" },
 ];
-
-/* ===================== StatusBadge ===================== */
-
-interface StatusBadgeProps {
-  status: UserStatus;
-}
-
-function StatusBadge({ status }: StatusBadgeProps) {
-  const isActive = status === "Active";
-  return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-md border px-3 py-1 text-xs font-medium ${
-        isActive
-          ? "border-emerald-500 bg-emerald-50 text-emerald-600"
-          : "border-slate-200 bg-slate-50 text-slate-600"
-      }`}
-    >
-      <span className={`h-2 w-1.5 rounded-full ${isActive ? "bg-emerald-700" : "bg-slate-400"}`} />
-      {status}
-      <ExternalLink size={12} />
-    </span>
-  );
-}
 
 /* ===================== ContactLine ===================== */
 
@@ -148,94 +127,6 @@ function ContactLine({ icon: Icon, value, onEdit }: ContactLineProps) {
         <SquarePenIcon size={16} />
       </button>
     </span>
-  );
-}
-
-/* ===================== ActionMenuButton ===================== */
-
-interface ActionMenuButtonProps {
-  row: UserRow;
-  onView?: (row: UserRow) => void;
-  onEdit?: (row: UserRow) => void;
-  onSetOtp?: (row: UserRow) => void;
-  onSetPassword?: (row: UserRow) => void;
-  onToggleStatus?: (row: UserRow) => void;
-}
-
-interface ActionMenuItem {
-  label: string;
-  icon: LucideIcon;
-  onClick: () => void;
-  danger?: boolean;
-}
-
-/**
- * Three-dot action menu.
- * Options: View, Edit, Set OTP, Set Password, Enable/Disable (toggles based on current status).
- * Each handler is optional — pass them down from the parent to hook up real behavior.
- */
-function ActionMenuButton({
-  row,
-  onView,
-  onEdit,
-  onSetOtp,
-  onSetPassword,
-  onToggleStatus,
-}: ActionMenuButtonProps) {
-  const [open, setOpen] = useState<boolean>(false);
-  const menuRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    if (open) document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [open]);
-
-  const items: ActionMenuItem[] = [
-    { label: "View", icon: Eye, onClick: () => onView?.(row) },
-    { label: "Edit", icon: SquarePenIcon, onClick: () => onEdit?.(row) },
-    { label: "Set/Rest Password", icon: Lock, onClick: () => onSetPassword?.(row) },
-    { label: "Set OTP", icon: KeyRound, onClick: () => onSetOtp?.(row) },
-    { label: "User Enable/ Disable", icon: Power, onClick: () => onToggleStatus?.(row) },
-  ];
-
-  return (
-    <div className="relative" ref={menuRef}>
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="text-gray-400 hover:text-gray-600"
-        aria-label="Row actions"
-        aria-haspopup="menu"
-        aria-expanded={open}
-      >
-        <MoreVertical size={18} />
-      </button>
-
-      {open && (
-        <div role="menu" className="absolute left-6 top-10 z-20 w-64 rounded-xl border border-primary-200 bg-white py-2 shadow-lg">
-          {items.map(({ label, icon: Icon, onClick }) => (
-            <button
-              key={label}
-              type="button"
-              role="menuitem"
-              onClick={() => {
-                onClick();
-                setOpen(false);
-              }}
-              className="flex w-full items-center gap-3 px-4 py-2 text-sm text-black hover:bg-gray-50"
-            >
-              <Icon size={16} className="text-primary" />
-              {label}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
   );
 }
 
@@ -258,6 +149,7 @@ export default function UserMasterTable({
   onSetOtp,
   onSetPassword,
 }: UserTableProps) {
+  const { tRaw } = useBilingual();
   const [rows, setRows] = useState<UserRow[]>(initialRows);
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
   const [editState, setEditState] = useState<EditState | null>(null);
@@ -375,7 +267,7 @@ export default function UserMasterTable({
 
   return (
     <div className="w-full bg-white rounded-xl overflow-hidden shadow-sm">
-      <div className="overflow-x-auto [-ms-overflow-style:none] scrollbar-none [&::-webkit-scrollbar]:hidden">
+      <div className="overflow-x-auto no-scrollbar">
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-primary rounded-t-xl">
@@ -387,10 +279,7 @@ export default function UserMasterTable({
                     col.sortable ? "cursor-pointer select-none" : ""
                   }`}
                 >
-                  <span className="inline-flex items-center gap-1">
-                    {col.label}
-                    {col.sortable && <ArrowUpDown size={13} className="opacity-80" />}
-                  </span>
+                  <SortableHeaderLabel label={tRaw(col.labelKey)} sortable={col.sortable} />
                 </th>
               ))}
             </tr>
@@ -402,18 +291,17 @@ export default function UserMasterTable({
                 className={`${idx !== sortedRows.length - 1 ? "border-b border-gray-100" : ""} hover:bg-gray-50`}
               >
                 <td className="px-6 py-3">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary-50 text-primary text-sm font-semibold">
-                    {r.sr}
-                  </span>
+                  <SrNoBadge value={r.sr} />
                 </td>
                 <td className="px-6 py-3">
-                  <ActionMenuButton
-                    row={r}
-                    onView={handleView}
-                    onEdit={handleEdit}
-                    onSetOtp={handleSetOtp}
-                    onSetPassword={handleSetPassword}
-                    onToggleStatus={handleToggleStatus}
+                  <RowActionMenu
+                    items={[
+                      { key: "view", label: tRaw("common.view"), icon: Eye, onClick: () => handleView(r) },
+                      { key: "edit", label: tRaw("common.edit"), icon: SquarePenIcon, onClick: () => handleEdit(r) },
+                      { key: "setPassword", label: tRaw("userMaster.table.menuSetPassword"), icon: Lock, onClick: () => handleSetPassword(r) },
+                      { key: "setOtp", label: tRaw("userMaster.table.menuSetOtp"), icon: KeyRound, onClick: () => handleSetOtp(r) },
+                      { key: "toggleStatus", label: tRaw("userMaster.table.menuToggleStatus"), icon: Power, onClick: () => handleToggleStatus(r) },
+                    ]}
                   />
                 </td>
                 <td className="px-6 py-3 text-[16px] text-primary">
@@ -424,7 +312,7 @@ export default function UserMasterTable({
                   </div>
                 </td>
                 <td className="px-6 py-3">
-                  <StatusBadge status={r.status} />
+                  <StatusPill label={r.status} tone={r.status === "Active" ? "success" : "neutral"} />
                 </td>
                 <td className="px-6 py-3 text-[16px] text-gray-700">{r.name}</td>
                 <td className="px-6 py-3 text-[16px] text-gray-700">{r.role}</td>

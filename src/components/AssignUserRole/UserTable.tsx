@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from "react";
 import {
-  ArrowUpDown,
   Phone,
   Mail,
   AlertTriangle,
@@ -12,6 +11,9 @@ import {
 import SearchFilterBar from "./SearchFilterBar";
 import FilterModal, { type UserRoleFilters } from "./FilterModal";
 import type { SelectedUser } from "./RoleAssignmentForm";
+import { useBilingual } from "@/i18n/useBilingual";
+import SrNoBadge from "../shared/SrNoBadge";
+import SortableHeaderLabel from "../shared/SortableHeaderLabel";
 
 export type UserRow = {
   srNo: number;
@@ -77,6 +79,7 @@ export default function UserTable({
   setCurrentNewUsers,
   setCurrentModifiedUsers 
 }: UserTableProps) {
+  const { tRaw } = useBilingual();
   const [activeTab, setActiveTab] = useState<TabType>("modify");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState<UserRoleFilters>({
@@ -151,52 +154,46 @@ export default function UserTable({
             onClick={() => setActiveTab("new")}
             className={tabClass("new")}
           >
-            New User Role
+            {tRaw("assignUserRole.tabs.newUserRole")}
           </button>
           <button
             type="button"
             onClick={() => setActiveTab("modify")}
             className={tabClass("modify")}
           >
-            Modify User Role
+            {tRaw("assignUserRole.tabs.modifyUserRole")}
           </button>
         </div>
 
         <SearchFilterBar onOpenFilter={() => setIsFilterOpen(true)} />
       </div>
 
-      <div className="flex-1 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="flex-1 overflow-x-auto no-scrollbar">
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-primary">
               <th className="px-4 py-3 text-left text-sm font-semibold text-white">
-                Sr No.
+                {tRaw("assignUserRole.table.srNo")}
               </th>
               <th
                 className="cursor-pointer px-4 py-3 text-left text-sm font-semibold text-white"
                 onClick={() => setSortAsc(!sortAsc)}
               >
-                <span className="inline-flex items-center gap-1">
-                  User Details
-                  <ArrowUpDown size={13} className="opacity-80" />
-                </span>
+                <SortableHeaderLabel label={tRaw("assignUserRole.table.userDetails")} sortable />
               </th>
               <th
                 className="cursor-pointer px-4 py-3 text-left text-sm font-semibold text-white"
                 onClick={() => setSortAsc(!sortAsc)}
               >
-                <span className="inline-flex items-center gap-1">
-                  User Name
-                  <ArrowUpDown size={13} className="opacity-80" />
-                </span>
+                <SortableHeaderLabel label={tRaw("assignUserRole.table.userName")} sortable />
               </th>
               {activeTab === "modify" && (
                 <th className="px-4 py-3 text-left text-sm font-semibold text-white">
-                  Role
+                  {tRaw("assignUserRole.table.role")}
                 </th>
               )}
               <th className="px-4 py-3 text-left text-sm font-semibold text-white">
-                Assigned
+                {tRaw("assignUserRole.table.assigned")}
               </th>
             </tr>
           </thead>
@@ -210,9 +207,7 @@ export default function UserTable({
                 } ${idx !== filteredUsers.length - 1 ? "border-b border-gray-100" : ""}`}
               >
                 <td className="px-4 py-3">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary-50 text-sm font-semibold text-primary">
-                    {user.srNo}
-                  </span>
+                  <SrNoBadge value={user.srNo} />
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex flex-col gap-0.5">
@@ -272,7 +267,7 @@ export default function UserTable({
           className="flex items-center gap-1 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
         >
           <ChevronLeft size={15} />
-          Back
+          {tRaw("assignUserRole.pagination.back")}
         </button>
 
         {PAGINATION_ITEMS.map((item, idx) =>
@@ -304,7 +299,7 @@ export default function UserTable({
           onClick={() => setCurrentPage((p) => p + 1)}
           className="flex items-center gap-1 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
         >
-          Next
+          {tRaw("assignUserRole.pagination.next")}
           <ChevronRight size={15} />
         </button>
       </div>

@@ -1,7 +1,12 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
-import { ArrowUpDown, MoreVertical, ExternalLink, Ban } from "lucide-react";
+import { useState } from "react";
+import { Ban } from "lucide-react";
+import { useBilingual } from "@/i18n/useBilingual";
+import RowActionMenu from "../shared/RowActionMenu";
+import SrNoBadge from "../shared/SrNoBadge";
+import StatusPill from "../shared/StatusPill";
+import SortableHeaderLabel from "../shared/SortableHeaderLabel";
 
 export type SIRow = {
   srNo: number;
@@ -19,14 +24,14 @@ export type SIRow = {
 };
 
 const columns = [
-  { key: "srNo", label: "Sr No.", sortable: false },
-  { key: "action", label: "Action", sortable: false },
-  { key: "debit", label: "Debit A/c", sortable: false },
-  { key: "credit", label: "Credit A/c", sortable: false },
-  { key: "amount", label: "Amount", sortable: true },
-  { key: "frequency", label: "Frequency", sortable: true },
-  { key: "nextDueDate", label: "Next Due Date", sortable: true },
-  { key: "status", label: "Status", sortable: true },
+  { key: "srNo", labelKey: "standingInstructions.table.srNo", sortable: false },
+  { key: "action", labelKey: "standingInstructions.table.action", sortable: false },
+  { key: "debit", labelKey: "standingInstructions.table.debit", sortable: false },
+  { key: "credit", labelKey: "standingInstructions.table.credit", sortable: false },
+  { key: "amount", labelKey: "standingInstructions.table.amount", sortable: true },
+  { key: "frequency", labelKey: "standingInstructions.table.frequency", sortable: true },
+  { key: "nextDueDate", labelKey: "standingInstructions.table.nextDueDate", sortable: true },
+  { key: "status", labelKey: "standingInstructions.table.status", sortable: true },
 ] as const;
 
 const rows: SIRow[] = [
@@ -42,20 +47,9 @@ interface TableSIProps {
 }
 
 const TableSI = ({ onStop }: TableSIProps) => {
+  const { tRaw } = useBilingual();
   const [sortKey, setSortKey] = useState<SortKey | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
-  const [openMenuRow, setOpenMenuRow] = useState<number | null>(null);
-  const menuRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setOpenMenuRow(null);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {
@@ -77,7 +71,7 @@ const TableSI = ({ onStop }: TableSIProps) => {
 
   return (
     <div className="w-full bg-white rounded-xl overflow-hidden shadow-sm">
-      <div className="overflow-x-auto [-ms-overflow-style:none] scrollbar-none [&::-webkit-scrollbar]:hidden">
+      <div className="overflow-x-auto no-scrollbar">
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-primary rounded-t-xl">
@@ -89,10 +83,7 @@ const TableSI = ({ onStop }: TableSIProps) => {
                     col.sortable ? "cursor-pointer select-none" : ""
                   }`}
                 >
-                  <span className="inline-flex items-center gap-1">
-                    {col.label}
-                    {col.sortable && <ArrowUpDown size={13} className="opacity-80" />}
-                  </span>
+                  <SortableHeaderLabel label={tRaw(col.labelKey)} sortable={col.sortable} />
                 </th>
               ))}
             </tr>
@@ -104,36 +95,16 @@ const TableSI = ({ onStop }: TableSIProps) => {
                 className={`${idx !== sortedRows.length - 1 ? "border-b border-gray-100" : ""} hover:bg-gray-50`}
               >
                 <td className="px-6 py-3">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary-50 text-primary text-sm font-semibold">
-                    {row.srNo}
-                  </span>
+                  <SrNoBadge value={row.srNo} />
                 </td>
 
                 <td className="px-6 py-3 relative">
-                  <button
-                    onClick={() => setOpenMenuRow(openMenuRow === row.srNo ? null : row.srNo)}
-                    className="text-gray-400 hover:text-gray-600"
-                  >
-                    <MoreVertical size={18} />
-                  </button>
-
-                  {openMenuRow === row.srNo && (
-                    <div
-                      ref={menuRef}
-                      className="absolute left-6 top-10 z-10 w-56 rounded-xl border border-primary-200 bg-white py-2 shadow-lg"
-                    >
-                      <button
-                        onClick={() => {
-                          setOpenMenuRow(null);
-                          onStop?.(row);
-                        }}
-                        className="flex w-full items-center gap-3 px-4 py-2 text-sm text-black hover:bg-gray-50"
-                      >
-                        <Ban size={16} className="text-primary" />
-                        Stop
-                      </button>
-                    </div>
-                  )}
+                  <RowActionMenu
+                    menuWidth={224}
+                    items={[
+                      { key: "stop", label: tRaw("standingInstructions.table.menuStop"), icon: Ban, onClick: () => onStop?.(row) },
+                    ]}
+                  />
                 </td>
 
                 <td className="px-6 py-3 text-[16px]">
@@ -157,11 +128,7 @@ const TableSI = ({ onStop }: TableSIProps) => {
                 <td className="px-6 py-3 text-[16px] text-gray-700">{row.nextDueDate}</td>
 
                 <td className="px-6 py-3">
-                  <span className="inline-flex items-center gap-1.5 rounded-md border border-emerald-500 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-600">
-                    <span className="h-2 w-1.5 rounded-full bg-emerald-700" />
-                    {row.status}
-                    <ExternalLink size={12} />
-                  </span>
+                  <StatusPill label={row.status} />
                 </td>
               </tr>
             ))}

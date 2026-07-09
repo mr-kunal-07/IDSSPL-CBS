@@ -18,7 +18,8 @@
     "select": "Select",
     "noResultsFound": "No results found",
     "view": "View",
-    "edit": "Edit"
+    "edit": "Edit",
+    "services": "Services"
   },
   "fields": {
     "accountCode": "Account Code",
@@ -68,11 +69,57 @@
   },
   "userMaster": {
     "title": "User Master",
-    "breadcrumb": "User Master"
+    "breadcrumb": "User Master",
+    "table": {
+      "srNo": "Sr No.",
+      "action": "Action",
+      "userDetails": "User Details",
+      "status": "Status",
+      "userName": "User Name",
+      "userRole": "User Role",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "branchCode": "Branch Code",
+      "branchName": "Branch Name",
+      "menuSetPassword": "Set/Reset Password",
+      "menuSetOtp": "Set OTP",
+      "menuToggleStatus": "User Enable/ Disable"
+    }
+  },
+  "assignUserRole": {
+    "title": "Assign User Role",
+    "breadcrumb": "Assign User Role",
+    "tabs": {
+      "newUserRole": "New User Role",
+      "modifyUserRole": "Modify User Role"
+    },
+    "table": {
+      "srNo": "Sr No.",
+      "userDetails": "User Details",
+      "userName": "User Name",
+      "role": "Role",
+      "assigned": "Assigned"
+    },
+    "pagination": {
+      "back": "Back",
+      "next": "Next"
+    }
   },
   "customerMaster": {
     "title": "Customer Master",
-    "breadcrumb": "Customer Master"
+    "breadcrumb": "Customer Master",
+    "table": {
+      "srNo": "Sr No.",
+      "action": "Action",
+      "customerDetails": "Customer Details",
+      "status": "Status",
+      "name": "Customer Name",
+      "gender": "Gender",
+      "dob": "Date of Birth",
+      "regDate": "Registration Date",
+      "categoryCode": "Category Code",
+      "riskCategory": "Risk Category"
+    }
   },
   "branchMaster": {
     "title": "Branch Master",
@@ -82,6 +129,22 @@
       "branchName": "Branch Name",
       "cityCode": "City Code",
       "isImplemented": "Is Implemented"
+    },
+    "table": {
+      "srNo": "Sr No.",
+      "branchCode": "Branch Code",
+      "ifscCode": "IFSC Code",
+      "branchName": "Branch Name",
+      "shortName": "Short Name",
+      "address": "Address",
+      "cityCode": "City Code",
+      "emailId": "Email ID",
+      "phoneNo": "Phone No.",
+      "isImplemented": "Is Implemented",
+      "noRecordsFound": "No records found",
+      "menuNonCbsParameter": "Branch Non CBS Parameter",
+      "menuChequeBookLot": "Branch Cheque Book Lot",
+      "menuTdReceiptLot": "Branch TD Receipt Lot"
     }
   },
   "globalMaster": {
@@ -100,7 +163,18 @@
   },
   "standingInstructions": {
     "title": "Standing Instructions",
-    "breadcrumb": "Standing Instructions"
+    "breadcrumb": "Standing Instructions",
+    "table": {
+      "srNo": "Sr No.",
+      "action": "Action",
+      "debit": "Debit A/c",
+      "credit": "Credit A/c",
+      "amount": "Amount",
+      "frequency": "Frequency",
+      "nextDueDate": "Next Due Date",
+      "status": "Status",
+      "menuStop": "Stop"
+    }
   },
   "memo": {
     "title": "Account Memo",
@@ -143,6 +217,7 @@
     "misActivity": "MIS Activity",
     "accountMaster": "Account Master",
     "customerMaster": "Customer Master",
+    "transactionMaster": "Transaction Master",
     "userMaster": "User Master",
     "assignUserRole": "Assign User Role",
     "headOfficeMaster": "Headoffice Master",

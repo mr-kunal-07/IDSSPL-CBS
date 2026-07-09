@@ -2,20 +2,45 @@
 "use client";
 import { useState } from "react";
 import { useBilingual } from "@/i18n/useBilingual";
-import AccountMasterTable from '@/components/AccountMaster/AccountMasterTable'
+import AccountMasterTable, { type RowData } from '@/components/AccountMaster/AccountMasterTable'
 import NavbarAM from '@/components/AccountMaster/NavbarAM'
 import AddAccountMaster from "@/components/AccountMaster/AddAccountMaster";
 import ChequeBookIssue from '@/components/AccountMaster/Cheque/cheque-issue';
 import DisplayVouchers from '@/components/AccountMaster/Cheque/voucher';
+import ViewAccountModal, { type AccountDetails } from "@/components/AccountMaster/ViewAccount";
 
 
- 
+
 
 const page = () => {
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openChequeModal, setOpenChequeModal] = useState(false);
   const [openVoucherModal, setOpenVoucherModal] = useState(false);
+  const [viewMode, setViewMode] = useState<"view" | "edit" | null>(null);
+  const [selectedAccountRow, setSelectedAccountRow] = useState<RowData | null>(null);
    const { t, en } = useBilingual();
+
+  const handleView = (row: RowData) => {
+    setSelectedAccountRow(row);
+    setViewMode("view");
+  };
+
+  const handleEdit = (row: RowData) => {
+    setSelectedAccountRow(row);
+    setViewMode("edit");
+  };
+
+  const toAccountDetails = (row: RowData): AccountDetails => ({
+    accountCode: row.accountId,
+    accountName: row.accountName,
+    accountOpenDate: row.openingDate,
+    customerId: row.customerId,
+    customerName: row.accountName,
+    createdBy: row.createdBy,
+    applicationNumber: row.applicationNo,
+    categoryCode: row.accountType,
+    accountStatus: row.status,
+  });
 
   return (
     <div className="min-h-screen bg-[#F4F6FC] relative" >
@@ -33,6 +58,8 @@ const page = () => {
 
       <div className="px-3 py-2">
         <AccountMasterTable
+          onView={handleView}
+          onEdit={handleEdit}
           onChequeBookIssue={() => setOpenChequeModal(true)}
         />
       </div>
@@ -54,6 +81,14 @@ const page = () => {
       )}
       {openVoucherModal && (
         <DisplayVouchers onClose={() => setOpenVoucherModal(false)} />
+      )}
+
+      {viewMode && selectedAccountRow && (
+        <ViewAccountModal
+          mode={viewMode}
+          data={toAccountDetails(selectedAccountRow)}
+          onClose={() => setViewMode(null)}
+        />
       )}
     </div>
   )

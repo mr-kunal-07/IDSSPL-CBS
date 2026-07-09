@@ -18,7 +18,8 @@
     "select": "निवडा",
     "noResultsFound": "कोणतेही निकाल आढळले नाहीत",
     "view": "पहा",
-    "edit": "संपादित करा"
+    "edit": "संपादित करा",
+    "services": "सेवा"
   },
   "fields": {
     "accountCode": "खाते कोड",
@@ -68,15 +69,77 @@
   },
   "userMaster": {
     "title": "युझर मास्टर",
-    "breadcrumb": "युझर मास्टर"
+    "breadcrumb": "युझर मास्टर",
+    "table": {
+      "srNo": "अ.क्र.",
+      "action": "कृती",
+      "userDetails": "वापरकर्ता तपशील",
+      "status": "स्थिती",
+      "userName": "वापरकर्ता नाव",
+      "userRole": "वापरकर्ता भूमिका",
+      "createdBy": "तयार केले",
+      "createdDate": "तयार केल्याची तारीख",
+      "branchCode": "शाखा कोड",
+      "branchName": "शाखेचे नाव",
+      "menuSetPassword": "पासवर्ड सेट/रीसेट करा",
+      "menuSetOtp": "ओटीपी सेट करा",
+      "menuToggleStatus": "वापरकर्ता सक्षम/अक्षम करा"
+    }
+  },
+  "assignUserRole": {
+    "title": "वापरकर्ता भूमिका नियुक्त करा",
+    "breadcrumb": "वापरकर्ता भूमिका नियुक्त करा",
+    "tabs": {
+      "newUserRole": "नवीन वापरकर्ता भूमिका",
+      "modifyUserRole": "वापरकर्ता भूमिका सुधारित करा"
+    },
+    "table": {
+      "srNo": "अ.क्र.",
+      "userDetails": "वापरकर्ता तपशील",
+      "userName": "वापरकर्ता नाव",
+      "role": "भूमिका",
+      "assigned": "नियुक्त केले"
+    },
+    "pagination": {
+      "back": "मागे",
+      "next": "पुढे"
+    }
   },
   "customerMaster": {
     "title": "कस्टमर मास्टर",
-    "breadcrumb": "कस्टमर मास्टर"
+    "breadcrumb": "कस्टमर मास्टर",
+    "table": {
+      "srNo": "अ.क्र.",
+      "action": "कृती",
+      "customerDetails": "ग्राहक तपशील",
+      "status": "स्थिती",
+      "name": "ग्राहकाचे नाव",
+      "gender": "लिंग",
+      "dob": "जन्मतारीख",
+      "regDate": "नोंदणी तारीख",
+      "categoryCode": "कॅटेगरी कोड",
+      "riskCategory": "धोक्याचा प्रकार"
+    }
   },
   "branchMaster": {
     "title": "शाखा मास्टर",
     "breadcrumb": "शाखा मास्टर",
+    "table": {
+      "srNo": "अ.क्र.",
+      "branchCode": "शाखा कोड",
+      "ifscCode": "आयएफएससी कोड",
+      "branchName": "शाखेचे नाव",
+      "shortName": "संक्षिप्त नाव",
+      "address": "पत्ता",
+      "cityCode": "शहर कोड",
+      "emailId": "ईमेल आयडी",
+      "phoneNo": "फोन नंबर",
+      "isImplemented": "अंमलात आणले आहे",
+      "noRecordsFound": "कोणतीही नोंद आढळली नाही",
+      "menuNonCbsParameter": "शाखा नॉन सीबीएस पॅरामीटर",
+      "menuChequeBookLot": "शाखा चेक बुक लॉट",
+      "menuTdReceiptLot": "शाखा टीडी पावती लॉट"
+    },
     "filters": {
       "branchCode": "शाखा कोड",
       "branchName": "शाखा नाव",
@@ -100,7 +163,18 @@
   },
   "standingInstructions": {
     "title": "स्थायी सूचना",
-    "breadcrumb": "स्थायी सूचना"
+    "breadcrumb": "स्थायी सूचना",
+    "table": {
+      "srNo": "अ.क्र.",
+      "action": "कृती",
+      "debit": "डेबिट खाते",
+      "credit": "क्रेडिट खाते",
+      "amount": "रक्कम",
+      "frequency": "वारंवारता",
+      "nextDueDate": "पुढील देय तारीख",
+      "status": "स्थिती",
+      "menuStop": "थांबवा"
+    }
   },
   "memo": {
     "title": "हिशेबाची टीप",
@@ -143,6 +217,7 @@
     "misActivity": "एमआयएस अ‍ॅक्टिव्हिटी",
     "accountMaster": "खाते मास्टर",
     "customerMaster": "कस्टमर मास्टर",
+    "transactionMaster": "ट्रान्झॅक्शन मास्टर",
     "userMaster": "युझर मास्टर",
     "assignUserRole": "वापरकर्ता भूमिका नियुक्त करा",
     "headOfficeMaster": "मुख्य कार्यालय मास्टर",
