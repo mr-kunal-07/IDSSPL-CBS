@@ -1,6 +1,10 @@
+"use client";
+
 import { Search } from "lucide-react";
+import { useBilingual } from "@/i18n/useBilingual";
 
 export default function SidebarHeader() {
+    const { tRaw } = useBilingual();
     return (
         <div className="px-4 pt-5">
 
@@ -37,7 +41,7 @@ export default function SidebarHeader() {
 
                 <input
                     type="text"
-                    placeholder="Search"
+                    placeholder={tRaw("sidebar.search")}
                     className="h-8 w-full rounded-md border border-[#ECECEC] bg-white pl-9 pr-3 text-xs text-[#444] placeholder:text-[#9AA2B2] outline-none focus:border-[#1976F9]"
                 />
 

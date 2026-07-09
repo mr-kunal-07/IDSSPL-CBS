@@ -1,4 +1,7 @@
+"use client";
+
 import { Clock3, ShieldCheck } from "lucide-react";
+import { useBilingual } from "@/i18n/useBilingual";
 
 type UserFooterProps = {
   user: {
@@ -11,6 +14,7 @@ type UserFooterProps = {
 };
 
 export default function UserFooter({ user }: UserFooterProps) {
+  const { tRaw } = useBilingual();
   return (
     <div className="mt-auto p-2">
       <div className="rounded-lg border border-white/10 bg-[#1A0838] p-2.5">
@@ -38,7 +42,7 @@ export default function UserFooter({ user }: UserFooterProps) {
         {/* Last Login */}
         <div className="flex items-center gap-1.5 text-[10px] text-[#9EA6C6]">
           <Clock3 size={11} />
-          <span>Last Login:</span>
+          <span>{tRaw("sidebar.lastLogin")}</span>
           <span className="ml-auto font-medium text-white">
             {user.lastLogin}
           </span>
@@ -47,7 +51,7 @@ export default function UserFooter({ user }: UserFooterProps) {
         {/* Role */}
         <div className="mt-1 flex items-center gap-1.5 text-[10px] text-[#9EA6C6]">
           <ShieldCheck size={11} className="text-[#7255FF]" />
-          <span>Role:</span>
+          <span>{tRaw("sidebar.role")}</span>
           <span className="ml-auto rounded bg-[#7255FF]/15 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-[#BCAEFF]">
             {user.role}
           </span>

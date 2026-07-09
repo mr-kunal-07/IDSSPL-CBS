@@ -147,6 +147,22 @@ CATALOG: dict[str, dict[str, str]] = {
 
     # ---- dashboard ---------------------------------------------------------
     "dashboard.title": {"en": "Dashboard", "hi": "डैशबोर्ड", "mr": "डॅशबोर्ड"},
+
+    # ---- sidebar (single labels — rendered with tRaw) ----------------------
+    "sidebar.dashboard":        {"en": "Dashboard",        "hi": "डैशबोर्ड",                 "mr": "डॅशबोर्ड"},
+    "sidebar.authorization":    {"en": "Authorization",    "hi": "प्राधिकरण",                "mr": "अधिकृतीकरण"},
+    "sidebar.misActivity":      {"en": "MIS Activity",     "hi": "एमआईएस गतिविधि",           "mr": "एमआयएस अ‍ॅक्टिव्हिटी"},
+    "sidebar.accountMaster":    {"en": "Account Master",   "hi": "खाता मास्टर",              "mr": "खाते मास्टर"},
+    "sidebar.customerMaster":   {"en": "Customer Master",  "hi": "कस्टमर मास्टर",            "mr": "कस्टमर मास्टर"},
+    "sidebar.userMaster":       {"en": "User Master",      "hi": "यूज़र मास्टर",             "mr": "युझर मास्टर"},
+    "sidebar.assignUserRole":   {"en": "Assign User Role", "hi": "यूज़र भूमिका असाइन करें",  "mr": "वापरकर्ता भूमिका नियुक्त करा"},
+    "sidebar.headOfficeMaster": {"en": "Headoffice Master","hi": "हेड ऑफिस मास्टर",          "mr": "मुख्य कार्यालय मास्टर"},
+    "sidebar.globalMaster":     {"en": "Global Master",    "hi": "ग्लोबल मास्टर",            "mr": "जागतिक मास्टर"},
+    "sidebar.branchMaster":     {"en": "Branch Master",    "hi": "शाखा मास्टर",              "mr": "शाखा मास्टर"},
+    "sidebar.futureModels":     {"en": "Future Models",    "hi": "फ्यूचर मॉडल्स",            "mr": "फ्युचर मॉडेल्स"},
+    "sidebar.search":           {"en": "Search",           "hi": "खोजें",                    "mr": "शोधा"},
+    "sidebar.lastLogin":        {"en": "Last Login:",      "hi": "अंतिम लॉगिन:",             "mr": "शेवटचे लॉगिन:"},
+    "sidebar.role":             {"en": "Role:",            "hi": "भूमिका:",                  "mr": "भूमिका:"},
 }
 
 # ----------------------------------------------------------------------------

@@ -98,5 +98,21 @@
   },
   "dashboard": {
     "title": "Dashboard"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "authorization": "Authorization",
+    "misActivity": "MIS Activity",
+    "accountMaster": "Account Master",
+    "customerMaster": "Customer Master",
+    "userMaster": "User Master",
+    "assignUserRole": "Assign User Role",
+    "headOfficeMaster": "Headoffice Master",
+    "globalMaster": "Global Master",
+    "branchMaster": "Branch Master",
+    "futureModels": "Future Models",
+    "search": "Search",
+    "lastLogin": "Last Login:",
+    "role": "Role:"
   }
 }

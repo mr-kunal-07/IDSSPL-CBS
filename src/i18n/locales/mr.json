@@ -98,5 +98,21 @@
   },
   "dashboard": {
     "title": "डॅशबोर्ड"
+  },
+  "sidebar": {
+    "dashboard": "डॅशबोर्ड",
+    "authorization": "अधिकृतीकरण",
+    "misActivity": "एमआयएस अ‍ॅक्टिव्हिटी",
+    "accountMaster": "खाते मास्टर",
+    "customerMaster": "कस्टमर मास्टर",
+    "userMaster": "युझर मास्टर",
+    "assignUserRole": "वापरकर्ता भूमिका नियुक्त करा",
+    "headOfficeMaster": "मुख्य कार्यालय मास्टर",
+    "globalMaster": "जागतिक मास्टर",
+    "branchMaster": "शाखा मास्टर",
+    "futureModels": "फ्युचर मॉडेल्स",
+    "search": "शोधा",
+    "lastLogin": "शेवटचे लॉगिन:",
+    "role": "भूमिका:"
   }
 }
