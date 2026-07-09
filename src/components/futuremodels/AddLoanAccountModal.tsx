@@ -14,6 +14,7 @@ import {
   ChevronsLeftRight,
   Calendar,
   Users,
+  MoreVertical,
   Home,
   Hash,
   Building2,
@@ -34,6 +35,7 @@ import {
   Calculator,
   Ruler,
 } from "lucide-react";
+import ListModal from "../AccountMaster/ListModal";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                             */
@@ -504,6 +506,25 @@ const SectionHeader: React.FC<{ title: string; titleHi: string; subtitle: string
   </div>
 );
 
+/* Trigger button (rendered outside the text input) that opens the Customer List picker */
+const ListPickerButton: React.FC<{ onClick: () => void; label: string }> = ({ onClick, label }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    aria-label={label}
+    className="flex h-[42px] w-[42px] items-center justify-center rounded-lg border border-slate-200 bg-primary-50 text-primary transition-colors hover:bg-primary-100 disabled:pointer-events-none disabled:opacity-40"
+  >
+    <MoreVertical size={16} />
+  </button>
+);
+
+const CUSTOMER_LIST_COLUMNS = [
+  { key: "id" as const, label: "Customer ID" },
+  { key: "name" as const, label: "Customer Name" },
+  { key: "category" as const, label: "Category" },
+  { key: "risk" as const, label: "Risk" },
+];
+
 /* Delete button shown at the top-right of a repeatable row card */
 const DeleteRowButton: React.FC<{ label: string; onClick: () => void }> = ({ label, onClick }) => (
   <button
@@ -531,83 +552,101 @@ interface PartyTabProps {
   onLookup: (index: number, id: string) => void;
 }
 
-const PartyTab: React.FC<PartyTabProps> = ({ rows, entityLabel, entityLabelHi, errorPrefix, errors, onUpdate, onDelete, onLookup }) => (
-  <>
-    {rows.map((row, index) => (
-      <div key={row.srNo} className="relative rounded-[20px] border-x border-b border-t-4 border-primary bg-white p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
-        {rows.length > 1 && <DeleteRowButton label={`${entityLabel} ${row.srNo}`} onClick={() => onDelete(index)} />}
+const PartyTab: React.FC<PartyTabProps> = ({ rows, entityLabel, entityLabelHi, errorPrefix, errors, onUpdate, onDelete, onLookup }) => {
+  const [pickerRowIndex, setPickerRowIndex] = useState<number | null>(null);
 
-        {/* Top row: Sr No (compact) + first 3 fields sharing remaining space */}
-        <div className="flex flex-col gap-5 md:flex-row">
-          <div className="shrink-0 md:w-10">
-            <label className="mb-1.5 block text-sm font-medium text-slate-700">Sr No</label>
-            <div className="flex h-[42px] w-full items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-sm text-slate-600">
-              {row.srNo}
+  return (
+    <>
+      {rows.map((row, index) => (
+        <div key={row.srNo} className="relative rounded-[20px] border-x border-b border-t-4 border-primary bg-white p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+          {rows.length > 1 && <DeleteRowButton label={`${entityLabel} ${row.srNo}`} onClick={() => onDelete(index)} />}
+
+          {/* Top row: Sr No (compact) + first 3 fields sharing remaining space */}
+          <div className="flex flex-col gap-5 md:flex-row">
+            <div className="shrink-0 md:w-10">
+              <label className="mb-1.5 block text-sm font-medium text-slate-700">Sr No</label>
+              <div className="flex h-[42px] w-full items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-sm text-slate-600">
+                {row.srNo}
+              </div>
+            </div>
+
+            <div className="flex-1">
+              <FieldShell label="Salutation Code" labelHi="संबोधनी" required>
+                <SelectInput icon={<User size={16} />} value={row.salutationCode} onChange={(v) => onUpdate(index, { salutationCode: v })} options={SALUTATIONS} />
+              </FieldShell>
+            </div>
+
+            <div className="flex-1">
+              <FieldShell label={`${entityLabel} Customer ID`} labelHi={`${entityLabelHi} ग्राहक आयडी`} required error={errors[`${errorPrefix}-${index}-customerId`]}>
+                <TextInput
+                  icon={<IdCard size={16} />}
+                  value={row.customerId}
+                  onChange={(v) => onLookup(index, v)}
+                  error={errors[`${errorPrefix}-${index}-customerId`]}
+                  trailing={<ListPickerButton label={`Pick ${entityLabel} Customer ID`} onClick={() => setPickerRowIndex(index)} />}
+                />
+              </FieldShell>
+            </div>
+
+            <div className="flex-1">
+              <FieldShell label={`${entityLabel} Name`} labelHi={`${entityLabelHi} नाव`} required error={errors[`${errorPrefix}-${index}-name`]}>
+                <TextInput icon={<User size={16} />} value={row.name} onChange={(v) => onUpdate(index, { name: v })} error={errors[`${errorPrefix}-${index}-name`]} />
+              </FieldShell>
             </div>
           </div>
 
-          <div className="flex-1">
-            <FieldShell label="Salutation Code" labelHi="संबोधनी" required>
-              <SelectInput icon={<User size={16} />} value={row.salutationCode} onChange={(v) => onUpdate(index, { salutationCode: v })} options={SALUTATIONS} />
+          {/* Remaining fields: 4-column grid */}
+          <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-4">
+            <FieldShell label="Relation" labelHi="नाते" required>
+              <SelectInput icon={<Users size={16} />} value={row.relation} onChange={(v) => onUpdate(index, { relation: v })} options={RELATIONS} />
             </FieldShell>
-          </div>
 
-          <div className="flex-1">
-            <FieldShell label={`${entityLabel} Customer ID`} labelHi={`${entityLabelHi} ग्राहक आयडी`} required error={errors[`${errorPrefix}-${index}-customerId`]}>
-              <TextInput
-                icon={<IdCard size={16} />}
-                value={row.customerId}
-                onChange={(v) => onLookup(index, v)}
-                error={errors[`${errorPrefix}-${index}-customerId`]}
-              />
+            <FieldShell label="Address 1" labelHi="पत्ता १" required>
+              <TextInput icon={<Home size={16} />} value={row.address1} onChange={(v) => onUpdate(index, { address1: v })} />
             </FieldShell>
-          </div>
 
-          <div className="flex-1">
-            <FieldShell label={`${entityLabel} Name`} labelHi={`${entityLabelHi} नाव`} required error={errors[`${errorPrefix}-${index}-name`]}>
-              <TextInput icon={<User size={16} />} value={row.name} onChange={(v) => onUpdate(index, { name: v })} error={errors[`${errorPrefix}-${index}-name`]} />
+            <FieldShell label="Address 2" labelHi="पत्ता २" required>
+              <TextInput icon={<Home size={16} />} value={row.address2} onChange={(v) => onUpdate(index, { address2: v })} />
+            </FieldShell>
+
+            <FieldShell label="Address 3" labelHi="पत्ता ३">
+              <TextInput icon={<Home size={16} />} value={row.address3} onChange={(v) => onUpdate(index, { address3: v })} />
+            </FieldShell>
+
+            <FieldShell label="Zip" labelHi="पिन कोड" required error={errors[`${errorPrefix}-${index}-zip`]}>
+              <TextInput icon={<Hash size={16} />} value={row.zip} onChange={(v) => onUpdate(index, { zip: v })} error={errors[`${errorPrefix}-${index}-zip`]} />
+            </FieldShell>
+
+            <FieldShell label="City" labelHi="शहरे" required>
+              <SelectInput icon={<Building2 size={16} />} value={row.city} onChange={(v) => onUpdate(index, { city: v })} options={CITIES} />
+            </FieldShell>
+
+            <FieldShell label="State" labelHi="राज्य" required>
+              <TextInput icon={<MapPin size={16} />} value={row.state} onChange={(v) => onUpdate(index, { state: v })} />
+            </FieldShell>
+
+            <FieldShell label="Country" labelHi="देश" required>
+              <TextInput icon={<Flag size={16} />} value={row.country} onChange={(v) => onUpdate(index, { country: v })} />
             </FieldShell>
           </div>
         </div>
+      ))}
 
-        {/* Remaining fields: 4-column grid */}
-        <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-4">
-          <FieldShell label="Relation" labelHi="नाते" required>
-            <SelectInput icon={<Users size={16} />} value={row.relation} onChange={(v) => onUpdate(index, { relation: v })} options={RELATIONS} />
-          </FieldShell>
-
-          <FieldShell label="Address 1" labelHi="पत्ता १" required>
-            <TextInput icon={<Home size={16} />} value={row.address1} onChange={(v) => onUpdate(index, { address1: v })} />
-          </FieldShell>
-
-          <FieldShell label="Address 2" labelHi="पत्ता २" required>
-            <TextInput icon={<Home size={16} />} value={row.address2} onChange={(v) => onUpdate(index, { address2: v })} />
-          </FieldShell>
-
-          <FieldShell label="Address 3" labelHi="पत्ता ३">
-            <TextInput icon={<Home size={16} />} value={row.address3} onChange={(v) => onUpdate(index, { address3: v })} />
-          </FieldShell>
-
-          <FieldShell label="Zip" labelHi="पिन कोड" required error={errors[`${errorPrefix}-${index}-zip`]}>
-            <TextInput icon={<Hash size={16} />} value={row.zip} onChange={(v) => onUpdate(index, { zip: v })} error={errors[`${errorPrefix}-${index}-zip`]} />
-          </FieldShell>
-
-          <FieldShell label="City" labelHi="शहरे" required>
-            <SelectInput icon={<Building2 size={16} />} value={row.city} onChange={(v) => onUpdate(index, { city: v })} options={CITIES} />
-          </FieldShell>
-
-          <FieldShell label="State" labelHi="राज्य" required>
-            <TextInput icon={<MapPin size={16} />} value={row.state} onChange={(v) => onUpdate(index, { state: v })} />
-          </FieldShell>
-
-          <FieldShell label="Country" labelHi="देश" required>
-            <TextInput icon={<Flag size={16} />} value={row.country} onChange={(v) => onUpdate(index, { country: v })} />
-          </FieldShell>
-        </div>
-      </div>
-    ))}
-  </>
-);
+      {pickerRowIndex !== null && (
+        <ListModal
+          title={`${entityLabel} Customer List`}
+          columns={CUSTOMER_LIST_COLUMNS}
+          rows={CUSTOMERS}
+          onSelect={(customer) => {
+            onLookup(pickerRowIndex, customer.id);
+            setPickerRowIndex(null);
+          }}
+          onClose={() => setPickerRowIndex(null)}
+        />
+      )}
+    </>
+  );
+};
 
 /* ------------------------------------------------------------------ */
 /*  Gold & Silver tab                                                  */
@@ -781,26 +820,36 @@ const LandBuildingSection: React.FC<LandBuildingSectionProps> = ({ rows, errors,
     {rows.map((row, index) => (
       <div key={row.srNo} className="relative rounded-[20px] border-x border-b border-t-4 border-primary bg-white p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
         {rows.length > 1 && <DeleteRowButton label={`Land & Building ${row.srNo}`} onClick={() => onDelete(index)} />}
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-          <div>
+
+        {/* Top row: Sr No (compact) + first 3 fields sharing remaining space */}
+        <div className="flex flex-col gap-5 md:flex-row">
+          <div className="shrink-0 md:w-16">
             <label className="mb-1.5 block text-xs font-medium text-black">Sr No</label>
-            <div className="flex h-[42px] w-16 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-sm text-slate-600">
+            <div className="flex h-[42px] w-full items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-sm text-slate-600">
               {row.srNo}
             </div>
           </div>
 
-          <FieldShell label="Security Type Code" labelHi="सुरक्षेचा प्रकार कोड" required error={errors[`lb-${index}-securityTypeCode`]}>
-            <SelectInput icon={<ShieldCheck size={16} />} value={row.securityTypeCode} onChange={(v) => onUpdate(index, { securityTypeCode: v })} options={LAND_SECURITY_TYPES} />
-          </FieldShell>
+          <div className="flex-1">
+            <FieldShell label="Security Type Code" labelHi="सुरक्षेचा प्रकार कोड" required error={errors[`lb-${index}-securityTypeCode`]}>
+              <SelectInput icon={<ShieldCheck size={16} />} value={row.securityTypeCode} onChange={(v) => onUpdate(index, { securityTypeCode: v })} options={LAND_SECURITY_TYPES} />
+            </FieldShell>
+          </div>
 
-          <FieldShell label="Submission Date" labelHi="सादर दिनांक">
-            <DateField value={row.submissionDate} onChange={(v) => onUpdate(index, { submissionDate: v })} />
-          </FieldShell>
+          <div className="flex-1">
+            <FieldShell label="Submission Date" labelHi="सादर दिनांक">
+              <DateField value={row.submissionDate} onChange={(v) => onUpdate(index, { submissionDate: v })} />
+            </FieldShell>
+          </div>
 
-          <FieldShell label="Location" labelHi="ठिकाण" required error={errors[`lb-${index}-location`]}>
-            <SelectInput icon={<Building2 size={16} />} value={row.location} onChange={(v) => onUpdate(index, { location: v })} options={CITIES} />
-          </FieldShell>
+          <div className="flex-1">
+            <FieldShell label="Location" labelHi="ठिकाण" required error={errors[`lb-${index}-location`]}>
+              <SelectInput icon={<Building2 size={16} />} value={row.location} onChange={(v) => onUpdate(index, { location: v })} options={CITIES} />
+            </FieldShell>
+          </div>
+        </div>
 
+        <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-3">
           <FieldShell label="Area" labelHi="क्षेत्र" required error={errors[`lb-${index}-area`]}>
             <TextInput icon={<Home size={16} />} value={row.area} onChange={(v) => onUpdate(index, { area: v })} error={errors[`lb-${index}-area`]} />
           </FieldShell>
@@ -1208,6 +1257,7 @@ const AddLoanAccountModal: React.FC<AddLoanAccountModalProps> = ({ productDescri
   const [wareHouse, setWareHouse] = useState<WareHouseData>(initialData?.wareHouse ?? DEFAULT_WAREHOUSE);
 
   const [errors, setErrors] = useState<Record<string, boolean>>({});
+  const [isCustomerListOpen, setIsCustomerListOpen] = useState(false);
 
   const applyCustomerLookup = (id: string) => {
     const match = CUSTOMERS.find((c) => c.id === id);
@@ -1367,6 +1417,7 @@ const AddLoanAccountModal: React.FC<AddLoanAccountModalProps> = ({ productDescri
   const showsAddButton = !isViewMode && ["Nominee", "Guarantor", "Land & Building", "Motor-Insurance", "Plan & Machine"].includes(activeTab);
 
   return (
+    <>
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
       <div className="max-h-[92vh] w-full max-w-6xl overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl">
         {/* Header */}
@@ -1431,6 +1482,7 @@ const AddLoanAccountModal: React.FC<AddLoanAccountModalProps> = ({ productDescri
                     value={details.customerId}
                     onChange={applyCustomerLookup}
                     error={errors.customerId}
+                    trailing={<ListPickerButton label="Pick Customer ID" onClick={() => setIsCustomerListOpen(true)} />}
                   />
                 </FieldShell>
 
@@ -1726,6 +1778,20 @@ const AddLoanAccountModal: React.FC<AddLoanAccountModalProps> = ({ productDescri
         </div>
       </div>
     </div>
+
+    {isCustomerListOpen && (
+      <ListModal
+        title="Customer List"
+        columns={CUSTOMER_LIST_COLUMNS}
+        rows={CUSTOMERS}
+        onSelect={(customer) => {
+          applyCustomerLookup(customer.id);
+          setIsCustomerListOpen(false);
+        }}
+        onClose={() => setIsCustomerListOpen(false)}
+      />
+    )}
+    </>
   );
 };
 
