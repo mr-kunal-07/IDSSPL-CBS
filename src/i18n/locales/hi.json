@@ -1,0 +1,102 @@
+{
+  "common": {
+    "home": "होम",
+    "misActivity": "एमआईएस गतिविधि",
+    "futureModels": "फ्यूचर मॉडल्स",
+    "cancel": "रद्द करें",
+    "save": "सहेजें",
+    "submit": "जमा करें",
+    "validate": "सत्यापित करें",
+    "revoke": "निरस्त करें",
+    "details": "विवरण",
+    "accountDetails": "खाता विवरण",
+    "lienDetails": "ग्रहणाधिकार विवरण"
+  },
+  "fields": {
+    "accountCode": "खाता कोड",
+    "accountName": "खाता नाम",
+    "name": "नाम",
+    "ledgerBalance": "लेजर बैलेंस",
+    "availableBalance": "उपलब्ध बैलेंस",
+    "loanAccountCode": "ऋण खाता कोड",
+    "loanAccountName": "ऋण खाता नाम",
+    "lienAmount": "ग्रहणाधिकार राशि",
+    "remark": "टिप्पणी",
+    "serial": "क्रम"
+  },
+  "accountMaster": {
+    "title": "खाता मास्टर",
+    "breadcrumb": "खाता मास्टर"
+  },
+  "userMaster": {
+    "title": "यूज़र मास्टर",
+    "breadcrumb": "यूज़र मास्टर"
+  },
+  "customerMaster": {
+    "title": "कस्टमर मास्टर",
+    "breadcrumb": "कस्टमर मास्टर"
+  },
+  "branchMaster": {
+    "title": "शाखा मास्टर",
+    "breadcrumb": "शाखा मास्टर",
+    "filters": {
+      "branchCode": "शाखा कोड",
+      "branchName": "शाखा नाम",
+      "cityCode": "शहर कोड",
+      "isImplemented": "लागू है"
+    }
+  },
+  "globalMaster": {
+    "title": "मास्टर मेंटेनेंस ग्लोबल"
+  },
+  "headOfficeMaster": {
+    "title": "मास्टर मेंटेनेंस हेड ऑफिस"
+  },
+  "authorization": {
+    "title": "प्राधिकरण",
+    "breadcrumb": "प्राधिकरण"
+  },
+  "tdClose": {
+    "title": "मियादी जमा बंद करें",
+    "breadcrumb": "मियादी जमा बंद करें"
+  },
+  "standingInstructions": {
+    "title": "स्थायी निर्देश",
+    "breadcrumb": "स्थायी निर्देश"
+  },
+  "memo": {
+    "title": "खाता मेमो",
+    "accountCode": "खाता कोड",
+    "name": "नाम",
+    "memoDetails": "मेमो विवरण",
+    "detailsPlaceholder": "विवरण",
+    "charactersOnly": "केवल {{count}} अक्षर"
+  },
+  "lienMark": {
+    "title": "ग्रहणाधिकार चिह्न"
+  },
+  "lienRevoke": {
+    "title": "ग्रहणाधिकार निरस्त चिह्न"
+  },
+  "tdCalculate": {
+    "title": "परिपक्वता राशि",
+    "subtitle": "सभी जानकारी परिपक्वता राशि से संबंधित है",
+    "accountType": "खाता प्रकार",
+    "productCode": "उत्पाद कोड",
+    "productDescription": "उत्पाद विवरण",
+    "categoryCode": "श्रेणी कोड",
+    "openingDate": "खोलने की तारीख",
+    "unitOfPeriod": "अवधि की इकाई",
+    "periodOfDeposit": "जमा की अवधि",
+    "rate": "दर",
+    "interestFrequency": "ब्याज भुगतान आवृत्ति",
+    "depositAmount": "जमा राशि",
+    "maturityAmount": "परिपक्वता राशि",
+    "maturityDate": "परिपक्वता तारीख",
+    "subProductList": "उप उत्पाद सूची",
+    "descriptionCol": "विवरण"
+  },
+  "dashboard": {
+    "title": "डैशबोर्ड"
+  }
+}

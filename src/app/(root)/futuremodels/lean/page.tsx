@@ -13,8 +13,10 @@ import {
   Settings,
 } from 'lucide-react'
 import Image from 'next/image'
+import { useBilingual } from '@/i18n/useBilingual'
 
 const page = () => {
+  const { t, en } = useBilingual()
   const [remark, setRemark] = useState('')
 
   return (
@@ -31,8 +33,8 @@ const page = () => {
               priority
             />
           <h2 className="text-[24px] font-bold text-black">
-            Lien Mark / {' '}
-            <span className="text-gray-500 font-semibold"> बोजा नोंदवणे</span>
+            {en('lienMark.title')}
+            {t('lienMark.title') ? <span className="text-gray-500 font-semibold"> / {t('lienMark.title')}</span> : null}
           </h2>
         </div>
         <button
@@ -50,8 +52,8 @@ const page = () => {
             <User className="w-5 h-5 text-primary" />
           </div>
           <h3 className="text-lg font-bold text-[#0B1B3D]">
-            Account Details /{' '}
-            <span className="text-gray-500 font-semibold">खात्याचा तपशील</span>
+            {en('common.accountDetails')}
+            {t('common.accountDetails') ? <span className="text-gray-500 font-semibold"> / {t('common.accountDetails')}</span> : null}
           </h3>
         </div>
         <div className="border-t border-gray-200 mb-6" />
@@ -59,7 +61,8 @@ const page = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-800 mb-2">
-              Account Code / <span className="text-gray-500">खाते कोड</span>
+              {en('fields.accountCode')}
+              {t('fields.accountCode') ? <span className="text-gray-500"> / {t('fields.accountCode')}</span> : null}
               <span className="text-red-500 ml-0.5">*</span>
             </label>
             <div className="flex items-center gap-3 rounded-lg border border-gray-300 bg-gray-100 px-4 py-3">
@@ -75,7 +78,8 @@ const page = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-800 mb-2">
-              Account Name / <span className="text-gray-500">खाते नाव</span>
+              {en('fields.accountName')}
+              {t('fields.accountName') ? <span className="text-gray-500"> / {t('fields.accountName')}</span> : null}
               <span className="text-red-500 ml-0.5">*</span>
             </label>
             <div className="flex items-center gap-3 rounded-lg border border-gray-300 bg-gray-100 px-4 py-3">
@@ -91,7 +95,8 @@ const page = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-800 mb-2">
-              Ledger Balance / <span className="text-gray-500">लेजर शिल्लक</span>
+              {en('fields.ledgerBalance')}
+              {t('fields.ledgerBalance') ? <span className="text-gray-500"> / {t('fields.ledgerBalance')}</span> : null}
               <span className="text-red-500 ml-0.5">*</span>
             </label>
             <div className="flex items-center gap-3 rounded-lg border border-gray-300 bg-gray-100 px-4 py-3">
@@ -107,8 +112,8 @@ const page = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-800 mb-2">
-              Available Balance /{' '}
-              <span className="text-gray-500">उपलब्ध शिल्लक</span>
+              {en('fields.availableBalance')}
+              {t('fields.availableBalance') ? <span className="text-gray-500"> / {t('fields.availableBalance')}</span> : null}
               <span className="text-red-500 ml-0.5">*</span>
             </label>
             <div className="flex items-center gap-3 rounded-lg border border-gray-300 bg-gray-100 px-4 py-3">
@@ -131,8 +136,8 @@ const page = () => {
             <User className="w-5 h-5 text-primary" />
           </div>
           <h3 className="text-lg font-bold text-[#0B1B3D]">
-            Lien Details /{' '}
-            <span className="text-gray-500 font-semibold">खात्याचा तपशील</span>
+            {en('common.lienDetails')}
+            {t('common.lienDetails') ? <span className="text-gray-500 font-semibold"> / {t('common.lienDetails')}</span> : null}
           </h3>
         </div>
         <div className="border-t border-gray-200 mb-6" />
@@ -140,8 +145,8 @@ const page = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-800 mb-2">
-              Loan Account Code /{' '}
-              <span className="text-gray-500">कर्ज खाते कोड</span>
+              {en('fields.loanAccountCode')}
+              {t('fields.loanAccountCode') ? <span className="text-gray-500"> / {t('fields.loanAccountCode')}</span> : null}
               <span className="text-red-500 ml-0.5">*</span>
             </label>
             <div className="flex items-center gap-3 rounded-lg border border-gray-300 px-4 py-3">
@@ -156,8 +161,8 @@ const page = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-800 mb-2">
-              Loan Account Name /{' '}
-              <span className="text-gray-500">कर्ज खाते नाव</span>
+              {en('fields.loanAccountName')}
+              {t('fields.loanAccountName') ? <span className="text-gray-500"> / {t('fields.loanAccountName')}</span> : null}
               <span className="text-red-500 ml-0.5">*</span>
             </label>
             <div className="flex items-center gap-3 rounded-lg border border-gray-300 px-4 py-3">
@@ -171,7 +176,8 @@ const page = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-800 mb-2">
-              Lien Amount / <span className="text-gray-500">बोजा रक्कम</span>
+              {en('fields.lienAmount')}
+              {t('fields.lienAmount') ? <span className="text-gray-500"> / {t('fields.lienAmount')}</span> : null}
               <span className="text-red-500 ml-0.5">*</span>
             </label>
             <div className="flex items-center gap-3 rounded-lg border border-gray-300 px-4 py-3">
@@ -186,7 +192,8 @@ const page = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-800 mb-2">
-              Remark / <span className="text-gray-500">शेरा</span>
+              {en('fields.remark')}
+              {t('fields.remark') ? <span className="text-gray-500"> / {t('fields.remark')}</span> : null}
               <span className="text-red-500 ml-0.5">*</span>
             </label>
             <div className="flex items-center gap-3 rounded-lg border border-gray-300 px-4 py-3">
@@ -209,20 +216,20 @@ const page = () => {
           type="button"
           className="flex items-center gap-2 px-8 py-3 rounded-lg bg-primary text-white font-semibold hover:bg-[#0a58ac] transition-colors"
         >
-          Validate <Check className="w-4 h-4" />
+          {en('common.validate')} <Check className="w-4 h-4" />
         </button>
         <button
           type="button"
           className="flex items-center gap-2 px-8 py-3 rounded-lg border border-primary text-primary font-semibold hover:bg-primary-50 transition-colors"
         >
-          Cancel <X className="w-4 h-4" />
+          {en('common.cancel')} <X className="w-4 h-4" />
         </button>
         <button
           type="button"
           className="flex items-center gap-2 px-8 py-3 rounded-lg bg-gray-100 text-gray-400 font-semibold cursor-not-allowed"
           disabled
         >
-          Save <ChevronDown className="w-4 h-4" />
+          {en('common.save')} <ChevronDown className="w-4 h-4" />
         </button>
       </div>
     </div>

@@ -1,11 +1,13 @@
 "use client";
 import { useState } from "react";
+import { useBilingual } from "@/i18n/useBilingual";
 import AccountMasterTable from "@/components/AccountMaster/AccountMasterTable";
 import NavbarAM from "@/components/AccountMaster/NavbarAM";
 import AddAccountMaster from "@/components/AccountMaster/AddAccountMaster";
 import FilterModal, { type AccountFilters } from "@/components/shared/FilterModal";
 
 const AccountMasterPage = () => {
+  const { t, en } = useBilingual();
   const [openAddModal, setOpenAddModal] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
@@ -27,12 +29,12 @@ const AccountMasterPage = () => {
   return (
     <div className="min-h-screen bg-[#F4F6FC] relative">
       <NavbarAM
-        titleEn="Account Master"
-        titleHi="खाते मास्टर"
+        titleEn={en("accountMaster.title")}
+        titleHi={t("accountMaster.title")}
         breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "MIS Activity", href: "/" },
-          { label: "Account Master", href: "/" },
+          { label: en("common.home"), href: "/" },
+          { label: en("common.misActivity"), href: "/" },
+          { label: en("accountMaster.breadcrumb"), href: "/" },
         ]}
         onBack={() => window.history.back()}
         onAdd={() => setOpenAddModal(true)}

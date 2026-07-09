@@ -5,8 +5,10 @@ import NavbarCM from "@/components/CustomerMaster/NavbarCM";
 import TableSI, { type SIRow } from "@/components/StandingInstruction/TableSI";
 import AddSI, { type NewSIFormData } from "@/components/StandingInstruction/AddSI";
 import StopSI from "@/components/StandingInstruction/StopSI";
+import { useBilingual } from "@/i18n/useBilingual";
 
 const StandingInstructionsPage = () => {
+  const { t, en } = useBilingual();
   const [openAddModal, setOpenAddModal] = useState(false);
   const [stopRow, setStopRow] = useState<SIRow | null>(null);
 
@@ -21,12 +23,12 @@ const StandingInstructionsPage = () => {
   return (
     <div className="min-h-screen bg-[#F4F6FC] relative">
       <NavbarCM
-        titleEn="Standing Instructions"
-        titleHi="स्थायी सूचना"
+        titleEn={en("standingInstructions.title")}
+        titleHi={t("standingInstructions.title")}
         breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "Future Models", href: "/futuremodels" },
-          { label: "Standing Instructions", href: "/futuremodels/standing-instructions" },
+          { label: en("common.home"), href: "/" },
+          { label: en("common.futureModels"), href: "/futuremodels" },
+          { label: en("standingInstructions.breadcrumb"), href: "/futuremodels/standing-instructions" },
         ]}
         onBack={() => window.history.back()}
         onAdd={() => setOpenAddModal(true)}

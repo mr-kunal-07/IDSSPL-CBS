@@ -1,15 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronDown, Clock3 } from "lucide-react";
+import { Clock3 } from "lucide-react";
 import Image from "next/image";
 import ThemeSwitcher from "@/components/theme/ThemeSwitcher";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 type HeaderProps = {
   onMenuClick?: () => void;
 };
 
-export default function Header({ onMenuClick }: HeaderProps) {
+export default function Header({ onMenuClick: _onMenuClick }: HeaderProps) {
   const [now, setNow] = useState<Date | null>(null);
   const [timeLeft, setTimeLeft] = useState(10 * 60);
 
@@ -73,14 +74,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
       <div className="flex items-center gap-4">
         <ThemeSwitcher />
 
-        <button
-          type="button"
-          onClick={onMenuClick}
-          className="flex h-8 w-32 items-center justify-between rounded-[10px] border border-[#1D73F6] bg-white px-4 text-xs text-[#1D73F6]"
-        >
-          <span>Language</span>
-          <ChevronDown size={15} />
-        </button>
+        <LanguageSwitcher />
 
         <div
           className="flex h-8 items-center gap-1 rounded-[10px] bg-primary px-3 text-xs text-white"

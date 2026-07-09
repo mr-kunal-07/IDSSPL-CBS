@@ -8,7 +8,7 @@ type BreadcrumbItem = {
 
 type NavbarCMProps = {
   titleEn: string;
-  titleHi: string;
+  titleHi?: string;
   breadcrumbs?: BreadcrumbItem[];
   onBack?: () => void;
   onAdd?: () => void;
@@ -98,8 +98,12 @@ const NavbarCM = ({
             <div className="min-w-0">
               <h1 className="truncate text-lg font-semibold text-[#1C398E]">
                 {titleEn}
-                <span className="mx-2 font-normal">|</span>
-                <span className="">{titleHi}</span>
+                {titleHi ? (
+                  <>
+                    <span className="mx-2 font-normal">|</span>
+                    <span className="">{titleHi}</span>
+                  </>
+                ) : null}
               </h1>
 
               <div className="flex flex-wrap items-center gap-2">

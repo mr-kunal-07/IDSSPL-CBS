@@ -1,0 +1,102 @@
+{
+  "common": {
+    "home": "Home",
+    "misActivity": "MIS Activity",
+    "futureModels": "Future Models",
+    "cancel": "Cancel",
+    "save": "Save",
+    "submit": "Submit",
+    "validate": "Validate",
+    "revoke": "Revoke",
+    "details": "Details",
+    "accountDetails": "Account Details",
+    "lienDetails": "Lien Details"
+  },
+  "fields": {
+    "accountCode": "Account Code",
+    "accountName": "Account Name",
+    "name": "Name",
+    "ledgerBalance": "Ledger Balance",
+    "availableBalance": "Available Balance",
+    "loanAccountCode": "Loan Account Code",
+    "loanAccountName": "Loan Account Name",
+    "lienAmount": "Lien Amount",
+    "remark": "Remark",
+    "serial": "Serial"
+  },
+  "accountMaster": {
+    "title": "Account Master",
+    "breadcrumb": "Account Master"
+  },
+  "userMaster": {
+    "title": "User Master",
+    "breadcrumb": "User Master"
+  },
+  "customerMaster": {
+    "title": "Customer Master",
+    "breadcrumb": "Customer Master"
+  },
+  "branchMaster": {
+    "title": "Branch Master",
+    "breadcrumb": "Branch Master",
+    "filters": {
+      "branchCode": "Branch Code",
+      "branchName": "Branch Name",
+      "cityCode": "City Code",
+      "isImplemented": "Is Implemented"
+    }
+  },
+  "globalMaster": {
+    "title": "Master Maintenance Global"
+  },
+  "headOfficeMaster": {
+    "title": "Master Maintenance Head Office"
+  },
+  "authorization": {
+    "title": "Authorization",
+    "breadcrumb": "Authorization"
+  },
+  "tdClose": {
+    "title": "Term Deposit Close",
+    "breadcrumb": "Term Deposit Close"
+  },
+  "standingInstructions": {
+    "title": "Standing Instructions",
+    "breadcrumb": "Standing Instructions"
+  },
+  "memo": {
+    "title": "Account Memo",
+    "accountCode": "Account Code",
+    "name": "Name",
+    "memoDetails": "Memo Details",
+    "detailsPlaceholder": "Details",
+    "charactersOnly": "{{count}} Characters Only"
+  },
+  "lienMark": {
+    "title": "Lien Mark"
+  },
+  "lienRevoke": {
+    "title": "Lien Revoke Mark"
+  },
+  "tdCalculate": {
+    "title": "Maturity Amount",
+    "subtitle": "All Information's are related to Maturity Amount",
+    "accountType": "Account Type",
+    "productCode": "Product Code",
+    "productDescription": "Product Description",
+    "categoryCode": "Category Code",
+    "openingDate": "Opening Date",
+    "unitOfPeriod": "Unit Of Period",
+    "periodOfDeposit": "Period of Deposit",
+    "rate": "Rate",
+    "interestFrequency": "Interest Payment frequency",
+    "depositAmount": "Deposit Amount",
+    "maturityAmount": "Maturity Amount",
+    "maturityDate": "Maturity Date",
+    "subProductList": "Sub Product List",
+    "descriptionCol": "Description"
+  },
+  "dashboard": {
+    "title": "Dashboard"
+  }
+}

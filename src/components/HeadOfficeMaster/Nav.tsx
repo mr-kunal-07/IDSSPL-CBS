@@ -8,7 +8,7 @@ type BreadcrumbItem = {
 
 type NavProps = {
   titleEn: string;
-  titleHi: string;
+  titleHi?: string;
   breadcrumbs?: BreadcrumbItem[];
   onBack?: () => void;
   onFilter?: () => void;
@@ -84,8 +84,12 @@ const Nav = ({
             <div className="min-w-0">
               <h1 className="truncate text-lg font-semibold text-[#1C398E]">
                 {titleEn}
-                <span className="mx-2 font-normal">|</span>
-                <span>{titleHi}</span>
+                {titleHi ? (
+                  <>
+                    <span className="mx-2 font-normal">|</span>
+                    <span>{titleHi}</span>
+                  </>
+                ) : null}
               </h1>
 
               <div className="flex flex-wrap items-center gap-2">

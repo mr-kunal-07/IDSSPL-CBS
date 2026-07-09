@@ -6,21 +6,24 @@ import BranchMasterTable, { DEFAULT_BRANCH_ROWS, rowToBranchFormData, type Branc
 import AddBranchModal, { emptyBranchFormData, type BranchFormData } from "@/components/BranchMaster/AddBranchModal";
 import FilterModal, { defaultBranchFilterValues, type BranchFilters } from "@/components/BranchMaster/FilterModal";
 import BranchChequeBookLotModal, { rowToChequeBookLotFormData, type ChequeBookLotFormData } from "@/components/BranchMaster/BranchChequeBookLotModal";
-
-const breadcrumbs = [
-  { label: "Home", href: "/" },
-  { label: "MIS Activity", href: "/" },
-  { label: "Branch Master", href: "#" },
-];
-
-const FILTER_LABELS: Record<keyof BranchFilters, string> = {
-  branchCode: "Branch Code",
-  branchName: "Branch Name",
-  cityCode: "City Code",
-  isImplemented: "Is Implemented",
-};
+import { useBilingual } from "@/i18n/useBilingual";
 
 export default function BranchMasterPage() {
+  const { t, en } = useBilingual();
+
+  const breadcrumbs = [
+    { label: en("common.home"), href: "/" },
+    { label: en("common.misActivity"), href: "/" },
+    { label: en("branchMaster.breadcrumb"), href: "#" },
+  ];
+
+  const FILTER_LABELS: Record<keyof BranchFilters, string> = {
+    branchCode: en("branchMaster.filters.branchCode"),
+    branchName: en("branchMaster.filters.branchName"),
+    cityCode: en("branchMaster.filters.cityCode"),
+    isImplemented: en("branchMaster.filters.isImplemented"),
+  };
+
   const [rows, setRows] = useState<BranchRow[]>(DEFAULT_BRANCH_ROWS);
   const [showAdd, setShowAdd] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
@@ -83,8 +86,8 @@ export default function BranchMasterPage() {
   return (
     <div className="min-h-screen bg-[#E7EAEF]">
       <GlobalNav
-        titleEn="Branch Master"
-        titleHi="शाखा मास्टर"
+        titleEn={en("branchMaster.title")}
+        titleHi={t("branchMaster.title")}
         breadcrumbs={breadcrumbs}
         onBack={() => window.history.back()}
         showActions
