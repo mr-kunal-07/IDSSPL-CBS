@@ -42,7 +42,7 @@ const MainModel = () => {
               </span>
 
             </div>
-          </Linkte>
+          </Link>
         )
       })}
     </div>
