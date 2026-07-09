@@ -122,7 +122,7 @@ export default function ListModal<T extends Record<string, any>>({
 
   return (
     <div className="fixed inset-0 z-[100] bg-black/40 backdrop-blur-sm flex items-center justify-center p-6">
-      <div className="relative w-full max-w-xl h-[80vh] overflow-hidden rounded-[24px] bg-white shadow-2xl">
+      <div className="relative w-full max-w-xl h-[60vh] overflow-hidden rounded-[24px] bg-white shadow-2xl">
 
         <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-[#DCEBFF]" />
 
