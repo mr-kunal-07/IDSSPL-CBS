@@ -18,6 +18,7 @@ import {
   UserCheck,
   AlertTriangle,
   ChevronDown,
+  ChevronRight,
   MoreVertical,
   User,
   Percent,
@@ -190,8 +191,8 @@ function BilingualLabel({
 }) {
   return (
     <label
-      className={`mb-1.5 block truncate whitespace-nowrap text-[#1F2858] ${
-        variant === "large" ? "text-[16px] font-semibold" : "text-xs font-medium"
+      className={`mb-1.5 block truncate whitespace-nowrap leading-5 text-[#1F2858] ${
+        variant === "large" ? "text-[16px] font-medium" : "text-xs font-medium"
       }`}
       title={mr ? `${en} / ${mr}` : en}
     >
@@ -266,7 +267,7 @@ function Field({
         <div className="relative flex flex-1 min-w-0 items-center">
           {Icon && (
             <span className="pointer-events-none absolute left-3 text-slate-400">
-              <Icon size={16} />
+              <Icon size={16} strokeWidth={1.75} />
             </span>
           )}
           {isEditing ? (
@@ -283,7 +284,7 @@ function Field({
                 }}
                 className={`w-full rounded-lg border bg-white py-2.5 ${
                   Icon ? "pl-9" : "pl-3"
-                } pr-3 text-sm text-slate-700 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 border-blue-500 ring-1 ring-blue-500`}
+                } pr-3 text-sm text-slate-700 outline-none transition-colors border-blue-500 ring-1 ring-blue-500`}
               />
             ) : (
               <input
@@ -297,7 +298,7 @@ function Field({
                 }}
                 className={`w-full rounded-lg border bg-white py-2.5 ${
                   Icon ? "pl-9" : "pl-3"
-                } pr-3 text-sm text-slate-700 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 border-blue-500 ring-1 ring-blue-500`}
+                } pr-3 text-sm text-slate-700 outline-none transition-colors border-blue-500 ring-1 ring-blue-500`}
               />
             )
           ) : (
@@ -395,20 +396,22 @@ function SelectField({
             onClick={() => setIsOpen((prev) => !prev)}
             aria-haspopup="listbox"
             aria-expanded={isOpen}
-            className={`flex h-10 w-full items-center rounded-md border bg-white px-4 text-left transition-all duration-200 ${
-              isOpen ? "border-[#0A66D8] ring-2 ring-[#0A66D8]/10" : "border-[#B8C2D6] hover:border-[#0A66D8]"
+            className={`flex w-full items-center rounded-lg border bg-white py-2.5 ${
+              Icon ? "pl-9" : "pl-3"
+            } pr-3 text-left text-sm transition-colors ${
+              isOpen ? "border-blue-500 ring-1 ring-blue-500" : "border-slate-300 hover:border-slate-400"
             }`}
           >
             {Icon && (
-              <span className="shrink-0 text-[#6B7280]">
-                <Icon className="h-4 w-4" strokeWidth={1.75} />
+              <span className="pointer-events-none absolute left-3 text-slate-400">
+                <Icon size={16} strokeWidth={1.75} />
               </span>
             )}
-            <span className={`flex-1 truncate text-sm ${Icon ? "ml-3" : ""} ${value ? "text-[#4B5563]" : "text-[#7C879B]"}`}>
+            <span className={`flex-1 truncate text-sm ${value ? "text-slate-700" : "text-slate-400"}`}>
               {value || "\u2014"}
             </span>
             <ChevronDown
-              className={`ml-2 h-5 w-5 shrink-0 text-[#6B7280] transition-transform ${isOpen ? "rotate-180" : ""}`}
+              className={`ml-2 h-4 w-4 shrink-0 text-slate-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
               strokeWidth={1.75}
             />
           </button>
@@ -428,7 +431,7 @@ function SelectField({
                       onChange?.(opt);
                       setIsOpen(false);
                     }}
-                    className={`flex w-full items-center justify-between px-3 py-2 text-left text-[14px] transition ${
+                    className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm transition ${
                       opt === value ? "bg-blue-50 text-blue-600" : "text-slate-700 hover:bg-slate-50"
                     }`}
                   >
@@ -449,13 +452,15 @@ function SelectField({
     <div className="flex h-full min-w-0 flex-col">
       <BilingualLabel en={labelEn} mr={labelMr} required={required} />
       <div
-        className={`flex h-10 flex-1 min-w-0 items-center rounded-md border bg-white px-4 transition-all duration-200 ${
-          isEditing ? "border-[#0A66D8] ring-2 ring-[#0A66D8]/10" : "border-[#B8C2D6] hover:border-[#0A66D8]"
+        className={`relative flex items-center rounded-lg border bg-white py-2.5 ${
+          Icon ? "pl-9" : "pl-3"
+        } pr-3 text-sm transition-colors ${
+          isEditing ? "border-blue-500 ring-1 ring-blue-500" : "border-slate-300 hover:border-slate-400"
         }`}
       >
         {Icon && (
-          <span className="shrink-0 text-[#6B7280]">
-            <Icon className="h-4 w-4" strokeWidth={1.75} />
+          <span className="pointer-events-none absolute left-3 text-slate-400">
+            <Icon size={16} strokeWidth={1.75} />
           </span>
         )}
         {isEditing ? (
@@ -468,20 +473,18 @@ function SelectField({
               if (e.key === "Enter") commit();
               if (e.key === "Escape") setIsEditing(false);
             }}
-            className={`w-full flex-1 bg-transparent text-sm text-[#4B5563] outline-none ${
-              Icon ? "ml-3" : ""
-            }`}
+            className="w-full flex-1 bg-transparent text-sm text-slate-700 outline-none"
           />
         ) : (
           <button
             type="button"
             onClick={startEditing}
-            className={`flex-1 truncate text-left text-sm text-[#4B5563] ${Icon ? "ml-3" : ""}`}
+            className="flex-1 truncate text-left text-sm text-slate-700"
           >
             {value || "\u2014"}
           </button>
         )}
-        <ChevronDown className="ml-2 h-5 w-5 shrink-0 text-[#6B7280]" strokeWidth={1.75} />
+        <ChevronDown className="ml-2 h-4 w-4 shrink-0 text-slate-400" strokeWidth={1.75} />
       </div>
     </div>
   );
@@ -490,8 +493,8 @@ function SelectField({
 function SrNoField({ value }: { value?: string | number }) {
   return (
     <div className="flex h-full min-w-0 flex-col">
-      <span className="mb-1.5 block truncate whitespace-nowrap text-[16px] font-semibold text-[#1F2858]">Sr No</span>
-      <div className="flex h-10 flex-1 items-center justify-center rounded-md border border-[#B8C2D6] bg-white text-sm text-[#4B5563]">
+      <span className="mb-1.5 block truncate whitespace-nowrap text-[16px] font-medium leading-5 text-[#1F2858]">Sr No</span>
+      <div className="flex items-center justify-center rounded-lg border border-slate-300 bg-white py-2.5 text-sm text-slate-700">
         {value ?? "\u2014"}
       </div>
     </div>
@@ -501,7 +504,7 @@ function SrNoField({ value }: { value?: string | number }) {
 function FieldGrid({ children, cols = 4 }: { children: React.ReactNode; cols?: 3 | 4 }) {
   return (
     <div
-      className={`grid grid-cols-1 gap-4 rounded-[20px] border-x border-b border-t-4 border-[#0A66D8] shadow-[0_2px_10px_rgba(0,0,0,0.05)] p-5 sm:grid-cols-2 [&>*]:min-w-0 ${
+      className={`grid grid-cols-1 gap-4 rounded-[20px] border-x border-b border-t-4 border-[#0A66D8] shadow-[0_2px_10px_rgba(0,0,0,0.05)] p-6 sm:grid-cols-2 [&>*]:min-w-0 ${
         cols === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4"
       }`}
     >
@@ -526,7 +529,7 @@ function RadioGroup({
   return (
     <div className="flex h-full min-w-0 flex-col justify-center">
       <div className="flex items-center justify-between gap-4">
-        <span className="whitespace-nowrap text-[16px] font-semibold text-[#1F2858]">
+        <span className="whitespace-nowrap text-[16px] font-medium leading-5 text-[#1F2858]">
           {labelEn}
           {labelMr && (
             <>
@@ -537,19 +540,12 @@ function RadioGroup({
         </span>
         <div className="flex items-center gap-6">
           {(["Day", "Month"] as const).map((opt) => (
-            <label key={opt} className="flex cursor-pointer items-center gap-2 whitespace-nowrap text-[14px] text-slate-600">
-              <span
-                className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 ${
-                  value === opt ? "border-blue-600" : "border-slate-300"
-                }`}
-              >
-                {value === opt && <span className="h-2 w-2 rounded-full bg-blue-600" />}
-              </span>
+            <label key={opt} className="flex cursor-pointer items-center gap-2 whitespace-nowrap text-sm text-slate-600">
               <input
                 type="radio"
-                className="hidden"
                 checked={value === opt}
                 onChange={() => onChange?.(opt)}
+                className="h-4 w-4 accent-blue-600"
               />
               {opt}
             </label>
@@ -562,7 +558,7 @@ function RadioGroup({
 
 function Tabs({ tabs, active, onChange }: { tabs: TabKey[]; active: TabKey; onChange: (t: TabKey) => void }) {
   return (
-    <div className="flex gap-[28.82px] border-b border-slate-200 bg-white px-6">
+    <div className="flex gap-6 border-b border-slate-100 bg-white px-6">
       {tabs.map((tab) => {
         const isActive = tab === active;
         return (
@@ -570,12 +566,12 @@ function Tabs({ tabs, active, onChange }: { tabs: TabKey[]; active: TabKey; onCh
             key={tab}
             type="button"
             onClick={() => onChange(tab)}
-            className={`relative -mb-px py-3 text-[14px] font-medium transition ${
+            className={`relative -mb-px shrink-0 py-3 text-sm font-medium transition-colors ${
               isActive ? "text-blue-600" : "text-slate-500 hover:text-slate-700"
             }`}
           >
             {tab}
-            {isActive && <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-blue-600" />}
+            {isActive && <span className="absolute -bottom-px left-0 right-0 h-[2px] rounded-full bg-blue-600" />}
           </button>
         );
       })}
@@ -626,16 +622,16 @@ function ListModal<T>({ title, idLabel, nameLabel, items, getId, getName, onSele
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search"
-                className="w-full bg-transparent text-[14px] text-slate-700 outline-none placeholder:text-slate-400"
+                className="w-full bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400"
               />
             </div>
             <button
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-gray-300 text-gray-500 transition hover:bg-gray-100"
             >
-              <X className="h-5 w-5" strokeWidth={1.75} />
+              <X size={18} strokeWidth={2.5} />
             </button>
           </div>
         </div>
@@ -672,7 +668,7 @@ function ListModal<T>({ title, idLabel, nameLabel, items, getId, getName, onSele
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={3} className="px-4 py-6 text-center text-[14px] text-slate-400">
+                  <td colSpan={3} className="px-4 py-6 text-center text-sm text-slate-400">
                     No results found.
                   </td>
                 </tr>
@@ -821,7 +817,7 @@ function NomineeTab({ data }: { data: NomineeDetails }) {
 
   return (
     <>
-    <div className="rounded-[20px] border-x border-b border-t-4 border-[#0A66D8] shadow-[0_2px_10px_rgba(0,0,0,0.05)] p-5">
+    <div className="rounded-[20px] border-x border-b border-t-4 border-[#0A66D8] shadow-[0_2px_10px_rgba(0,0,0,0.05)] p-6">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[80px_1.3fr_1fr_1fr_1fr] [&>*]:min-w-0">
         <SrNoField value={formData.srNo} />
         <SelectField
@@ -883,7 +879,7 @@ function JointHolderTab({ data }: { data: JointHolderDetails }) {
 
   return (
     <>
-    <div className="rounded-[20px] border-x border-b border-t-4 border-[#0A66D8] shadow-[0_2px_10px_rgba(0,0,0,0.05)] p-5">
+    <div className="rounded-[20px] border-x border-b border-t-4 border-[#0A66D8] shadow-[0_2px_10px_rgba(0,0,0,0.05)] p-6">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[80px_1.3fr_1fr_1fr] [&>*]:min-w-0">
         <SrNoField value={formData.srNo} />
         <SelectField
@@ -936,8 +932,8 @@ function JointHolderTab({ data }: { data: JointHolderDetails }) {
 
 function HeaderIcon() {
   return (
-    <span className="relative flex h-11 w-11 shrink-0 items-center justify-center">
-      <Image src="/person1.png" alt="" fill sizes="44px" className="object-contain" />
+    <span className="relative flex h-[50px] w-[50px] shrink-0 items-center justify-center">
+      <Image src="/person1.png" alt="" fill sizes="50px" className="object-contain" />
     </span>
   );
 }
@@ -1037,16 +1033,16 @@ export default function ViewAccountModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
       <div className="flex max-h-[90vh] w-[95vw] max-w-[1400px] flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
         {/* Header */}
-        <div className="flex items-start justify-between gap-4 px-6 pt-6">
+        <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-6 pt-6 pb-4">
           <div className="flex items-start gap-3">
             <HeaderIcon />
             <div>
-              <h2 className="text-[32px] font-bold leading-[120%] tracking-[0.0025em] text-[#1E1B4B]">
+              <h2 className="text-xl font-bold text-slate-800">
                 View Deposit Account Details
                 <span className="text-slate-400"> / </span>
-                <span className="text-[#64748B]">ठेव खाते तपशील पहा</span>
+                <span className="font-bold text-[#64748B]">ठेव खाते तपशील पहा</span>
               </h2>
-              <p className="mt-1 text-[16px] font-normal leading-5 tracking-[0.0025em] text-[#64748B]">
+              <p className="mt-1 text-sm text-slate-500">
                 Only can view some basic information related to the Employee / कर्मचाऱ्याशी संबंधित काही मूलभूत माहिती
               </p>
             </div>
@@ -1055,9 +1051,9 @@ export default function ViewAccountModal({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-full border border-slate-300 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-gray-300 text-gray-500 transition hover:bg-gray-100"
           >
-            <X className="h-6 w-6" strokeWidth={1.75} />
+            <X size={18} strokeWidth={2.5} />
           </button>
         </div>
 
@@ -1084,14 +1080,14 @@ export default function ViewAccountModal({
         `}</style>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-6 border-t border-slate-100 px-6 py-4">
+        <div className="flex items-center justify-end gap-3 border-t border-slate-100 px-6 py-4">
           <button
             type="button"
             onClick={onClose}
-            className="flex items-center gap-1.5 rounded-lg border border-slate-200 px-5 py-2 text-[14px] font-medium text-slate-600 transition hover:bg-slate-50"
+            className="flex items-center gap-1.5 rounded-lg border border-blue-500 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50"
           >
             Cancel
-            <X className="h-4 w-4" />
+            <X size={16} />
           </button>
           <button
             type="button"
@@ -1103,10 +1099,10 @@ export default function ViewAccountModal({
                 setActiveTab(TABS[currentIndex + 1]);
               }
             }}
-            className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-5 py-2 text-[14px] font-medium text-white transition hover:bg-blue-700"
+            className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
           >
             {isLastTab ? "Ok, Got It" : "Next"}
-            {isLastTab ? <Check className="h-4 w-4" /> : <ChevronDown className="h-4 w-4 -rotate-90" />}
+            {isLastTab ? <Check size={16} /> : <ChevronRight size={16} />}
           </button>
         </div>
       </div>
