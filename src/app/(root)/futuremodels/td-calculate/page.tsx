@@ -16,6 +16,7 @@ import {
   ChevronDown,
 } from 'lucide-react'
 import ListModal from '@/components/AccountMaster/ListModal'
+import { useBilingual } from '@/i18n/useBilingual'
 
 /* ------------------------------------------------------------------ */
 /* Static data                                                         */
@@ -164,6 +165,7 @@ function SelectShell({
 /* ------------------------------------------------------------------ */
 
 const page = () => {
+  const { t, en } = useBilingual()
   const [productCode, setProductCode] = useState('401')
   const [categoryCode, setCategoryCode] = useState('Public')
   const [openingDate, setOpeningDate] = useState('2026-05-20')
@@ -216,11 +218,11 @@ const page = () => {
           />
           <div>
             <h2 className="text-2xl font-bold text-slate-900">
-              Maturity Amount <span className="font-bold text-[#64748B]">/ परिपक्वतेची रक्कम</span>
+              {en('tdCalculate.title')} <span className="font-bold text-[#64748B]">/ {t('tdCalculate.title')}</span>
             </h2>
             <p className="text-sm text-gray-600">
-              All Information&apos;s are related to Maturity Amount /{' '}
-              <span>सर्व माहितीपर्यंत प्राप्यता रकमेशी संबंधित आहे</span>
+              {en('tdCalculate.subtitle')} /{' '}
+              <span>{t('tdCalculate.subtitle')}</span>
             </p>
           </div>
         </div>
@@ -235,11 +237,11 @@ const page = () => {
       {/* Form Card */}
       <div className="rounded-2xl border-2 border-primary p-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6">
-          <Field label="Account Type" labelHi="खात्याचा प्रकार">
+          <Field label={en('tdCalculate.accountType')} labelHi={t('tdCalculate.accountType')}>
             <InputShell icon={User} value="TD" readOnly />
           </Field>
 
-          <Field label="Product Code" labelHi="उत्पादन कोड">
+          <Field label={en('tdCalculate.productCode')} labelHi={t('tdCalculate.productCode')}>
             <div className="flex items-center gap-3">
               <div className="flex-1">
                 <InputShell icon={User} value={productCode} readOnly />
@@ -254,11 +256,11 @@ const page = () => {
             </div>
           </Field>
 
-          <Field label="Product Description" labelHi="उत्पादन कोड">
+          <Field label={en('tdCalculate.productDescription')} labelHi={t('tdCalculate.productDescription')}>
             <InputShell icon={AlignLeft} value={product.description} readOnly />
           </Field>
 
-          <Field label="Category Code" labelHi="कॅटेगरी कोड">
+          <Field label={en('tdCalculate.categoryCode')} labelHi={t('tdCalculate.categoryCode')}>
             <SelectShell
               icon={LayoutGrid}
               value={categoryCode}
@@ -267,7 +269,7 @@ const page = () => {
             />
           </Field>
 
-          <Field label="Opening Date" labelHi="उद्घाटनाची तारीख">
+          <Field label={en('tdCalculate.openingDate')} labelHi={t('tdCalculate.openingDate')}>
             <div className="relative flex h-11 items-center gap-3 rounded-xl border border-[#B8C2D6] bg-white px-4 focus-within:border-primary">
               <Calendar size={18} className="shrink-0 text-[#6A7282]" />
               <input
@@ -280,7 +282,9 @@ const page = () => {
           </Field>
 
           <div>
-            <label className="mb-2 block text-[15px] font-semibold text-black">Unit Of Period</label>
+            <label className="mb-2 block text-[15px] font-semibold text-black">
+              {en('tdCalculate.unitOfPeriod')} <span className="text-gray-500 font-semibold">/ {t('tdCalculate.unitOfPeriod')}</span>
+            </label>
             <div className="flex h-11 items-center gap-6">
               {(['Day', 'Month'] as const).map((opt) => (
                 <label key={opt} className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
@@ -296,27 +300,27 @@ const page = () => {
             </div>
           </div>
 
-          <Field label="Period of Deposit" labelHi="ठेवींची कालावधी">
+          <Field label={en('tdCalculate.periodOfDeposit')} labelHi={t('tdCalculate.periodOfDeposit')}>
             <InputShell icon={CalendarClock} value={`${product.periodMonths} Months`} readOnly />
           </Field>
 
-          <Field label="Rate" labelHi="दर">
+          <Field label={en('tdCalculate.rate')} labelHi={t('tdCalculate.rate')}>
             <InputShell icon={Percent} value={rate} onChange={setRate} />
           </Field>
 
-          <Field label="Interest Payment frequency" labelHi="व्याज भरण्याची वारंवारिता">
+          <Field label={en('tdCalculate.interestFrequency')} labelHi={t('tdCalculate.interestFrequency')}>
             <SelectShell icon={Repeat} value={frequency} onChange={setFrequency} options={FREQUENCIES} />
           </Field>
 
-          <Field label="Deposit Amount" labelHi="ठेवी रक्कम">
+          <Field label={en('tdCalculate.depositAmount')} labelHi={t('tdCalculate.depositAmount')}>
             <InputShell icon={Wallet} value={depositAmount} onChange={setDepositAmount} alignRight />
           </Field>
 
-          <Field label="Maturity Amount" labelHi="परिपक्वतेची रक्कम">
+          <Field label={en('tdCalculate.maturityAmount')} labelHi={t('tdCalculate.maturityAmount')}>
             <InputShell icon={Wallet} value={maturityAmountLabel} readOnly alignRight />
           </Field>
 
-          <Field label="Maturity Date" labelHi="परिपक्वता तारीख">
+          <Field label={en('tdCalculate.maturityDate')} labelHi={t('tdCalculate.maturityDate')}>
             <InputShell icon={Calendar} value={maturityDateLabel} readOnly />
           </Field>
         </div>
@@ -328,17 +332,17 @@ const page = () => {
           type="button"
           className="flex items-center gap-2 px-6 py-2.5 rounded-lg border border-primary text-primary font-semibold hover:bg-primary-50 transition-colors"
         >
-          Cancel <X size={16} />
+          {en('common.cancel')} <X size={16} />
         </button>
       </div>
 
       {/* Sub Product List overlay */}
       {showSubProductList && (
         <ListModal
-          title="Sub Product List"
+          title={en('tdCalculate.subProductList')}
           columns={[
-            { key: 'code', label: 'Product Code' },
-            { key: 'description', label: 'Description' },
+            { key: 'code', label: en('tdCalculate.productCode') },
+            { key: 'description', label: en('tdCalculate.descriptionCol') },
           ]}
           rows={SUB_PRODUCT_ROWS}
           onSelect={handleSelectProduct}

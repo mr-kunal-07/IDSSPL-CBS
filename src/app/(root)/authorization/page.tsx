@@ -2,17 +2,19 @@
 
 import GlobalNav from "@/components/GlobalMaster/GlobalNav";
 import AuthorizationCards from "@/components/Authorization/AuthorizationCards";
+import { useBilingual } from "@/i18n/useBilingual";
 
 const Page = () => {
+  const { t, en } = useBilingual();
   return (
     <div className="min-h-screen bg-[#E7EAEF] no-scrollbar ">
       <GlobalNav
-        titleEn="Authorization"
-        titleHi="अधिकृतीकरण"
+        titleEn={en("authorization.title")}
+        titleHi={t("authorization.title")}
         breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "MIS Activity", href: "/" },
-          { label: "Authorization", href: "#" },
+          { label: en("common.home"), href: "/" },
+          { label: en("common.misActivity"), href: "/" },
+          { label: en("authorization.breadcrumb"), href: "#" },
         ]}
         onBack={() => window.history.back()}
       />

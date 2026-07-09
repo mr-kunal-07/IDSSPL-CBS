@@ -4,6 +4,7 @@ import AddUserModal from '@/components/UserMaster/AddUserMaster';
 import NavbarAM from '@/components/UserMaster/NavbarAM';
 import FilterModal, { type UserFilters, defaultValues } from '@/components/UserMaster/FilterModal';
 import { useState } from 'react';
+import { useBilingual } from '@/i18n/useBilingual';
 
 interface Breadcrumb {
   label: string;
@@ -11,15 +12,16 @@ interface Breadcrumb {
 }
 
 const Page = () => {
+  const { t, en } = useBilingual();
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState<UserFilters>(defaultValues);
 
   const breadcrumbs: Breadcrumb[] = [
-    { label: "Home", href: "/" },
-    { label: "MIS Activity", href: "/" },
-    { label: "User Master", href: "/" },
+    { label: en("common.home"), href: "/" },
+    { label: en("common.misActivity"), href: "/" },
+    { label: en("userMaster.breadcrumb"), href: "/" },
   ];
 
   const handleResetFilters = () => {
@@ -29,8 +31,8 @@ const Page = () => {
   return (
     <div className="min-h-screen bg-[#F4F6FC] relative">
       <NavbarAM
-        titleEn="User Master"
-        titleHi="युझर मास्टर"
+        titleEn={en("userMaster.title")}
+        titleHi={t("userMaster.title")}
         breadcrumbs={breadcrumbs}
         onBack={() => window.history.back()}
         onAdd={() => setOpenAddModal(true)}

@@ -6,6 +6,7 @@ import HeroOffice from "@/components/HeadOfficeMaster/HeroOffice";
 import ParameterModal from "@/components/HeadOfficeMaster/ParameterModal";
 import FilterModal from "@/components/HeadOfficeMaster/FilterModal";
 import { getMasterConfig, emptyFormData } from "@/components/HeadOfficeMaster/masterConfig";
+import { useBilingual } from "@/i18n/useBilingual";
 
 interface BreadcrumbItem {
   label: string;
@@ -23,6 +24,7 @@ interface MasterItem {
 type ModalMode = "add" | null;
 
 const Page: React.FC = () => {
+  const { t, en } = useBilingual();
   const [openMaster, setOpenMaster] = useState<MasterItem | null>(null);
   const [tableRows, setTableRows] = useState<Record<string, unknown>[]>([]);
   const [filters, setFilters] = useState<Record<string, string>>({});
@@ -46,19 +48,19 @@ const Page: React.FC = () => {
 
   const breadcrumbs: BreadcrumbItem[] = openMaster
     ? [
-        { label: "Home", href: "/" },
-        { label: "MIS Activity", href: "/mis-activity" },
+        { label: en("common.home"), href: "/" },
+        { label: en("common.misActivity"), href: "/mis-activity" },
         {
-          label: "Master Maintenance Head Office",
+          label: en("headOfficeMaster.title"),
           href: "#",
           onClick: handleCloseMaster,
         },
         { label: openMaster.titleEn, href: "#" },
       ]
     : [
-        { label: "Home", href: "/" },
-        { label: "MIS Activity", href: "/mis-activity" },
-        { label: "Master Maintenance Head Office", href: "#" },
+        { label: en("common.home"), href: "/" },
+        { label: en("common.misActivity"), href: "/mis-activity" },
+        { label: en("headOfficeMaster.title"), href: "#" },
       ];
 
   const handleAddSave = (formData: Record<string, string>) => {
@@ -84,8 +86,8 @@ const Page: React.FC = () => {
   return (
     <div className="bg-[#E7EAEF] min-h-screen">
       <Nav
-        titleEn={openMaster ? openMaster.titleEn : "Master Maintenance Head Office"}
-        titleHi={openMaster ? openMaster.titleHi : "मुख्य कार्यालय मास्टर मेंटेनन्स"}
+        titleEn={openMaster ? openMaster.titleEn : en("headOfficeMaster.title")}
+        titleHi={openMaster ? openMaster.titleHi : t("headOfficeMaster.title")}
         breadcrumbs={breadcrumbs}
         onBack={() => (openMaster ? handleCloseMaster() : window.history.back())}
         showActions={!!openMaster}

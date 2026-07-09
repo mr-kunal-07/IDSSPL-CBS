@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useBilingual } from "@/i18n/useBilingual";
 import AddCM from "@/components/CustomerMaster/AddCM";
 import NavbarCM from "@/components/CustomerMaster/NavbarCM";
 import TableCM, { type RowData } from "@/components/CustomerMaster/TableCM";
@@ -20,6 +21,7 @@ interface CustomerRow {
 }
 
 const CustomerMasterPage = () => {
+  const { t, en } = useBilingual();
   const [openAddModal, setOpenAddModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState<CustomerRow | null>(null);
   const [viewMode, setViewMode] = useState<"view" | "edit" | null>(null);
@@ -65,12 +67,12 @@ const CustomerMasterPage = () => {
   return (
     <div className="min-h-screen bg-[#F4F6FC] relative">
       <NavbarCM
-        titleEn="Customer Master"
-        titleHi="कस्टमर मास्टर"
+        titleEn={en("customerMaster.title")}
+        titleHi={t("customerMaster.title")}
         breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "MIS Activity", href: "/" },
-          { label: "Customer Master", href: "/" },
+          { label: en("common.home"), href: "/" },
+          { label: en("common.misActivity"), href: "/" },
+          { label: en("customerMaster.breadcrumb"), href: "/" },
         ]}
         onBack={() => window.history.back()}
         onAdd={() => setOpenAddModal(true)}

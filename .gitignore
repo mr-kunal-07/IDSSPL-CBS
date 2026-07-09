@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# generated i18n extraction coverage report (dev artifact)
+i18n-extraction-report.json
